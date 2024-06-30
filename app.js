@@ -31,3 +31,10 @@ const enemy = new Sprite({
 })
 
 enemy.draw()
+
+function animate() {
+    window.requestAnimationFrame(animate)
+    console.log('аниме хуйня')
+}
+
+animate()

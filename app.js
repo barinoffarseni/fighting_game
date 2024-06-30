@@ -5,8 +5,6 @@ canvas.width = 1024
 canvas.height = 576
 
 const gravity = 0.2
-// ctx.fillStyle = "black";
-// ctx.fillRect(0, 0, canvas.width, canvas.height)
 
 class Sprite {
     constructor({ position, velocity }) {
@@ -22,7 +20,6 @@ class Sprite {
 
     update() {
         this.draw()
-        // this.velocity.y += gravity
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 

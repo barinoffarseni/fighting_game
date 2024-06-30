@@ -4,11 +4,23 @@ ctx = canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576
 
-ctx.fillStyle = "red";
+ctx.fillStyle = "black";
 ctx.fillRect(0, 0, canvas.width, canvas.height)
-ctx.fillStyle = "green";
-ctx.fillRect(canvas.width / 2, 0, canvas.width, canvas.height)
-ctx.fillStyle = "blue";
-ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height)
-ctx.fillStyle = "yellow";
-ctx.fillRect(canvas.width / 2, canvas.height / 2, canvas.width, canvas.height)
+
+class Sprite {
+    constructor(position) {
+        this.position = position
+    }
+
+    draw() {
+        ctx.fillStyle = 'red'
+        ctx.fillRect(this.position.x, this.position.y, 50, 150)
+    }
+}
+
+const player = new Sprite({
+    x: 0,
+    y: 0
+})
+
+player.draw()

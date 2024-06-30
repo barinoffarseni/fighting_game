@@ -24,3 +24,10 @@ const player = new Sprite({
 })
 
 player.draw()
+
+const enemy = new Sprite({
+    x: canvas.width / 2,
+    y: 0
+})
+
+enemy.draw()

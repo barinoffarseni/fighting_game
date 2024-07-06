@@ -6,6 +6,17 @@ canvas.height = 576
 
 const gravity = 0.2
 
+const keys = {
+    w: false,
+    a: false,
+    s: false,
+    d: false,
+    up: false,
+    left: false,
+    down: false,
+    right: false
+}
+
 class Sprite {
     constructor({ position, velocity }) {
         this.position = position
@@ -57,6 +68,7 @@ function animate() {
     window.requestAnimationFrame(animate)
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height)
+    control()
     player.update()
     console.log(player.velocity.y)
     enemy.update()
@@ -64,23 +76,29 @@ function animate() {
 
 animate()
 
+function control() {
+    if (keys.w) {
+        player.velocity.y = -10
+    }
+    if (keys.d) {
+        player.velocity.x = 1
+    }
+    if (keys.a) {
+        player.velocity.x = -1
+    }
+}
+
 window.addEventListener('keydown', keydown)
 function keydown(event) {
     switch (event.key) {
         case 'd':
-            // keys.d.pressed = true
-
-            player.velocity.x = 1
+            keys.d = true
             break
         case 'a':
-            // keys.d.pressed = true
-
-            player.velocity.x = -1
+            keys.a = true
             break
         case 'w':
-            // keys.d.pressed = true
-
-            player.velocity.y = -10
+            keys.w = true
             break
     }  
 }
@@ -89,19 +107,13 @@ window.addEventListener('keyup', keyup)
 function keyup(event) {
     switch (event.key) {
         case 'd':
-            // keys.d.pressed = true
-
-            player.velocity.x = 0
+            keys.d = false
             break
         case 'a':
-            // keys.d.pressed = true
-
-            player.velocity.x = 0
+            keys.a = false
             break
         case 'w':
-            // keys.d.pressed = true
-
-            // player.velocity.y = 0
+            keys.w = false
             break
     }  
 }

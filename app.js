@@ -62,3 +62,19 @@ function animate() {
 }
 
 animate()
+
+window.addEventListener('keydown', keydown)
+function keydown(event) {
+    switch (event.key) {
+        case 'd':
+            // keys.d.pressed = true
+
+            player.velocity.x = 1
+            break
+        case 'a':
+            // keys.d.pressed = true
+
+            player.velocity.x = -1
+            break
+    }  
+}

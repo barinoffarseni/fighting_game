@@ -58,6 +58,7 @@ function animate() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     player.update()
+    console.log(player.velocity.y)
     enemy.update()
 }
 
@@ -76,6 +77,11 @@ function keydown(event) {
 
             player.velocity.x = -1
             break
+        case 'w':
+            // keys.d.pressed = true
+
+            player.velocity.y = -10
+            break
     }  
 }
 
@@ -91,6 +97,11 @@ function keyup(event) {
             // keys.d.pressed = true
 
             player.velocity.x = 0
+            break
+        case 'w':
+            // keys.d.pressed = true
+
+            // player.velocity.y = 0
             break
     }  
 }

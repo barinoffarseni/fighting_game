@@ -78,3 +78,19 @@ function keydown(event) {
             break
     }  
 }
+
+window.addEventListener('keyup', keyup)
+function keyup(event) {
+    switch (event.key) {
+        case 'd':
+            // keys.d.pressed = true
+
+            player.velocity.x = 0
+            break
+        case 'a':
+            // keys.d.pressed = true
+
+            player.velocity.x = 0
+            break
+    }  
+}

@@ -70,7 +70,6 @@ function animate() {
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     control()
     player.update()
-    console.log(player.velocity.y)
     enemy.update()
 }
 
@@ -82,14 +81,29 @@ function control() {
     }
     if (keys.d) {
         player.velocity.x = 1
+    } else {
+        player.velocity.x = 0
     }
     if (keys.a) {
         player.velocity.x = -1
+    } 
+
+    if (keys.up) {
+        enemy.velocity.y = -10
+    }
+    if (keys.right) {
+        enemy.velocity.x = 1
+    } else {
+        enemy.velocity.x = 0
+    }
+    if (keys.left) {
+        enemy.velocity.x = -1
     }
 }
 
 window.addEventListener('keydown', keydown)
 function keydown(event) {
+    console.log(event)
     switch (event.key) {
         case 'd':
             keys.d = true
@@ -99,6 +113,15 @@ function keydown(event) {
             break
         case 'w':
             keys.w = true
+            break
+        case 'ArrowRight':
+            keys.right = true
+            break
+        case 'ArrowLeft':
+            keys.left = true
+            break
+        case 'ArrowUp':
+            keys.up = true
             break
     }  
 }
@@ -115,5 +138,14 @@ function keyup(event) {
         case 'w':
             keys.w = false
             break
+        case 'ArrowRight':
+            keys.right = false
+            break
+        case 'ArrowLeft':
+            keys.left = false
+            break
+        case 'ArrowUp':
+            keys.up = false
+            break            
     }  
 }

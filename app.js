@@ -76,25 +76,23 @@ function animate() {
 animate()
 
 function control() {
+    player.velocity.x = 0
     if (keys.w) {
         player.velocity.y = -10
     }
     if (keys.d) {
         player.velocity.x = 1
-    } else {
-        player.velocity.x = 0
     }
     if (keys.a) {
         player.velocity.x = -1
     } 
 
+    enemy.velocity.x = 0
     if (keys.up) {
         enemy.velocity.y = -10
     }
     if (keys.right) {
         enemy.velocity.x = 1
-    } else {
-        enemy.velocity.x = 0
     }
     if (keys.left) {
         enemy.velocity.x = -1

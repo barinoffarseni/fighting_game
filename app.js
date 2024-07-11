@@ -101,7 +101,6 @@ function control() {
 
 window.addEventListener('keydown', keydown)
 function keydown(event) {
-    console.log(event)
     switch (event.key) {
         case 'd':
             keys.d = true

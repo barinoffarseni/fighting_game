@@ -82,6 +82,7 @@ function animate() {
 
     if (player.atackBox.position.x + player.atackBox.width >= enemy.position.x 
         && player.position.x <= enemy.position.x + enemy.width
+        && player.atackBox.position.y + player.atackBox.height >= enemy.position.y
     ) {
         console.log('sssssssuka')
     }

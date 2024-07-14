@@ -21,6 +21,7 @@ class Sprite {
     constructor({ position, velocity }) {
         this.position = position
         this.velocity = velocity
+        this.width = 50
         this.height = 150
         this.atackBox = {
             position: this.position,
@@ -31,7 +32,7 @@ class Sprite {
 
     draw() {
         ctx.fillStyle = 'red'
-        ctx.fillRect(this.position.x, this.position.y, 50, this.height)
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
         ctx.fillStyle = 'yellow'
         ctx.fillRect(this.atackBox.position.x, this.atackBox.position.y, this.atackBox.width, this.atackBox.height)
     }
@@ -78,6 +79,12 @@ function animate() {
     control()
     player.update()
     enemy.update()
+
+    if (player.atackBox.position.x + player.atackBox.width >= enemy.position.x 
+        && player.position.x <= enemy.position.x + enemy.width
+    ) {
+        console.log('sssssssuka')
+    }
 }
 
 animate()

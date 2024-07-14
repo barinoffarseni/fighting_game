@@ -22,11 +22,18 @@ class Sprite {
         this.position = position
         this.velocity = velocity
         this.height = 150
+        this.atackBox = {
+            position: this.position,
+            width: 80,
+            height: 50
+        }
     }
 
     draw() {
         ctx.fillStyle = 'red'
         ctx.fillRect(this.position.x, this.position.y, 50, this.height)
+        ctx.fillStyle = 'yellow'
+        ctx.fillRect(this.atackBox.position.x, this.atackBox.position.y, this.atackBox.width, this.atackBox.height)
     }
 
     update() {

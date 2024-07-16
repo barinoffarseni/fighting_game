@@ -28,13 +28,16 @@ class Sprite {
             width: 80,
             height: 50
         }
+        this.isAttack = false
     }
 
     draw() {
         ctx.fillStyle = 'red'
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-        ctx.fillStyle = 'yellow'
-        ctx.fillRect(this.atackBox.position.x, this.atackBox.position.y, this.atackBox.width, this.atackBox.height)
+        if (this.isAttack) {
+            ctx.fillStyle = 'yellow'
+            ctx.fillRect(this.atackBox.position.x, this.atackBox.position.y, this.atackBox.width, this.atackBox.height)
+        }
     }
 
     update() {
@@ -47,6 +50,13 @@ class Sprite {
         } else {
             this.velocity.y += gravity
         }
+    }
+
+    attack() {
+        this.isAttack = true
+        setTimeout(() =>{
+            this.isAttack = false
+        }, 100)
     }
 }
 
@@ -84,7 +94,7 @@ function animate() {
         && player.position.x <= enemy.position.x + enemy.width
         && player.atackBox.position.y + player.atackBox.height >= enemy.position.y
     ) {
-        console.log('sssssssuka')
+        player.attack()
     }
 }
 

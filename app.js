@@ -90,11 +90,18 @@ function animate() {
     player.update()
     enemy.update()
 
+    if (player.isAttack && checkCollision()) {
+        console.log('sssss')
+    }
+    
+}
+
+function checkCollision() {
     if (player.atackBox.position.x + player.atackBox.width >= enemy.position.x 
         && player.position.x <= enemy.position.x + enemy.width
         && player.atackBox.position.y + player.atackBox.height >= enemy.position.y
     ) {
-        player.attack()
+        return true
     }
 }
 
@@ -110,6 +117,9 @@ function control() {
     }
     if (keys.a) {
         player.velocity.x = -1
+    } 
+    if (keys.s) {
+        player.attack()
     } 
 
     enemy.velocity.x = 0
@@ -136,6 +146,9 @@ function keydown(event) {
         case 'w':
             keys.w = true
             break
+        case 's':
+            keys.s = true
+            break
         case 'ArrowRight':
             keys.right = true
             break
@@ -159,6 +172,9 @@ function keyup(event) {
             break
         case 'w':
             keys.w = false
+            break
+        case 's':
+            keys.s = false
             break
         case 'ArrowRight':
             keys.right = false

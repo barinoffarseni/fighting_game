@@ -26,7 +26,8 @@ class Sprite {
         this.atackBox = {
             position: this.position,
             width: 80,
-            height: 50
+            height: 50,
+            widthDirection: 1
         }
         this.isAttack = false
     }
@@ -36,7 +37,7 @@ class Sprite {
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
         if (this.isAttack) {
             ctx.fillStyle = 'yellow'
-            ctx.fillRect(this.atackBox.position.x, this.atackBox.position.y, this.atackBox.width, this.atackBox.height)
+            ctx.fillRect(this.atackBox.position.x, this.atackBox.position.y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
         }
     }
 
@@ -94,6 +95,7 @@ function animate() {
         console.log('sssss')
     }
     
+    player.atackBox.widthDirection = getAttackBoxDirection(player.position.x, enemy.position.x)
 }
 
 function checkCollision() {
@@ -186,4 +188,12 @@ function keyup(event) {
             keys.up = false
             break            
     }  
+}
+
+function getAttackBoxDirection(x1, x2) {
+    if (x1 >= x2) {
+        return -1
+    } else {
+        return 1
+    }
 }

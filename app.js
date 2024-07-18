@@ -32,12 +32,27 @@ class Sprite {
         this.isAttack = false
     }
 
+    getPosition() {
+        return this.position
+    }
+
+    getAttackBoxPosition() {
+        if (this.atackBox.widthDirection > 0) {
+            return this.position
+        } else {
+            return {
+                x: this.position.x + this.width,
+                y: this.position.y
+            }
+        }
+    }
+
     draw() {
         ctx.fillStyle = 'red'
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
         if (this.isAttack) {
             ctx.fillStyle = 'yellow'
-            ctx.fillRect(this.atackBox.position.x, this.atackBox.position.y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
+            ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
         }
     }
 
@@ -100,17 +115,17 @@ function animate() {
 
 function checkCollision() {
     if (player.atackBox.widthDirection > 0) {
-        playerAttackBoxXMin = player.atackBox.position.x
-        playerAttackBoxXMax = player.atackBox.position.x + player.atackBox.width * player.atackBox.widthDirection
+        playerAttackBoxXMin = player.getAttackBoxPosition().x
+        playerAttackBoxXMax = player.getAttackBoxPosition().x + player.atackBox.width * player.atackBox.widthDirection
     } else {
-        playerAttackBoxXMin = player.atackBox.position.x + player.atackBox.width * player.atackBox.widthDirection
-        playerAttackBoxXMax = player.atackBox.position.x
+        playerAttackBoxXMin = player.getAttackBoxPosition().x + player.atackBox.width * player.atackBox.widthDirection
+        playerAttackBoxXMax = player.getAttackBoxPosition().x
     }
 
     enemyXMin = enemy.position.x 
     enemyXMax = enemy.position.x + enemy.width
 
-    if (player.atackBox.position.y + player.atackBox.height >= enemy.position.y) {
+    if (player.getAttackBoxPosition().y + player.atackBox.height >= enemy.position.y) {
         //   [    ] AttackBox
         // [  ] enemy
         if (enemyXMin < playerAttackBoxXMin && enemyXMax > playerAttackBoxXMin) {

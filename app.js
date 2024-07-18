@@ -99,11 +99,35 @@ function animate() {
 }
 
 function checkCollision() {
-    if (player.atackBox.position.x + player.atackBox.width >= enemy.position.x 
-        && player.position.x <= enemy.position.x + enemy.width
-        && player.atackBox.position.y + player.atackBox.height >= enemy.position.y
-    ) {
-        return true
+    if (player.atackBox.widthDirection > 0) {
+        playerAttackBoxXMin = player.atackBox.position.x
+        playerAttackBoxXMax = player.atackBox.position.x + player.atackBox.width * player.atackBox.widthDirection
+    } else {
+        playerAttackBoxXMin = player.atackBox.position.x + player.atackBox.width * player.atackBox.widthDirection
+        playerAttackBoxXMax = player.atackBox.position.x
+    }
+
+    enemyXMin = enemy.position.x 
+    enemyXMax = enemy.position.x + enemy.width
+
+    if (player.atackBox.position.y + player.atackBox.height >= enemy.position.y) {
+        //   [    ] AttackBox
+        // [  ] enemy
+        if (enemyXMin < playerAttackBoxXMin && enemyXMax > playerAttackBoxXMin) {
+            return true
+        }
+
+        // [    ] AttackBox
+        //  [  ] enemy
+        if (enemyXMin > playerAttackBoxXMin && enemyXMax < playerAttackBoxXMax) {
+            return true
+        }
+
+        // [    ] AttackBox
+        //     [  ] enemy
+        if (enemyXMin < playerAttackBoxXMax && enemyXMax > playerAttackBoxXMax) {
+            return true
+        }
     }
 }
 

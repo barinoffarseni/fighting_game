@@ -74,6 +74,11 @@ class Sprite {
             this.isAttack = false
         }, 100)
     }
+
+    bar() {
+    if (this.isAttack && checkCollision()) {
+        console.log('sssss')
+    }}
 }
 
 const player = new Sprite({
@@ -106,9 +111,11 @@ function animate() {
     player.update()
     enemy.update()
 
-    if (player.isAttack && checkCollision()) {
-        console.log('sssss')
-    }
+    // if (player.isAttack && checkCollision()) {
+    //     console.log('sssss')
+    // }
+    player.bar()
+    enemy.bar()
     
     player.atackBox.widthDirection = getAttackBoxDirection(player.position.x, enemy.position.x)
 }

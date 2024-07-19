@@ -37,7 +37,6 @@ class Sprite {
     }
 
     getAttackBoxPosition() {
-        console.log(this.atackBox.widthDirection)
         if (this.atackBox.widthDirection > 0) {
             return this.position
         } else {
@@ -47,7 +46,7 @@ class Sprite {
             }
         }
     }
-
+    
     draw() {
         ctx.fillStyle = 'red'
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
@@ -56,12 +55,12 @@ class Sprite {
             ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
         }
     }
-
+    
     update() {
         this.draw()
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
-
+        
         if (this.position.y + this.height >= canvas.height) {
             this.velocity.y = 0
         } else {
@@ -76,20 +75,7 @@ class Sprite {
         }, 100)
     }
 
-    bar(enemyPositionX, enemyWidth, enemyPositionY) {
-        if (this.isAttack && this.checkCollision(enemyPositionX, enemyWidth, enemyPositionY)) {
-            console.log('sssss')
-        }
-    }
-
-    getAttackBoxDirection(enemy) {
-        if (this.position.x >= enemy) {
-            return -1
-        } else {
-            return 1
-        }
-    }
-
+    
     checkCollision(enemyPositionX, enemyWidth, enemyPositionY) {
         if (this.atackBox.widthDirection > 0) {
             this.attackBoxXMin = this.getAttackBoxPosition().x
@@ -98,23 +84,29 @@ class Sprite {
             this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.atackBox.widthDirection
             this.attackBoxXMax= this.getAttackBoxPosition().x
         }
-    
+        
         this.xMin = enemyPositionX
         this.xMax = enemyPositionX + enemyWidth
-    
+        
         if (this.getAttackBoxPosition().y + this.atackBox.height >= enemyPositionY) {
-    
+            
             if (this.xMin < this.attackBoxXMin && this.xMax > this.attackBoxXMin) {
                 return true
             }
-    
+            
             if (this.xMin > this.attackBoxXMin && this.xMax < this.attackBoxXMax) {
                 return true
             }
-    
+            
             if (this.xMin < this.attackBoxXMax && this.xMax > this.attackBoxXMax) {
                 return true
             }
+        }
+    }
+
+    bar(enemyPositionX, enemyWidth, enemyPositionY) {
+        if (this.isAttack && this.checkCollision(enemyPositionX, enemyWidth, enemyPositionY)) {
+            console.log('sssss')
         }
     }
 }
@@ -152,37 +144,9 @@ function animate() {
     player.bar(enemy.position.x, enemy.width, enemy.position.y)
     enemy.bar(player.position.x, player.width, player.position.y)
     
-    player.atackBox.widthDirection = player.getAttackBoxDirection(enemy.position.x)
-    enemy.atackBox.widthDirection = player.getAttackBoxDirection(player.position.x)
+    player.atackBox.widthDirection = GetAttackBoxDirection(player.position.x, enemy.position.x)
+    enemy.atackBox.widthDirection = GetAttackBoxDirection(enemy.position.x, player.position.x)
 }
-
-// function checkCollision() {
-//     if (player.atackBox.widthDirection > 0) {
-//         playerAttackBoxXMin = player.getAttackBoxPosition().x
-//         playerAttackBoxXMax = player.getAttackBoxPosition().x + player.atackBox.width * player.atackBox.widthDirection
-//     } else {
-//         playerAttackBoxXMin = player.getAttackBoxPosition().x + player.atackBox.width * player.atackBox.widthDirection
-//         playerAttackBoxXMax = player.getAttackBoxPosition().x
-//     }
-
-//     enemyXMin = enemy.position.x 
-//     enemyXMax = enemy.position.x + enemy.width
-
-//     if (player.getAttackBoxPosition().y + player.atackBox.height >= enemy.position.y) {
-
-//         if (enemyXMin < playerAttackBoxXMin && enemyXMax > playerAttackBoxXMin) {
-//             return true
-//         }
-
-//         if (enemyXMin > playerAttackBoxXMin && enemyXMax < playerAttackBoxXMax) {
-//             return true
-//         }
-
-//         if (enemyXMin < playerAttackBoxXMax && enemyXMax > playerAttackBoxXMax) {
-//             return true
-//         }
-//     }
-// }
 
 animate()
 
@@ -274,4 +238,12 @@ function keyup(event) {
             keys.down = false
             break            
     }  
+}
+
+function GetAttackBoxDirection(x1, x2) {
+    if (x1 >= x2) {
+        return -1
+    } else {
+        return 1
+    }
 }

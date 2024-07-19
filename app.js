@@ -126,14 +126,24 @@ function checkCollision() {
     enemyXMax = enemy.position.x + enemy.width
 
     if (player.getAttackBoxPosition().y + player.atackBox.height >= enemy.position.y) {
+
         //   [    ] AttackBox
         // [  ] enemy
+
+        //   b    ] AttackBoxdasd
+        // a  c enemy
+        // if (a < b && c > b) {
         if (enemyXMin < playerAttackBoxXMin && enemyXMax > playerAttackBoxXMin) {
             return true
         }
 
         // [    ] AttackBox
         //  [  ] enemy
+
+        // c    d AttackBox
+        //  a  b enemy
+        // if (a > c && b < d) {
+
         if (enemyXMin > playerAttackBoxXMin && enemyXMax < playerAttackBoxXMax) {
             return true
         }
@@ -173,6 +183,9 @@ function control() {
     if (keys.left) {
         enemy.velocity.x = -1
     }
+    if (keys.down) {
+        enemy.attack()
+    }
 }
 
 window.addEventListener('keydown', keydown)
@@ -198,6 +211,9 @@ function keydown(event) {
             break
         case 'ArrowUp':
             keys.up = true
+            break
+        case 'ArrowDown':
+            keys.down = true
             break
     }  
 }
@@ -225,6 +241,9 @@ function keyup(event) {
             break
         case 'ArrowUp':
             keys.up = false
+            break            
+        case 'ArrowDown':
+            keys.down = false
             break            
     }  
 }

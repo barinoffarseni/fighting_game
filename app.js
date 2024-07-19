@@ -79,6 +79,14 @@ class Sprite {
     if (this.isAttack && checkCollision()) {
         console.log('sssss')
     }}
+
+    getAttackBoxDirection(enemy) {
+        if (this.position.x >= enemy) {
+            return -1
+        } else {
+            return 1
+        }
+    }
 }
 
 const player = new Sprite({
@@ -117,7 +125,8 @@ function animate() {
     player.bar()
     enemy.bar()
     
-    player.atackBox.widthDirection = getAttackBoxDirection(player.position.x, enemy.position.x)
+    player.atackBox.widthDirection = player.getAttackBoxDirection(enemy.position.x)
+    enemy.atackBox.widthDirection = player.getAttackBoxDirection(player.position.x)
 }
 
 function checkCollision() {
@@ -255,10 +264,10 @@ function keyup(event) {
     }  
 }
 
-function getAttackBoxDirection(x1, x2) {
-    if (x1 >= x2) {
-        return -1
-    } else {
-        return 1
-    }
-}
+// function getAttackBoxDirection(x1, x2) {
+//     if (x1 >= x2) {
+//         return -1
+//     } else {
+//         return 1
+//     }
+// }

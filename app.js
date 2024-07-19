@@ -37,6 +37,7 @@ class Sprite {
     }
 
     getAttackBoxPosition() {
+        console.log(this.atackBox.widthDirection)
         if (this.atackBox.widthDirection > 0) {
             return this.position
         } else {
@@ -75,16 +76,45 @@ class Sprite {
         }, 100)
     }
 
-    bar() {
-    if (this.isAttack && checkCollision()) {
-        console.log('sssss')
-    }}
+    bar(enemyPositionX, enemyWidth, enemyPositionY) {
+        if (this.isAttack && this.checkCollision(enemyPositionX, enemyWidth, enemyPositionY)) {
+            console.log('sssss')
+        }
+    }
 
     getAttackBoxDirection(enemy) {
         if (this.position.x >= enemy) {
             return -1
         } else {
             return 1
+        }
+    }
+
+    checkCollision(enemyPositionX, enemyWidth, enemyPositionY) {
+        if (this.atackBox.widthDirection > 0) {
+            this.attackBoxXMin = this.getAttackBoxPosition().x
+            this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.atackBox.widthDirection
+        } else {
+            this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.atackBox.widthDirection
+            this.attackBoxXMax= this.getAttackBoxPosition().x
+        }
+    
+        this.xMin = enemyPositionX
+        this.xMax = enemyPositionX + enemyWidth
+    
+        if (this.getAttackBoxPosition().y + this.atackBox.height >= enemyPositionY) {
+    
+            if (this.xMin < this.attackBoxXMin && this.xMax > this.attackBoxXMin) {
+                return true
+            }
+    
+            if (this.xMin > this.attackBoxXMin && this.xMax < this.attackBoxXMax) {
+                return true
+            }
+    
+            if (this.xMin < this.attackBoxXMax && this.xMax > this.attackBoxXMax) {
+                return true
+            }
         }
     }
 }
@@ -119,58 +149,40 @@ function animate() {
     player.update()
     enemy.update()
 
-    // if (player.isAttack && checkCollision()) {
-    //     console.log('sssss')
-    // }
-    player.bar()
-    enemy.bar()
+    player.bar(enemy.position.x, enemy.width, enemy.position.y)
+    enemy.bar(player.position.x, player.width, player.position.y)
     
     player.atackBox.widthDirection = player.getAttackBoxDirection(enemy.position.x)
     enemy.atackBox.widthDirection = player.getAttackBoxDirection(player.position.x)
 }
 
-function checkCollision() {
-    if (player.atackBox.widthDirection > 0) {
-        playerAttackBoxXMin = player.getAttackBoxPosition().x
-        playerAttackBoxXMax = player.getAttackBoxPosition().x + player.atackBox.width * player.atackBox.widthDirection
-    } else {
-        playerAttackBoxXMin = player.getAttackBoxPosition().x + player.atackBox.width * player.atackBox.widthDirection
-        playerAttackBoxXMax = player.getAttackBoxPosition().x
-    }
+// function checkCollision() {
+//     if (player.atackBox.widthDirection > 0) {
+//         playerAttackBoxXMin = player.getAttackBoxPosition().x
+//         playerAttackBoxXMax = player.getAttackBoxPosition().x + player.atackBox.width * player.atackBox.widthDirection
+//     } else {
+//         playerAttackBoxXMin = player.getAttackBoxPosition().x + player.atackBox.width * player.atackBox.widthDirection
+//         playerAttackBoxXMax = player.getAttackBoxPosition().x
+//     }
 
-    enemyXMin = enemy.position.x 
-    enemyXMax = enemy.position.x + enemy.width
+//     enemyXMin = enemy.position.x 
+//     enemyXMax = enemy.position.x + enemy.width
 
-    if (player.getAttackBoxPosition().y + player.atackBox.height >= enemy.position.y) {
+//     if (player.getAttackBoxPosition().y + player.atackBox.height >= enemy.position.y) {
 
-        //   [    ] AttackBox
-        // [  ] enemy
+//         if (enemyXMin < playerAttackBoxXMin && enemyXMax > playerAttackBoxXMin) {
+//             return true
+//         }
 
-        //   b    ] AttackBoxdasd
-        // a  c enemy
-        // if (a < b && c > b) {
-        if (enemyXMin < playerAttackBoxXMin && enemyXMax > playerAttackBoxXMin) {
-            return true
-        }
+//         if (enemyXMin > playerAttackBoxXMin && enemyXMax < playerAttackBoxXMax) {
+//             return true
+//         }
 
-        // [    ] AttackBox
-        //  [  ] enemy
-
-        // c    d AttackBox
-        //  a  b enemy
-        // if (a > c && b < d) {
-
-        if (enemyXMin > playerAttackBoxXMin && enemyXMax < playerAttackBoxXMax) {
-            return true
-        }
-
-        // [    ] AttackBox
-        //     [  ] enemy
-        if (enemyXMin < playerAttackBoxXMax && enemyXMax > playerAttackBoxXMax) {
-            return true
-        }
-    }
-}
+//         if (enemyXMin < playerAttackBoxXMax && enemyXMax > playerAttackBoxXMax) {
+//             return true
+//         }
+//     }
+// }
 
 animate()
 
@@ -263,11 +275,3 @@ function keyup(event) {
             break            
     }  
 }
-
-// function getAttackBoxDirection(x1, x2) {
-//     if (x1 >= x2) {
-//         return -1
-//     } else {
-//         return 1
-//     }
-// }

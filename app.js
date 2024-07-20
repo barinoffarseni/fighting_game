@@ -30,6 +30,7 @@ class Sprite {
             widthDirection: 1
         }
         this.isAttack = false
+        this.health = 100
     }
 
     getPosition() {
@@ -78,6 +79,7 @@ class Sprite {
     tryAttack(enemy) {
         if (this.isAttack && checkAttackIsSuccess(this, enemy)) {
             console.log("attack success")
+            enemy.health -= 10
         }
     }
 }
@@ -115,6 +117,13 @@ function animate() {
     player.tryAttack(enemy)
     enemy.tryAttack(player)
     
+    if (player.health == 0) {
+        alert("player is dead")
+    }
+    if (enemy.health == 0) {
+        alert("enemy is dead")
+    }
+
     player.atackBox.widthDirection = GetAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.widthDirection = GetAttackBoxDirection(enemy.position.x, player.position.x)
 }
@@ -229,7 +238,7 @@ function checkAttackIsSuccess(attacker, victim) {
     }
 
     xMin = victim.position.x
-    xMax = victim.position.y + victim.width
+    xMax = victim.position.x + victim.width
 
     if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
         if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {

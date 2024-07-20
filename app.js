@@ -75,38 +75,9 @@ class Sprite {
         }, 100)
     }
 
-    
-    checkCollision(enemyPositionX, enemyWidth, enemyPositionY) {
-        if (this.atackBox.widthDirection > 0) {
-            this.attackBoxXMin = this.getAttackBoxPosition().x
-            this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.atackBox.widthDirection
-        } else {
-            this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.atackBox.widthDirection
-            this.attackBoxXMax= this.getAttackBoxPosition().x
-        }
-        
-        this.xMin = enemyPositionX
-        this.xMax = enemyPositionX + enemyWidth
-        
-        if (this.getAttackBoxPosition().y + this.atackBox.height >= enemyPositionY) {
-            
-            if (this.xMin < this.attackBoxXMin && this.xMax > this.attackBoxXMin) {
-                return true
-            }
-            
-            if (this.xMin > this.attackBoxXMin && this.xMax < this.attackBoxXMax) {
-                return true
-            }
-            
-            if (this.xMin < this.attackBoxXMax && this.xMax > this.attackBoxXMax) {
-                return true
-            }
-        }
-    }
-
-    bar(enemyPositionX, enemyWidth, enemyPositionY) {
-        if (this.isAttack && this.checkCollision(enemyPositionX, enemyWidth, enemyPositionY)) {
-            console.log('sssss')
+    tryAttack(enemy) {
+        if (this.isAttack && checkAttackIsSuccess(this, enemy)) {
+            console.log("attack success")
         }
     }
 }
@@ -141,8 +112,8 @@ function animate() {
     player.update()
     enemy.update()
 
-    player.bar(enemy.position.x, enemy.width, enemy.position.y)
-    enemy.bar(player.position.x, player.width, player.position.y)
+    player.tryAttack(enemy)
+    enemy.tryAttack(player)
     
     player.atackBox.widthDirection = GetAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.widthDirection = GetAttackBoxDirection(enemy.position.x, player.position.x)
@@ -233,11 +204,11 @@ function keyup(event) {
             break
         case 'ArrowUp':
             keys.up = false
-            break            
+            break
         case 'ArrowDown':
             keys.down = false
-            break            
-    }  
+            break
+    }
 }
 
 function GetAttackBoxDirection(x1, x2) {
@@ -245,5 +216,32 @@ function GetAttackBoxDirection(x1, x2) {
         return -1
     } else {
         return 1
+    }
+}
+
+function checkAttackIsSuccess(attacker, victim) {
+    if (attacker.atackBox.widthDirection > 0) {
+        attacker.attackBoxXMin = attacker.getAttackBoxPosition().x
+        attacker.attackBoxXMax = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
+    } else {
+        attacker.attackBoxXMin = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
+        attacker.attackBoxXMax = attacker.getAttackBoxPosition().x
+    }
+
+    xMin = victim.position.x
+    xMax = victim.position.y + victim.width
+
+    if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
+        if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
+            return true
+        }
+
+        if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
+            return true
+        }
+
+        if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
+            return true
+        }
     }
 }

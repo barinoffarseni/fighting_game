@@ -21,23 +21,63 @@ class Sprite {
     constructor({ position, velocity }) {
         this.position = position
         this.velocity = velocity
+        this.width = 50
         this.height = 150
+        this.atackBox = {
+            position: this.position,
+            width: 80,
+            height: 50,
+            widthDirection: 1
+        }
+        this.isAttack = false
     }
 
+    getPosition() {
+        return this.position
+    }
+
+    getAttackBoxPosition() {
+        if (this.atackBox.widthDirection > 0) {
+            return this.position
+        } else {
+            return {
+                x: this.position.x + this.width,
+                y: this.position.y
+            }
+        }
+    }
+    
     draw() {
         ctx.fillStyle = 'red'
-        ctx.fillRect(this.position.x, this.position.y, 50, this.height)
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+        if (this.isAttack) {
+            ctx.fillStyle = 'yellow'
+            ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
+        }
     }
-
+    
     update() {
         this.draw()
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
-
+        
         if (this.position.y + this.height >= canvas.height) {
             this.velocity.y = 0
         } else {
             this.velocity.y += gravity
+        }
+    }
+
+    attack() {
+        this.isAttack = true
+        setTimeout(() =>{
+            this.isAttack = false
+        }, 100)
+    }
+
+    tryAttack(enemy) {
+        if (this.isAttack && checkAttackIsSuccess(this, enemy)) {
+            console.log("attack success")
         }
     }
 }
@@ -71,6 +111,12 @@ function animate() {
     control()
     player.update()
     enemy.update()
+
+    player.tryAttack(enemy)
+    enemy.tryAttack(player)
+    
+    player.atackBox.widthDirection = GetAttackBoxDirection(player.position.x, enemy.position.x)
+    enemy.atackBox.widthDirection = GetAttackBoxDirection(enemy.position.x, player.position.x)
 }
 
 animate()
@@ -86,6 +132,9 @@ function control() {
     if (keys.a) {
         player.velocity.x = -1
     } 
+    if (keys.s) {
+        player.attack()
+    } 
 
     enemy.velocity.x = 0
     if (keys.up) {
@@ -96,6 +145,9 @@ function control() {
     }
     if (keys.left) {
         enemy.velocity.x = -1
+    }
+    if (keys.down) {
+        enemy.attack()
     }
 }
 
@@ -111,6 +163,9 @@ function keydown(event) {
         case 'w':
             keys.w = true
             break
+        case 's':
+            keys.s = true
+            break
         case 'ArrowRight':
             keys.right = true
             break
@@ -119,6 +174,9 @@ function keydown(event) {
             break
         case 'ArrowUp':
             keys.up = true
+            break
+        case 'ArrowDown':
+            keys.down = true
             break
     }  
 }
@@ -135,6 +193,9 @@ function keyup(event) {
         case 'w':
             keys.w = false
             break
+        case 's':
+            keys.s = false
+            break
         case 'ArrowRight':
             keys.right = false
             break
@@ -143,6 +204,44 @@ function keyup(event) {
             break
         case 'ArrowUp':
             keys.up = false
-            break            
-    }  
+            break
+        case 'ArrowDown':
+            keys.down = false
+            break
+    }
+}
+
+function GetAttackBoxDirection(x1, x2) {
+    if (x1 >= x2) {
+        return -1
+    } else {
+        return 1
+    }
+}
+
+function checkAttackIsSuccess(attacker, victim) {
+    if (attacker.atackBox.widthDirection > 0) {
+        attacker.attackBoxXMin = attacker.getAttackBoxPosition().x
+        attacker.attackBoxXMax = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
+    } else {
+        attacker.attackBoxXMin = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
+        attacker.attackBoxXMax = attacker.getAttackBoxPosition().x
+    }
+
+    xMin = victim.position.x
+    xMax = victim.position.y + victim.width
+
+    if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
+        if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
+            return true
+        }
+
+        if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
+            return true
+        }
+
+        if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
+            return true
+        }
+    }
 }

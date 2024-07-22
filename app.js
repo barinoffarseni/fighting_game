@@ -17,7 +17,7 @@ const keys = {
     right: false
 }
 
-class Sprite {
+class Fighter {
     constructor({ position, velocity }) {
         this.position = position
         this.velocity = velocity
@@ -84,7 +84,25 @@ class Sprite {
     }
 }
 
-const player = new Sprite({
+class Sprite {
+    constructor({ position, imgSrc }) {
+        this.position = position
+        this.width = 50
+        this.height = 150
+        this.img = new Image()
+        this.img.src = imgSrc
+    }
+
+    draw() {
+        ctx.drawImage(this.img, this.position.x, this.position.y)
+    }
+
+    update() {
+        this.draw()
+    }
+}
+
+const player = new Fighter({
     position: {
         x: 0,
         y: 0
@@ -95,7 +113,7 @@ const player = new Sprite({
     }
 })
 
-const enemy = new Sprite({
+const enemy = new Fighter({
     position: {
         x: canvas.width / 2,
         y: 0
@@ -106,11 +124,21 @@ const enemy = new Sprite({
     }
 })
 
+const background = new Sprite({
+    position: {
+        x: 0,
+        y: 0
+    },
+    imgSrc: './img/background.png'
+    // img/background.png
+})
+
 function animate() {
     window.requestAnimationFrame(animate)
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    // ctx.fillStyle = "black";
+    // ctx.fillRect(0, 0, canvas.width, canvas.height)
     control()
+    background.update()
     player.update()
     enemy.update()
 

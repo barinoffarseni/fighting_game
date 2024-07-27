@@ -75,10 +75,58 @@ class Sprite {
     }
 
     draw() {
-        ctx.drawImage(this.img, this.position.x, this.position.y)
+        ctx.drawImage(this.img,
+            this.position.x,
+            this.position.y
+        )
     }
 
     update() {
         this.draw()
     }
 }
+
+class Sprite2 {
+    constructor({ position, imgSrc }) {
+        this.position = position
+        this.width = 50
+        this.height = 150
+        this.img = new Image()
+        this.img.src = imgSrc
+        this.dx = 0
+        this.dy = 0
+        this.framesElapsed = 0
+        this.framesHold = 10
+    }
+
+    draw() {
+        // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+        // image, sx, sy, sWidth, sHeight то как на канвасе это будет изображено
+        // dx, dy, dWidth, dHeight отвечает за то какой кусок картинки оторвать для отображения
+
+        ctx.drawImage(
+            this.img,
+            this.dx,
+            this.dy,
+            this.img.width / 6,
+            this.img.height,
+            this.position.x,
+            this.position.y,
+            this.img.width / 6,
+            this.img.height
+        )
+    }
+
+    update() {
+        this.draw()
+        this.framesElapsed++
+
+        if (this.framesElapsed % this.framesHold === 0) {
+            this.dx += this.img.width / 6
+            if (this.dx >= this.img.width) {
+                this.dx = 0
+            }
+        }
+    }
+}
+

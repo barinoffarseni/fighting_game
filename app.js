@@ -47,11 +47,20 @@ const background = new Sprite({
     imgSrc: './img/background.png'
 })
 
+const shop = new Sprite2({
+    position: {
+        x: 0,
+        y: 0
+    },
+    imgSrc: './img/shop.png'
+})
+
 function animate() {
     window.requestAnimationFrame(animate)
 
     control()
     background.update()
+    shop.update()
     player.update()
     enemy.update()
 

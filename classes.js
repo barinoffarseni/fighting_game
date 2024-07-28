@@ -70,7 +70,7 @@ class Fighter extends SpriteAnimated {
         super({
             position,
             imgSrc: './img/samuraiMack/Idle.png',
-            scale: 1,
+            scale: 2,
             framesHold: 10,
             imgFrames: 8
         })

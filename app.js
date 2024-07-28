@@ -50,7 +50,7 @@ const background = new SpriteStatic({
 const shop = new SpriteAnimated({
     position: {
         x: 650,
-        y: 351
+        y: 223
     },
     imgSrc: './img/shop.png'
 })

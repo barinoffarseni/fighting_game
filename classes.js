@@ -111,8 +111,8 @@ class SpriteAnimated {
             this.img.height,
             this.position.x,
             this.position.y,
-            this.img.width / 6,
-            this.img.height
+            this.img.width / 6 * this.scale,
+            this.img.height * this.scale
         )
     }
 

@@ -71,12 +71,12 @@ class Fighter extends SpriteAnimated {
         super({
             position,
             imgSrc: './img/samuraiMack/Idle.png',
-            scale: 2,
+            scale: 2.5,
             framesHold: 10,
             imgFrames: 8,
             offset: {
-                x: 0,
-                y: 0
+                x: -215,
+                y: -180
             }
         })
         this.position = position
@@ -119,6 +119,8 @@ class Fighter extends SpriteAnimated {
 
     update() {
         this.draw()
+        this.animate()
+
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 

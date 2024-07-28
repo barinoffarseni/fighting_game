@@ -76,7 +76,7 @@ class Fighter extends SpriteAnimated {
             imgFrames: 8,
             offset: {
                 x: -215,
-                y: -180
+                y: -155
             }
         })
         this.position = position

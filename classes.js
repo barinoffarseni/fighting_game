@@ -20,7 +20,7 @@ class SpriteStatic {
 }
 
 class SpriteAnimated {
-    constructor({ position, imgSrc, scale , framesHold, imgFrames}) {
+    constructor({ position, imgSrc, scale , framesHold, imgFrames, offset}) {
         this.position = position
         this.width = 50
         this.height = 150
@@ -32,6 +32,7 @@ class SpriteAnimated {
         this.framesHold = framesHold
         this.scale = scale
         this.imgFrames = imgFrames
+        this.offset = offset
     }
 
     draw() {
@@ -41,8 +42,8 @@ class SpriteAnimated {
             this.dy,
             this.img.width / this.imgFrames,
             this.img.height,
-            this.position.x,
-            this.position.y,
+            this.position.x + this.offset.x,
+            this.position.y + this.offset.y,
             this.img.width / this.imgFrames * this.scale,
             this.img.height * this.scale
         )
@@ -72,7 +73,11 @@ class Fighter extends SpriteAnimated {
             imgSrc: './img/samuraiMack/Idle.png',
             scale: 2,
             framesHold: 10,
-            imgFrames: 8
+            imgFrames: 8,
+            offset: {
+                x: 0,
+                y: 0
+            }
         })
         this.position = position
         this.velocity = velocity

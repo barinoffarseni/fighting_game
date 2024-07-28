@@ -69,7 +69,7 @@ function animate() {
 
     player.tryAttack(enemy)
     enemy.tryAttack(player)
-    
+
     if (player.health == 0) {
         alert("player is dead")
     }
@@ -93,10 +93,10 @@ function control() {
     }
     if (keys.a) {
         player.velocity.x = -1
-    } 
+    }
     if (keys.s) {
         player.attack()
-    } 
+    }
 
     enemy.velocity.x = 0
     if (keys.up) {
@@ -140,7 +140,7 @@ function keydown(event) {
         case 'ArrowDown':
             keys.down = true
             break
-    }  
+    }
 }
 
 window.addEventListener('keyup', keyup)

@@ -87,7 +87,7 @@ class SpriteStatic {
 }
 
 class SpriteAnimated {
-    constructor({ position, imgSrc }) {
+    constructor({ position, imgSrc, scale , framesHold, imgFrames}) {
         this.position = position
         this.width = 50
         this.height = 150
@@ -96,22 +96,21 @@ class SpriteAnimated {
         this.dx = 0
         this.dy = 0
         this.framesElapsed = 0
-        this.framesHold = 10
-        this.scale = 2
+        this.framesHold = framesHold
+        this.scale = scale
+        this.imgFrames = imgFrames
     }
 
     draw() {
-
-
         ctx.drawImage(
             this.img,
             this.dx,
             this.dy,
-            this.img.width / 6,
+            this.img.width / this.imgFrames,
             this.img.height,
             this.position.x,
             this.position.y,
-            this.img.width / 6 * this.scale,
+            this.img.width / this.imgFrames * this.scale,
             this.img.height * this.scale
         )
     }
@@ -121,7 +120,7 @@ class SpriteAnimated {
         this.framesElapsed++
 
         if (this.framesElapsed % this.framesHold === 0) {
-            this.dx += this.img.width / 6
+            this.dx += this.img.width / this.imgFrames
             if (this.dx >= this.img.width) {
                 this.dx = 0
             }

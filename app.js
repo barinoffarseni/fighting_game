@@ -52,7 +52,10 @@ const shop = new SpriteAnimated({
         x: 650,
         y: 223
     },
-    imgSrc: './img/shop.png'
+    imgSrc: './img/shop.png',
+    scale: 2,
+    framesHold: 10,
+    imgFrames: 6
 })
 
 function animate() {

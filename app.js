@@ -39,7 +39,7 @@ const enemy = new Fighter({
     }
 })
 
-const background = new Sprite({
+const background = new SpriteStatic({
     position: {
         x: 0,
         y: 0
@@ -47,10 +47,10 @@ const background = new Sprite({
     imgSrc: './img/background.png'
 })
 
-const shop = new Sprite2({
+const shop = new SpriteAnimated({
     position: {
-        x: 0,
-        y: 0
+        x: 650,
+        y: 351
     },
     imgSrc: './img/shop.png'
 })

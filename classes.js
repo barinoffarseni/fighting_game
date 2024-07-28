@@ -65,7 +65,7 @@ class Fighter {
     }
 }
 
-class Sprite {
+class SpriteStatic {
     constructor({ position, imgSrc }) {
         this.position = position
         this.width = 50
@@ -86,7 +86,7 @@ class Sprite {
     }
 }
 
-class Sprite2 {
+class SpriteAnimated {
     constructor({ position, imgSrc }) {
         this.position = position
         this.width = 50
@@ -97,12 +97,11 @@ class Sprite2 {
         this.dy = 0
         this.framesElapsed = 0
         this.framesHold = 10
+        this.scale = 2
     }
 
     draw() {
-        // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-        // image, sx, sy, sWidth, sHeight то как на канвасе это будет изображено
-        // dx, dy, dWidth, dHeight отвечает за то какой кусок картинки оторвать для отображения
+
 
         ctx.drawImage(
             this.img,

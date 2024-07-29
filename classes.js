@@ -91,6 +91,24 @@ class Fighter extends SpriteAnimated {
         }
         this.isAttack = false
         this.health = 100
+        this.sprites = {
+            idle: {
+                src: './img/samuraiMack/Idle.png',
+                frames: 8
+            },
+            run: {
+                src: './img/samuraiMack/Run.png',
+                frames: 8
+            },
+            jump: {
+                src: './img/samuraiMack/Jump.png',
+                frames: 2
+            },
+            fall: {
+                src: './img/samuraiMack/Fall.png',
+                frames: 2
+            }
+        }
     }
 
     getPosition() {
@@ -108,6 +126,23 @@ class Fighter extends SpriteAnimated {
         }
     }
 
+    conditionSet(condition) {
+        switch (condition) {
+            case 'idle':
+                this.img.imgSrc = this.sprites.idle.src
+                this.imgFrames = this.sprites.idle.frames
+                break;
+            case 'run':
+                console.log('run')
+                this.img.imgSrc = this.sprites.run.src
+                this.imgFrames = this.sprites.run.frames
+                break;
+
+            default:
+                break;
+        }
+    }
+
     // draw() {
     //     ctx.fillStyle = 'red'
     //     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
@@ -120,6 +155,12 @@ class Fighter extends SpriteAnimated {
     update() {
         this.draw()
         this.animate()
+
+        if (this.velocity.x != 0) {
+            this.conditionSet('run');
+        } else {
+            this.conditionSet('idle');
+        }
 
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y

@@ -33,6 +33,7 @@ class SpriteAnimated {
         this.scale = scale
         this.imgFrames = imgFrames
         this.offset = offset
+        this.animateIsEnd = false;
     }
 
     draw() {
@@ -53,8 +54,10 @@ class SpriteAnimated {
         this.framesElapsed++
 
         if (this.framesElapsed % this.framesHold === 0) {
+            this.animateIsEnd = false;
             this.dx += this.img.width / this.imgFrames
             if (this.dx >= this.img.width) {
+                this.animateIsEnd = true;
                 this.dx = 0
             }
         }
@@ -107,6 +110,14 @@ class Fighter extends SpriteAnimated {
             fall: {
                 src: './img/samuraiMack/Fall.png',
                 frames: 2
+            },
+            attack1: {
+                src: './img/samuraiMack/Attack1.png',
+                frames: 6
+            },
+            attack2: {
+                src: './img/samuraiMack/Attack2.png',
+                frames: 6
             }
         }
         this.condition = 'idle'
@@ -128,6 +139,10 @@ class Fighter extends SpriteAnimated {
     }
 
     conditionSet(condition) {
+        if (this.condition == 'attack1' && this.animateIsEnd == false) {
+            return
+        }
+
         if (this.condition != condition) {
             this.condition = condition
             switch (condition) {
@@ -149,6 +164,16 @@ class Fighter extends SpriteAnimated {
                 case 'fall':
                     this.img.src = this.sprites.fall.src
                     this.imgFrames = this.sprites.fall.frames
+                    this.dx = 0
+                    break;
+                case 'attack1':
+                    this.img.src = this.sprites.attack1.src
+                    this.imgFrames = this.sprites.attack1.frames
+                    this.dx = 0
+                    break;
+                case 'attack2':
+                    this.img.src = this.sprites.attack2.src
+                    this.imgFrames = this.sprites.attack2.frames
                     this.dx = 0
                     break;
 
@@ -185,6 +210,14 @@ class Fighter extends SpriteAnimated {
             this.conditionSet('fall')
         }
 
+        // if (this.isAttack) {
+        //     this.conditionSet('attack1')
+        // }
+
+        // if (this.isAttack) {
+        //     this.conditionSet('attack2')
+        // }
+
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
@@ -196,8 +229,9 @@ class Fighter extends SpriteAnimated {
     }
 
     attack() {
+        this.conditionSet('attack1')
         this.isAttack = true
-        setTimeout(() =>{
+        setTimeout(() => {
             this.isAttack = false
         }, 100)
     }

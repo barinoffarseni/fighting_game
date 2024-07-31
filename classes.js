@@ -141,7 +141,17 @@ class Fighter extends SpriteAnimated {
                     this.imgFrames = this.sprites.run.frames
                     this.dx = 0
                     break;
-    
+                case 'jump':
+                    this.img.src = this.sprites.jump.src
+                    this.imgFrames = this.sprites.jump.frames
+                    this.dx = 0
+                    break;
+                case 'fall':
+                    this.img.src = this.sprites.fall.src
+                    this.imgFrames = this.sprites.fall.frames
+                    this.dx = 0
+                    break;
+
                 default:
                     break;
             }
@@ -165,6 +175,14 @@ class Fighter extends SpriteAnimated {
             this.conditionSet('run');
         } else {
             this.conditionSet('idle');
+        }
+
+        if (this.velocity.y < 0) {
+            this.conditionSet('jump')
+        }
+
+        if (this.velocity.y > 0) {
+            this.conditionSet('fall')
         }
 
         this.position.x += this.velocity.x

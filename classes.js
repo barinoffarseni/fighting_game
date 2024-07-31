@@ -109,6 +109,7 @@ class Fighter extends SpriteAnimated {
                 frames: 2
             }
         }
+        this.condition = 'idle'
     }
 
     getPosition() {
@@ -127,18 +128,23 @@ class Fighter extends SpriteAnimated {
     }
 
     conditionSet(condition) {
-        switch (condition) {
-            case 'idle':
-                this.img.src = this.sprites.idle.src
-                this.imgFrames = this.sprites.idle.frames
-                break;
-            case 'run':
-                this.img.src = this.sprites.run.src
-                this.imgFrames = this.sprites.run.frames
-                break;
-
-            default:
-                break;
+        if (this.condition != condition) {
+            this.condition = condition
+            switch (condition) {
+                case 'idle':
+                    this.img.src = this.sprites.idle.src
+                    this.imgFrames = this.sprites.idle.frames
+                    this.dx = 0
+                    break;
+                case 'run':
+                    this.img.src = this.sprites.run.src
+                    this.imgFrames = this.sprites.run.frames
+                    this.dx = 0
+                    break;
+    
+                default:
+                    break;
+            }
         }
     }
 

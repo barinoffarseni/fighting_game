@@ -138,14 +138,14 @@ class Fighter extends SpriteAnimated {
         }
     }
 
-    conditionSet(condition) {
+    conditionSet(newCondition) {
         if (this.condition == 'attack1' && this.animateIsEnd == false) {
             return
         }
 
-        if (this.condition != condition) {
-            this.condition = condition
-            switch (condition) {
+        if (this.condition != newCondition) {
+            this.condition = newCondition
+            switch (newCondition) {
                 case 'idle':
                     this.img.src = this.sprites.idle.src
                     this.imgFrames = this.sprites.idle.frames

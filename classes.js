@@ -129,12 +129,11 @@ class Fighter extends SpriteAnimated {
     conditionSet(condition) {
         switch (condition) {
             case 'idle':
-                this.img.imgSrc = this.sprites.idle.src
+                this.img.src = this.sprites.idle.src
                 this.imgFrames = this.sprites.idle.frames
                 break;
             case 'run':
-                console.log('run')
-                this.img.imgSrc = this.sprites.run.src
+                this.img.src = this.sprites.run.src
                 this.imgFrames = this.sprites.run.frames
                 break;
 

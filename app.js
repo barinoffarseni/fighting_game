@@ -25,7 +25,7 @@ const player = new Fighter({
     velocity: {
         x: 0,
         y: 0
-    }
+    },
 })
 
 const enemy = new Fighter({

@@ -53,7 +53,7 @@ const player = new Fighter({
         },
         takeHit: {
             src: './img/samuraiMack/Take Hit.png',
-            frames: 6
+            frames: 4
         }
     },
     offset: {
@@ -98,7 +98,7 @@ const enemy = new Fighter({
         },
         takeHit: {
             src: './img/kenji/Take Hit.png',
-            frames: 6
+            frames: 3
         }
     },
     offset: {

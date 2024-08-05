@@ -50,6 +50,10 @@ const player = new Fighter({
         attack2: {
             src: './img/samuraiMack/Attack2.png',
             frames: 6
+        },
+        takeHit: {
+            src: './img/samuraiMack/Take Hit.png',
+            frames: 6
         }
     },
     offset: {
@@ -91,6 +95,10 @@ const enemy = new Fighter({
         attack2: {
             src: './img/kenji/Attack2.png',
             frames: 4
+        },
+        takeHit: {
+            src: './img/kenji/Take Hit.png',
+            frames: 6
         }
     },
     offset: {

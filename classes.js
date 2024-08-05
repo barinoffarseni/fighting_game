@@ -114,6 +114,9 @@ class Fighter extends SpriteAnimated {
         if (this.condition == 'attack1' && this.animateIsEnd == false) {
             return
         }
+        if (this.condition == 'takeHit' && this.animateIsEnd == false) {
+            return
+        }
 
         if (this.condition != newCondition) {
             this.condition = newCondition
@@ -146,6 +149,11 @@ class Fighter extends SpriteAnimated {
                 case 'attack2':
                     this.img.src = this.sprites.attack2.src
                     this.imgFrames = this.sprites.attack2.frames
+                    this.dx = 0
+                    break;
+                case 'takeHit':
+                    this.img.src = this.sprites.takeHit.src
+                    this.imgFrames = this.sprites.takeHit.frames
                     this.dx = 0
                     break;
 
@@ -212,6 +220,7 @@ class Fighter extends SpriteAnimated {
         if (this.isAttack && checkAttackIsSuccess(this, enemy)) {
             console.log("attack success")
             enemy.health -= 10
+            enemy.conditionSet('takeHit')
         }
     }
 }

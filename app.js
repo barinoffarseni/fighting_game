@@ -51,6 +51,10 @@ const player = new Fighter({
             src: './img/samuraiMack/Attack2.png',
             frames: 6
         }
+    },
+    offset: {
+        x: -215,
+        y: -155
     }
 })
 
@@ -66,7 +70,7 @@ const enemy = new Fighter({
     sprites: {
         idle: {
             src: './img/kenji/Idle.png',
-            frames: 8
+            frames: 4
         },
         run: {
             src: './img/kenji/Run.png',
@@ -82,12 +86,16 @@ const enemy = new Fighter({
         },
         attack1: {
             src: './img/kenji/Attack1.png',
-            frames: 6
+            frames: 4
         },
         attack2: {
             src: './img/kenji/Attack2.png',
-            frames: 6
+            frames: 4
         }
+    },
+    offset: {
+        x: -215,
+        y: -170
     }
 })
 

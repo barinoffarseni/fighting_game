@@ -70,17 +70,14 @@ class SpriteAnimated {
 }
 
 class Fighter extends SpriteAnimated {
-    constructor({ position, velocity, sprites }) {
+    constructor({ position, velocity, sprites, offset }) {
         super({
             position,
             imgSrc: './img/samuraiMack/Idle.png',
             scale: 2.5,
             framesHold: 10,
             imgFrames: 8,
-            offset: {
-                x: -215,
-                y: -155
-            }
+            offset: offset
         })
         this.position = position
         this.velocity = velocity
@@ -95,7 +92,6 @@ class Fighter extends SpriteAnimated {
         this.isAttack = false
         this.health = 100
         this.sprites = sprites
-
         this.condition = 'idle'
     }
 

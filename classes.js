@@ -70,7 +70,7 @@ class SpriteAnimated {
 }
 
 class Fighter extends SpriteAnimated {
-    constructor({ position, velocity }) {
+    constructor({ position, velocity, sprites }) {
         super({
             position,
             imgSrc: './img/samuraiMack/Idle.png',
@@ -94,32 +94,8 @@ class Fighter extends SpriteAnimated {
         }
         this.isAttack = false
         this.health = 100
-        this.sprites = {
-            idle: {
-                src: './img/samuraiMack/Idle.png',
-                frames: 8
-            },
-            run: {
-                src: './img/samuraiMack/Run.png',
-                frames: 8
-            },
-            jump: {
-                src: './img/samuraiMack/Jump.png',
-                frames: 2
-            },
-            fall: {
-                src: './img/samuraiMack/Fall.png',
-                frames: 2
-            },
-            attack1: {
-                src: './img/samuraiMack/Attack1.png',
-                frames: 6
-            },
-            attack2: {
-                src: './img/samuraiMack/Attack2.png',
-                frames: 6
-            }
-        }
+        this.sprites = sprites
+
         this.condition = 'idle'
     }
 

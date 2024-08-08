@@ -85,9 +85,13 @@ class Fighter extends SpriteAnimated {
         this.height = 150
         this.atackBox = {
             position: this.position,
-            width: 80,
-            height: 50,
-            widthDirection: 1
+            width: 160,
+            height: 90,
+            widthDirection: 1,
+            offset: {
+                x: 80,
+                y: 0
+            }
         }
         this.isAttack = false
         this.health = 100
@@ -101,11 +105,14 @@ class Fighter extends SpriteAnimated {
 
     getAttackBoxPosition() {
         if (this.atackBox.widthDirection > 0) {
-            return this.position
+            return {
+                x :this.position.x + this.atackBox.offset.x,
+                y :this.position.y + this.atackBox.offset.y
+            }
         } else {
             return {
-                x: this.position.x + this.width,
-                y: this.position.y
+                x: this.position.x + this.width - this.atackBox.offset.x,
+                y: this.position.y + this.atackBox.offset.y
             }
         }
     }
@@ -190,13 +197,10 @@ class Fighter extends SpriteAnimated {
             this.conditionSet('fall')
         }
 
-        // if (this.isAttack) {
-        //     this.conditionSet('attack1')
-        // }
+        setAttackBoxMinMaxPosition(this)
 
-        // if (this.isAttack) {
-        //     this.conditionSet('attack2')
-        // }
+        ctx.fillRect(this.attackBoxXMin, this.getAttackBoxPosition().y, this.atackBox.width, this.atackBox.height)
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y

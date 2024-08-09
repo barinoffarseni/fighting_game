@@ -209,8 +209,10 @@ class Fighter extends SpriteAnimated {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
+        console.log(this.position.y + this.height)
         if (this.position.y + this.height >= canvas.height - 96) {
             this.velocity.y = 0
+            this.position.y = canvas.height - 96 - this.height
         } else {
             this.velocity.y += gravity
         }

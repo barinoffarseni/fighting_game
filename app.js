@@ -120,10 +120,10 @@ const background = new SpriteStatic({
 const shop = new SpriteAnimated({
     position: {
         x: 650,
-        y: 223
+        y: 173
     },
     imgSrc: './img/shop.png',
-    scale: 2,
+    scale: 2.4,
     framesHold: 10,
     imgFrames: 6,
     offset: {

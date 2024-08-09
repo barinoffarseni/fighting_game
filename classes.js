@@ -219,9 +219,6 @@ class Fighter extends SpriteAnimated {
     attack() {
         this.conditionSet('attack1')
         this.isAttack = true
-        setTimeout(() => {
-            this.isAttack = false
-        }, 100)
     }
 
     tryAttack(enemy) {
@@ -229,6 +226,10 @@ class Fighter extends SpriteAnimated {
             console.log("attack success")
             enemy.health -= 10
             enemy.conditionSet('takeHit')
+        }
+
+        if (this.isAttack && this.dx >= this.takingDamageFrame) {
+            this.isAttack = false
         }
     }
 }

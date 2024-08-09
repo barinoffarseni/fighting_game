@@ -33,7 +33,7 @@ class SpriteAnimated {
         this.scale = scale
         this.imgFrames = imgFrames
         this.offset = offset
-        this.animateIsEnd = false;
+        this.animateIsEnd = false
     }
 
     draw() {
@@ -70,7 +70,7 @@ class SpriteAnimated {
 }
 
 class Fighter extends SpriteAnimated {
-    constructor({ position, velocity, sprites, offset }) {
+    constructor({ position, velocity, sprites, offset, takingDamageFrame}) {
         super({
             position,
             imgSrc: './img/samuraiMack/Idle.png',
@@ -94,6 +94,7 @@ class Fighter extends SpriteAnimated {
             }
         }
         this.isAttack = false
+        this.takingDamageFrame = takingDamageFrame
         this.health = 100
         this.sprites = sprites
         this.condition = 'idle'
@@ -183,6 +184,9 @@ class Fighter extends SpriteAnimated {
         this.draw()
         this.animate()
 
+        // console.log(this.dx, this.takingDamageFrame)
+        // console.log()
+
         if (this.velocity.x != 0) {
             this.conditionSet('run');
         } else {
@@ -199,8 +203,8 @@ class Fighter extends SpriteAnimated {
 
         setAttackBoxMinMaxPosition(this)
 
-        ctx.fillRect(this.attackBoxXMin, this.getAttackBoxPosition().y, this.atackBox.width, this.atackBox.height)
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+        // ctx.fillRect(this.attackBoxXMin, this.getAttackBoxPosition().y, this.atackBox.width, this.atackBox.height)
+        // ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
@@ -221,7 +225,7 @@ class Fighter extends SpriteAnimated {
     }
 
     tryAttack(enemy) {
-        if (this.isAttack && checkAttackIsSuccess(this, enemy)) {
+        if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.dx >= this.takingDamageFrame) {
             console.log("attack success")
             enemy.health -= 10
             enemy.conditionSet('takeHit')

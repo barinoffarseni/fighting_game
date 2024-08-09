@@ -8,13 +8,6 @@ function GetAttackBoxDirection(x1, x2) {
 
 function checkAttackIsSuccess(attacker, victim) {
     setAttackBoxMinMaxPosition(attacker)
-    // if (attacker.atackBox.widthDirection > 0) {
-    //     attacker.attackBoxXMin = attacker.getAttackBoxPosition().x
-    //     attacker.attackBoxXMax = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
-    // } else {
-    //     attacker.attackBoxXMin = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
-    //     attacker.attackBoxXMax = attacker.getAttackBoxPosition().x
-    // }
 
     xMin = victim.position.x
     xMax = victim.position.x + victim.width

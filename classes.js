@@ -66,6 +66,9 @@ class SpriteAnimated {
                 this.currentFrame = 0
             }
 
+            // if (this.condition == 'attack1') {
+            //     console.log(this.currentFrame)
+            // }
             this.dx = this.currentFrame * this.img.width / this.imgFrames
         }
     }
@@ -131,7 +134,6 @@ class Fighter extends SpriteAnimated {
         }
 
         if (this.condition == 'death') {
-            console.log(this.currentFrame, this.imgFrames);
             if (this.animateIsEnd == true) {
                 this.currentFrame = this.imgFrames - 1
                 this.stopAnimate = true
@@ -243,7 +245,7 @@ class Fighter extends SpriteAnimated {
 
     tryAttack(enemy) {
         if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.dx >= this.takingDamageFrameOffSet) {
-            console.log("attack success")
+            // console.log("attack success")
             enemy.health -= 10
             if (enemy.health <= 0) {
                 enemy.conditionSet('death')

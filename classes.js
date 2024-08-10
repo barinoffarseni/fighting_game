@@ -122,6 +122,9 @@ class Fighter extends SpriteAnimated {
         if (this.condition == 'attack1' && this.animateIsEnd == false) {
             return
         }
+        if (this.condition == 'death' && this.animateIsEnd == false) {
+            return
+        }
         if (this.condition == 'takeHit' && this.animateIsEnd == false) {
             return
         }
@@ -164,6 +167,11 @@ class Fighter extends SpriteAnimated {
                     this.imgFrames = this.sprites.takeHit.frames
                     this.dx = 0
                     break;
+                case 'death':
+                    this.img.src = this.sprites.death.src
+                    this.imgFrames = this.sprites.death.frames
+                    this.dx = 0
+                    break;
 
                 default:
                     break;
@@ -183,9 +191,6 @@ class Fighter extends SpriteAnimated {
     update() {
         this.draw()
         this.animate()
-
-        // console.log(this.dx, this.takingDamageFrameOffSet)
-        // console.log()
 
         if (this.velocity.x != 0) {
             this.conditionSet('run');
@@ -226,7 +231,11 @@ class Fighter extends SpriteAnimated {
         if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.dx >= this.takingDamageFrameOffSet) {
             console.log("attack success")
             enemy.health -= 10
-            enemy.conditionSet('takeHit')
+            if (enemy.health <= 0) {
+                enemy.conditionSet('death')
+            } else {
+                enemy.conditionSet('takeHit')
+            }
         }
 
         if (this.isAttack && this.dx >= this.takingDamageFrameOffSet) {

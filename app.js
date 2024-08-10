@@ -54,6 +54,10 @@ const player = new Fighter({
         takeHit: {
             src: './img/samuraiMack/Take Hit.png',
             frames: 4
+        },
+        death: {
+            src: './img/samuraiMack/Death.png',
+            frames: 6
         }
     },
     offset: {
@@ -100,6 +104,10 @@ const enemy = new Fighter({
         takeHit: {
             src: './img/kenji/Take Hit.png',
             frames: 3
+        },
+        death: {
+            src: './img/kenji/Death.png',
+            frames: 7
         }
     },
     offset: {
@@ -144,12 +152,12 @@ function animate() {
     player.tryAttack(enemy)
     enemy.tryAttack(player)
 
-    if (player.health == 0) {
-        alert("player is dead")
-    }
-    if (enemy.health == 0) {
-        alert("enemy is dead")
-    }
+    // if (player.health == 0) {
+    //     alert("player is dead")
+    // }
+    // if (enemy.health == 0) {
+    //     alert("enemy is dead")
+    // }
 
     player.atackBox.widthDirection = GetAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.widthDirection = GetAttackBoxDirection(enemy.position.x, player.position.x)

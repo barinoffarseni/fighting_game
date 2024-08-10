@@ -34,6 +34,7 @@ class SpriteAnimated {
         this.imgFrames = imgFrames
         this.offset = offset
         this.animateIsEnd = false
+        this.currentFrame = 0
     }
 
     draw() {
@@ -54,11 +55,13 @@ class SpriteAnimated {
         this.framesElapsed++
 
         if (this.framesElapsed % this.framesHold === 0) {
+            this.currentFrame++
             this.animateIsEnd = false;
-            this.dx += this.img.width / this.imgFrames
-            if (this.dx >= this.img.width) {
+            this.dx = this.currentFrame * this.img.width / this.imgFrames
+            console.log(this.dx, this.img.width)
+            if (this.currentFrame == this.imgFrames - 1) {
                 this.animateIsEnd = true;
-                this.dx = 0
+                this.currentFrame = 0
             }
         }
     }
@@ -122,9 +125,15 @@ class Fighter extends SpriteAnimated {
         if (this.condition == 'attack1' && this.animateIsEnd == false) {
             return
         }
-        if (this.condition == 'death' && this.animateIsEnd == false) {
+
+        if (this.condition == 'death') {
+            if (this.animateIsEnd == true) {
+                this.animateIsEnd = true
+                this.currentFrame = this.imgFrames -1
+            }
             return
         }
+
         if (this.condition == 'takeHit' && this.animateIsEnd == false) {
             return
         }
@@ -135,42 +144,42 @@ class Fighter extends SpriteAnimated {
                 case 'idle':
                     this.img.src = this.sprites.idle.src
                     this.imgFrames = this.sprites.idle.frames
-                    this.dx = 0
+                    this.currentFrame = 0
                     break;
                 case 'run':
                     this.img.src = this.sprites.run.src
                     this.imgFrames = this.sprites.run.frames
-                    this.dx = 0
+                    this.currentFrame = 0
                     break;
                 case 'jump':
                     this.img.src = this.sprites.jump.src
                     this.imgFrames = this.sprites.jump.frames
-                    this.dx = 0
+                    this.currentFrame = 0
                     break;
                 case 'fall':
                     this.img.src = this.sprites.fall.src
                     this.imgFrames = this.sprites.fall.frames
-                    this.dx = 0
+                    this.currentFrame = 0
                     break;
                 case 'attack1':
                     this.img.src = this.sprites.attack1.src
                     this.imgFrames = this.sprites.attack1.frames
-                    this.dx = 0
+                    this.currentFrame = 0
                     break;
                 case 'attack2':
                     this.img.src = this.sprites.attack2.src
                     this.imgFrames = this.sprites.attack2.frames
-                    this.dx = 0
+                    this.currentFrame = 0
                     break;
                 case 'takeHit':
                     this.img.src = this.sprites.takeHit.src
                     this.imgFrames = this.sprites.takeHit.frames
-                    this.dx = 0
+                    this.currentFrame = 0
                     break;
                 case 'death':
                     this.img.src = this.sprites.death.src
                     this.imgFrames = this.sprites.death.frames
-                    this.dx = 0
+                    this.currentFrame = 0
                     break;
 
                 default:

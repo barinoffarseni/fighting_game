@@ -35,6 +35,7 @@ class SpriteAnimated {
         this.offset = offset
         this.animateIsEnd = false
         this.currentFrame = 0
+        this.stopAnimate = false
     }
 
     draw() {
@@ -55,7 +56,9 @@ class SpriteAnimated {
         this.framesElapsed++
 
         if (this.framesElapsed % this.framesHold === 0) {
-            this.currentFrame++
+            if (!this.stopAnimate) {
+                this.currentFrame++
+            }
             this.animateIsEnd = false;
 
             if (this.currentFrame == this.imgFrames) {
@@ -129,9 +132,10 @@ class Fighter extends SpriteAnimated {
 
         if (this.condition == 'death') {
             console.log(this.currentFrame, this.imgFrames);
-            // if (this.animateIsEnd == true) {
-            //     this.currentFrame = this.imgFrames - 1
-            // }
+            if (this.animateIsEnd == true) {
+                this.currentFrame = this.imgFrames - 1
+                this.stopAnimate = true
+            }
             return
         }
 

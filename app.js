@@ -17,72 +17,7 @@ const keys = {
     right: false
 }
 
-class Sprite {
-    constructor({ position, velocity }) {
-        this.position = position
-        this.velocity = velocity
-        this.width = 50
-        this.height = 150
-        this.atackBox = {
-            position: this.position,
-            width: 80,
-            height: 50,
-            widthDirection: 1
-        }
-        this.isAttack = false
-    }
-
-    getPosition() {
-        return this.position
-    }
-
-    getAttackBoxPosition() {
-        if (this.atackBox.widthDirection > 0) {
-            return this.position
-        } else {
-            return {
-                x: this.position.x + this.width,
-                y: this.position.y
-            }
-        }
-    }
-    
-    draw() {
-        ctx.fillStyle = 'red'
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-        if (this.isAttack) {
-            ctx.fillStyle = 'yellow'
-            ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
-        }
-    }
-    
-    update() {
-        this.draw()
-        this.position.x += this.velocity.x
-        this.position.y += this.velocity.y
-        
-        if (this.position.y + this.height >= canvas.height) {
-            this.velocity.y = 0
-        } else {
-            this.velocity.y += gravity
-        }
-    }
-
-    attack() {
-        this.isAttack = true
-        setTimeout(() =>{
-            this.isAttack = false
-        }, 100)
-    }
-
-    tryAttack(enemy) {
-        if (this.isAttack && checkAttackIsSuccess(this, enemy)) {
-            console.log("attack success")
-        }
-    }
-}
-
-const player = new Sprite({
+const player = new Fighter({
     position: {
         x: 0,
         y: 0
@@ -90,10 +25,49 @@ const player = new Sprite({
     velocity: {
         x: 0,
         y: 0
-    }
+    },
+    sprites: {
+        idle: {
+            src: './img/samuraiMack/Idle.png',
+            frames: 8
+        },
+        run: {
+            src: './img/samuraiMack/Run.png',
+            frames: 8
+        },
+        jump: {
+            src: './img/samuraiMack/Jump.png',
+            frames: 2
+        },
+        fall: {
+            src: './img/samuraiMack/Fall.png',
+            frames: 2
+        },
+        attack1: {
+            src: './img/samuraiMack/Attack1.png',
+            frames: 6
+        },
+        attack2: {
+            src: './img/samuraiMack/Attack2.png',
+            frames: 6
+        },
+        takeHit: {
+            src: './img/samuraiMack/Take Hit.png',
+            frames: 4
+        },
+        death: {
+            src: './img/samuraiMack/Death.png',
+            frames: 6
+        }
+    },
+    offset: {
+        x: -215,
+        y: -155
+    },
+    takingDamageFrameOffSet: 1000
 })
 
-const enemy = new Sprite({
+const enemy = new Fighter({
     position: {
         x: canvas.width / 2,
         y: 0
@@ -101,20 +75,90 @@ const enemy = new Sprite({
     velocity: {
         x: 0,
         y: 0
+    },
+    sprites: {
+        idle: {
+            src: './img/kenji/Idle.png',
+            frames: 4
+        },
+        run: {
+            src: './img/kenji/Run.png',
+            frames: 8
+        },
+        jump: {
+            src: './img/kenji/Jump.png',
+            frames: 2
+        },
+        fall: {
+            src: './img/kenji/Fall.png',
+            frames: 2
+        },
+        attack1: {
+            src: './img/kenji/Attack1.png',
+            frames: 4
+        },
+        attack2: {
+            src: './img/kenji/Attack2.png',
+            frames: 4
+        },
+        takeHit: {
+            src: './img/kenji/Take Hit.png',
+            frames: 3
+        },
+        death: {
+            src: './img/kenji/Death.png',
+            frames: 7
+        }
+    },
+    offset: {
+        x: -215,
+        y: -170
+    },
+    takingDamageFrameOffSet: 400
+})
+
+const background = new SpriteStatic({
+    position: {
+        x: 0,
+        y: 0
+    },
+    imgSrc: './img/background.png'
+})
+
+const shop = new SpriteAnimated({
+    position: {
+        x: 650,
+        y: 173
+    },
+    imgSrc: './img/shop.png',
+    scale: 2.4,
+    framesHold: 10,
+    imgFrames: 6,
+    offset: {
+        x: 0,
+        y: 0
     }
 })
 
 function animate() {
     window.requestAnimationFrame(animate)
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
     control()
+    background.update()
+    shop.update()
     player.update()
     enemy.update()
 
     player.tryAttack(enemy)
     enemy.tryAttack(player)
-    
+
+    // if (player.health == 0) {
+    //     alert("player is dead")
+    // }
+    // if (enemy.health == 0) {
+    //     alert("enemy is dead")
+    // }
+
     player.atackBox.widthDirection = GetAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.widthDirection = GetAttackBoxDirection(enemy.position.x, player.position.x)
 }
@@ -131,10 +175,10 @@ function control() {
     }
     if (keys.a) {
         player.velocity.x = -1
-    } 
+    }
     if (keys.s) {
         player.attack()
-    } 
+    }
 
     enemy.velocity.x = 0
     if (keys.up) {
@@ -178,7 +222,7 @@ function keydown(event) {
         case 'ArrowDown':
             keys.down = true
             break
-    }  
+    }
 }
 
 window.addEventListener('keyup', keyup)
@@ -208,40 +252,5 @@ function keyup(event) {
         case 'ArrowDown':
             keys.down = false
             break
-    }
-}
-
-function GetAttackBoxDirection(x1, x2) {
-    if (x1 >= x2) {
-        return -1
-    } else {
-        return 1
-    }
-}
-
-function checkAttackIsSuccess(attacker, victim) {
-    if (attacker.atackBox.widthDirection > 0) {
-        attacker.attackBoxXMin = attacker.getAttackBoxPosition().x
-        attacker.attackBoxXMax = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
-    } else {
-        attacker.attackBoxXMin = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
-        attacker.attackBoxXMax = attacker.getAttackBoxPosition().x
-    }
-
-    xMin = victim.position.x
-    xMax = victim.position.y + victim.width
-
-    if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
-        if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
-            return true
-        }
-
-        if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
-            return true
-        }
-
-        if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
-            return true
-        }
     }
 }

@@ -57,18 +57,19 @@ class SpriteAnimated {
         if (this.framesElapsed % this.framesHold === 0) {
             this.currentFrame++
             this.animateIsEnd = false;
-            this.dx = this.currentFrame * this.img.width / this.imgFrames
-            console.log(this.dx, this.img.width)
-            if (this.currentFrame == this.imgFrames - 1) {
+
+            if (this.currentFrame == this.imgFrames) {
                 this.animateIsEnd = true;
                 this.currentFrame = 0
             }
+
+            this.dx = this.currentFrame * this.img.width / this.imgFrames
         }
     }
 
     update() {
-        this.draw()
         this.animate()
+        this.draw()
     }
 }
 
@@ -127,10 +128,10 @@ class Fighter extends SpriteAnimated {
         }
 
         if (this.condition == 'death') {
-            if (this.animateIsEnd == true) {
-                this.animateIsEnd = true
-                this.currentFrame = this.imgFrames -1
-            }
+            console.log(this.currentFrame, this.imgFrames);
+            // if (this.animateIsEnd == true) {
+            //     this.currentFrame = this.imgFrames - 1
+            // }
             return
         }
 

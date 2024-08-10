@@ -70,7 +70,7 @@ class SpriteAnimated {
 }
 
 class Fighter extends SpriteAnimated {
-    constructor({ position, velocity, sprites, offset, takingDamageFrame}) {
+    constructor({ position, velocity, sprites, offset, takingDamageFrameOffSet}) {
         super({
             position,
             imgSrc: './img/samuraiMack/Idle.png',
@@ -94,7 +94,7 @@ class Fighter extends SpriteAnimated {
             }
         }
         this.isAttack = false
-        this.takingDamageFrame = takingDamageFrame
+        this.takingDamageFrameOffSet = takingDamageFrameOffSet
         this.health = 100
         this.sprites = sprites
         this.condition = 'idle'
@@ -184,7 +184,7 @@ class Fighter extends SpriteAnimated {
         this.draw()
         this.animate()
 
-        // console.log(this.dx, this.takingDamageFrame)
+        // console.log(this.dx, this.takingDamageFrameOffSet)
         // console.log()
 
         if (this.velocity.x != 0) {
@@ -209,7 +209,6 @@ class Fighter extends SpriteAnimated {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
-        console.log(this.position.y + this.height)
         if (this.position.y + this.height >= canvas.height - 96) {
             this.velocity.y = 0
             this.position.y = canvas.height - 96 - this.height
@@ -224,13 +223,13 @@ class Fighter extends SpriteAnimated {
     }
 
     tryAttack(enemy) {
-        if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.dx >= this.takingDamageFrame) {
+        if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.dx >= this.takingDamageFrameOffSet) {
             console.log("attack success")
             enemy.health -= 10
             enemy.conditionSet('takeHit')
         }
 
-        if (this.isAttack && this.dx >= this.takingDamageFrame) {
+        if (this.isAttack && this.dx >= this.takingDamageFrameOffSet) {
             this.isAttack = false
         }
     }

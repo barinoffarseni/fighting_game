@@ -260,7 +260,7 @@ class Fighter extends SpriteAnimated {
     }
 }
 
-class Asset {
+class Timer {
     constructor({ position, color, offset }) {
         this.position = position
         this.color = color
@@ -268,6 +268,7 @@ class Asset {
         this.height = 100
         this.offset = offset
     }
+
     draw() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)

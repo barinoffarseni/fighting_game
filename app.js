@@ -140,7 +140,7 @@ const shop = new SpriteAnimated({
     }
 })
 
-const timer = new Asset({
+const timer = new Timer({
     position: {
         x: canvas.width / 2,
         y: 10

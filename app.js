@@ -140,6 +140,14 @@ const shop = new SpriteAnimated({
     }
 })
 
+const timer = new Asset({
+    position: {
+        x: canvas.width / 2,
+        y: 0
+    },
+    color: 'grey'
+})
+
 function animate() {
     window.requestAnimationFrame(animate)
 
@@ -148,6 +156,8 @@ function animate() {
     shop.update()
     player.update()
     enemy.update()
+
+    timer.draw()
 
     player.tryAttack(enemy)
     enemy.tryAttack(player)

@@ -260,3 +260,15 @@ class Fighter extends SpriteAnimated {
     }
 }
 
+class Asset {
+    constructor({ position, color }) {
+        this.position = position
+        this.color = color
+        this.width = 50
+        this.height = 150
+    }
+    draw() {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+    }
+}

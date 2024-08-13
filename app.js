@@ -143,9 +143,13 @@ const shop = new SpriteAnimated({
 const timer = new Asset({
     position: {
         x: canvas.width / 2,
-        y: 0
+        y: 10
     },
-    color: 'grey'
+    color: 'grey',
+    offset: {
+        x: -75,
+        y: 0
+    }
 })
 
 function animate() {

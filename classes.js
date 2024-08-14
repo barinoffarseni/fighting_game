@@ -282,7 +282,6 @@ class Indicators {
         this.width =  417
         this.height = 70
         this.offset = offset
-        // this.health = health
     }
 
     draw(health) {

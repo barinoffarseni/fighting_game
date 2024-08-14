@@ -276,19 +276,21 @@ class Timer {
 }
 
 class Indicators {
-    constructor({ position, color, offset }) {
+    constructor({ position, color, offset}) {
         this.position = position
         this.color = color
         this.width =  417
         this.height = 70
         this.offset = offset
+        // this.health = health
     }
 
-    draw() {
-        this.end = 10
-        this.cell = this.width / this.end
-        this.cells = this.end * this.cell
-        console.log(this.cells)
+    draw(health) {
+        if (health == 100) {
+            this.cell = this.width / health
+        }
+        console.log(health)
+        this.cells = health * this.cell
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.cells, this.height)
     }

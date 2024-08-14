@@ -174,7 +174,7 @@ function animate() {
     enemy.update()
 
     timer.draw()
-    healthIndicators.draw()
+    healthIndicators.draw(player.health)
 
     player.tryAttack(enemy)
     enemy.tryAttack(player)

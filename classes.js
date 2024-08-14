@@ -274,3 +274,22 @@ class Timer {
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
     }
 }
+
+class Indicators {
+    constructor({ position, color, offset }) {
+        this.position = position
+        this.color = color
+        this.width =  417
+        this.height = 70
+        this.offset = offset
+    }
+
+    draw() {
+        this.end = 10
+        this.cell = this.width / this.end
+        this.cells = this.end * this.cell
+        console.log(this.cells)
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.cells, this.height)
+    }
+}

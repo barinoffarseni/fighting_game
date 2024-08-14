@@ -140,6 +140,18 @@ const shop = new SpriteAnimated({
     }
 })
 
+const healthIndicators = new Indicators({
+    position: {
+        x: 20,
+        y: 10
+    },
+    color: 'green',
+    offset: {
+        x: 0,
+        y: 0
+    }
+})
+
 const timer = new Timer({
     position: {
         x: canvas.width / 2,
@@ -162,6 +174,7 @@ function animate() {
     enemy.update()
 
     timer.draw()
+    healthIndicators.draw()
 
     player.tryAttack(enemy)
     enemy.tryAttack(player)

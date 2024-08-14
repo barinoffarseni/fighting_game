@@ -261,17 +261,26 @@ class Fighter extends SpriteAnimated {
 }
 
 class Timer {
-    constructor({ position, color, offset }) {
+    constructor({ position, color, offset, positionOfText}) {
         this.position = position
         this.color = color
         this.width = 100
         this.height = 100
         this.offset = offset
+        this.text = {
+            position: positionOfText,
+            offset: {
+                x: -23,
+                y: 0
+            }
+        }
     }
 
     draw() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        ctx.font = 'bold 48px serif'
+        ctx.strokeText('11', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 }
 
@@ -289,7 +298,6 @@ class Indicators {
         if (health == 100) {
             this.cell = this.width / health * this.side
         }
-        console.log(health)
         this.cells = health * this.cell
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.cells, this.height)

@@ -175,6 +175,10 @@ const timer = new Timer({
     offset: {
         x: -50,
         y: 0
+    },
+    positionOfText: {
+        x: canvas.width / 2,
+        y: 75
     }
 })
 

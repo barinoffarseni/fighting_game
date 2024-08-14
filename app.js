@@ -179,7 +179,8 @@ const timer = new Timer({
     positionOfText: {
         x: canvas.width / 2,
         y: 75
-    }
+    },
+    timeRemaining: 60
 })
 
 function animate() {

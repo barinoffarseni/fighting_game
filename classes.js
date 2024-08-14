@@ -261,12 +261,13 @@ class Fighter extends SpriteAnimated {
 }
 
 class Timer {
-    constructor({ position, color, offset, positionOfText}) {
+    constructor({ position, color, offset, positionOfText, timeRemaining}) {
         this.position = position
         this.color = color
         this.width = 100
         this.height = 100
         this.offset = offset
+        this.styleOfText = 'bold 48px serif'
         this.text = {
             position: positionOfText,
             offset: {
@@ -274,13 +275,28 @@ class Timer {
                 y: 0
             }
         }
+        this.timeRemaining = timeRemaining + 1
     }
 
     draw() {
+        this.countdownTimer()
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
-        ctx.font = 'bold 48px serif'
-        ctx.strokeText('11', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+        ctx.font = this.styleOfText
+        ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+    }
+
+    countdownTimer() {
+        const intervalId = setInterval(() => {
+            if (this.timeRemaining <= 0) {
+                clearInterval(intervalId)
+
+            } else {
+                this.timeRemaining--
+                console.log(this.timeRemaining)
+                return this.timeRemaining
+            }
+        }, 1000);
     }
 }
 

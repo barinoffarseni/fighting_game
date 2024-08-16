@@ -141,11 +141,6 @@ const shop = new SpriteAnimated({
 })
 
 const enemyHealthIndicators = new Indicators({
-    position: {
-        x: canvas.width / 2,
-        y: 10
-    },
-    color: 'green',
     offset: {
         x: 50,
         y: 0
@@ -154,11 +149,6 @@ const enemyHealthIndicators = new Indicators({
 })
 
 const playerHealthIndicators = new Indicators({
-    position: {
-        x: canvas.width / 2,
-        y: 10
-    },
-    color: 'green',
     offset: {
         x: -50,
         y: 0

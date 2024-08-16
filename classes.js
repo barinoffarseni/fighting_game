@@ -301,9 +301,12 @@ class Timer {
 }
 
 class Indicators {
-    constructor({ position, color, offset, direction}) {
-        this.position = position
-        this.color = color
+    constructor({offset, direction}) {
+        this.position = {
+            x: canvas.width / 2,
+            y: 10
+        }
+        this.color = 'green'
         this.width =  417
         this.height = 70
         this.offset = offset

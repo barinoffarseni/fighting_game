@@ -278,10 +278,10 @@ class Timer {
             }
         }
         this.timeRemaining = timeRemaining + 1
+        this.countdownTimer()
     }
 
     draw() {
-        this.countdownTimer()
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
         ctx.font = this.styleOfText
@@ -292,11 +292,9 @@ class Timer {
         const intervalId = setInterval(() => {
             if (this.timeRemaining <= 0) {
                 clearInterval(intervalId)
-
             } else {
                 this.timeRemaining--
-                console.log(this.timeRemaining)
-                return this.timeRemaining
+                this.countdownTimer()
             }
         }, 1000)
     }

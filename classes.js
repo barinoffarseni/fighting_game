@@ -296,7 +296,7 @@ class Timer {
                 console.log(this.timeRemaining)
                 return this.timeRemaining
             }
-        }, 1000);
+        }, 1000)
     }
 }
 

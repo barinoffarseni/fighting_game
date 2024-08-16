@@ -166,22 +166,22 @@ const playerHealthIndicators = new Indicators({
     side: -1
 })
 
-const timer = new Timer({
-    position: {
-        x: canvas.width / 2,
-        y: 10
-    },
-    color: 'grey',
-    offset: {
-        x: -50,
-        y: 0
-    },
-    positionOfText: {
-        x: canvas.width / 2,
-        y: 75
-    },
-    timeRemaining: 60
-})
+// const timer = new Timer({
+//     position: {
+//         x: canvas.width / 2,
+//         y: 10
+//     },
+//     color: 'grey',
+//     offset: {
+//         x: -50,
+//         y: 0
+//     },
+//     positionOfText: {
+//         x: canvas.width / 2,
+//         y: 75
+//     },
+//     timeRemaining: 60
+// })
 
 function animate() {
     window.requestAnimationFrame(animate)
@@ -194,7 +194,7 @@ function animate() {
 
     enemyHealthIndicators.draw(enemy.health)
     playerHealthIndicators.draw(player.health)
-    timer.draw()
+    // timer.draw()
 
     player.tryAttack(enemy)
     enemy.tryAttack(player)

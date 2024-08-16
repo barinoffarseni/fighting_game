@@ -277,8 +277,8 @@ class Timer {
                 y: 0
             }
         }
-        this.timeRemaining = timeRemaining + 1
-        this.countdownTimer()
+        this.timeRemaining = timeRemaining
+        this.startTimer()
     }
 
     draw() {
@@ -288,13 +288,12 @@ class Timer {
         ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 
-    countdownTimer() {
+    startTimer() {
         const intervalId = setInterval(() => {
             if (this.timeRemaining <= 0) {
                 clearInterval(intervalId)
             } else {
                 this.timeRemaining--
-                this.countdownTimer()
             }
         }, 1000)
     }

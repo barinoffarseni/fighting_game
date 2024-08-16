@@ -140,6 +140,39 @@ const shop = new SpriteAnimated({
     }
 })
 
+const enemyHealthIndicators = new Indicators({
+    offset: {
+        x: 50,
+        y: 0
+    },
+    direction: 1
+})
+
+const playerHealthIndicators = new Indicators({
+    offset: {
+        x: -50,
+        y: 0
+    },
+    direction: -1
+})
+
+const timer = new Timer({
+    position: {
+        x: canvas.width / 2,
+        y: 10
+    },
+    color: 'grey',
+    offset: {
+        x: -50,
+        y: 0
+    },
+    positionOfText: {
+        x: canvas.width / 2,
+        y: 75
+    },
+    timeRemaining: 60
+})
+
 function animate() {
     window.requestAnimationFrame(animate)
 
@@ -148,6 +181,10 @@ function animate() {
     shop.update()
     player.update()
     enemy.update()
+
+    enemyHealthIndicators.draw(enemy.health * 100 / 10000)
+    playerHealthIndicators.draw(player.health * 100 / 10000)
+    timer.draw()
 
     player.tryAttack(enemy)
     enemy.tryAttack(player)

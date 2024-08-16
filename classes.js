@@ -247,7 +247,9 @@ class Fighter extends SpriteAnimated {
         if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.dx >= this.takingDamageFrameOffSet) {
             // console.log("attack success")
             enemy.health -= 10
+
             if (enemy.health <= 0) {
+                enemy.health = 0
                 enemy.conditionSet('death')
             } else {
                 enemy.conditionSet('takeHit')
@@ -260,3 +262,58 @@ class Fighter extends SpriteAnimated {
     }
 }
 
+class Timer {
+    constructor({ position, color, offset, positionOfText, timeRemaining}) {
+        this.position = position
+        this.color = color
+        this.width = 100
+        this.height = 100
+        this.offset = offset
+        this.styleOfText = 'bold 48px serif'
+        this.text = {
+            position: positionOfText,
+            offset: {
+                x: -23,
+                y: 0
+            }
+        }
+        this.timeRemaining = timeRemaining
+        this.startTimer()
+    }
+
+    draw() {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        ctx.font = this.styleOfText
+        ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+    }
+
+    startTimer() {
+        const intervalId = setInterval(() => {
+            if (this.timeRemaining <= 0) {
+                clearInterval(intervalId)
+            } else {
+                this.timeRemaining--
+            }
+        }, 1000)
+    }
+}
+
+class Indicators {
+    constructor({offset, direction}) {
+        this.position = {
+            x: canvas.width / 2,
+            y: 10
+        }
+        this.color = 'green'
+        this.maxWidth =  417
+        this.height = 70
+        this.offset = offset
+        this.direction = direction
+    }
+
+    draw(healthPercent) {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.direction * healthPercent, this.height)
+    }
+}

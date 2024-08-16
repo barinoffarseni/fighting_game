@@ -182,8 +182,8 @@ function animate() {
     player.update()
     enemy.update()
 
-    enemyHealthIndicators.draw(enemy.health)
-    playerHealthIndicators.draw(player.health)
+    enemyHealthIndicators.draw(enemy.health * 100 / 10000)
+    playerHealthIndicators.draw(player.health * 100 / 10000)
     // timer.draw()
 
     player.tryAttack(enemy)

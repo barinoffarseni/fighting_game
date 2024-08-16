@@ -307,18 +307,14 @@ class Indicators {
             y: 10
         }
         this.color = 'green'
-        this.width =  417
+        this.maxWidth =  417
         this.height = 70
         this.offset = offset
         this.direction = direction
     }
 
-    draw(health) {
-        if (health == 100) {
-            this.cell = this.width / health * this.direction
-        }
-        this.cells = health * this.cell
+    draw(healthPercent) {
         ctx.fillStyle = this.color
-        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.cells, this.height)
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.direction * healthPercent, this.height)
     }
 }

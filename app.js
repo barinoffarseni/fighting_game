@@ -150,7 +150,7 @@ const enemyHealthIndicators = new Indicators({
         x: 50,
         y: 0
     },
-    side: 1
+    direction: 1
 })
 
 const playerHealthIndicators = new Indicators({
@@ -163,7 +163,7 @@ const playerHealthIndicators = new Indicators({
         x: -50,
         y: 0
     },
-    side: -1
+    direction: -1
 })
 
 // const timer = new Timer({

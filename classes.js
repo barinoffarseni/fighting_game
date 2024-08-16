@@ -301,18 +301,18 @@ class Timer {
 }
 
 class Indicators {
-    constructor({ position, color, offset, side}) {
+    constructor({ position, color, offset, direction}) {
         this.position = position
         this.color = color
         this.width =  417
         this.height = 70
         this.offset = offset
-        this.side = side
+        this.direction = direction
     }
 
     draw(health) {
         if (health == 100) {
-            this.cell = this.width / health * this.side
+            this.cell = this.width / health * this.direction
         }
         this.cells = health * this.cell
         ctx.fillStyle = this.color

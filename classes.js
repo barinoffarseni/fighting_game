@@ -247,7 +247,9 @@ class Fighter extends SpriteAnimated {
         if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.dx >= this.takingDamageFrameOffSet) {
             // console.log("attack success")
             enemy.health -= 10
+
             if (enemy.health <= 0) {
+                enemy.health = 0
                 enemy.conditionSet('death')
             } else {
                 enemy.conditionSet('takeHit')

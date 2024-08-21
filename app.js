@@ -162,14 +162,6 @@ const timer = new Timer({
         y: 10
     },
     color: 'grey',
-    offset: {
-        x: -50,
-        y: 0
-    },
-    positionOfText: {
-        x: canvas.width / 2,
-        y: 75
-    },
     timeRemaining: 60
 })
 

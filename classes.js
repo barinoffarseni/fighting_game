@@ -278,21 +278,33 @@ class Indicator {
 }
 
 class Timer extends Indicator {
-    constructor({ position, color, offset, positionOfText, timeRemaining}) {
-        this.position = position
-        this.color = color
-        this.width = 100
-        this.height = 100
-        this.offset = offset
+    constructor() {
+        super({
+            position: {
+                x: canvas.width / 2,
+                y: 10
+            },
+            color: 'grey',
+            width: 100,
+            height: 100,
+            offset: {
+                x: -50,
+                y: 0
+            },
+            
+        })
         this.styleOfText = 'bold 48px serif'
         this.text = {
-            position: positionOfText,
+            position: {
+                x: canvas.width / 2,
+                y: 75
+            },
             offset: {
                 x: -23,
                 y: 0
             }
         }
-        this.timeRemaining = timeRemaining
+        this.timeRemaining = 60
         this.startTimer()
     }
 

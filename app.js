@@ -140,7 +140,7 @@ const shop = new SpriteAnimated({
     }
 })
 
-const enemyHealthIndicators = new Indicators({
+const enemyHealthIndicators = new HealthBar({
     offset: {
         x: 50,
         y: 0
@@ -148,7 +148,7 @@ const enemyHealthIndicators = new Indicators({
     direction: 1
 })
 
-const playerHealthIndicators = new Indicators({
+const playerHealthIndicators = new HealthBar({
     offset: {
         x: -50,
         y: 0

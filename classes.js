@@ -262,7 +262,22 @@ class Fighter extends SpriteAnimated {
     }
 }
 
-class Timer {
+class Indicator {
+    constructor({ position, color, width, height, offset }) {
+        this.position = position
+        this.color = color
+        this.width = width
+        this.height = height
+        this.offset = offset
+    }
+
+    draw() {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+    }
+}
+
+class Timer extends Indicator {
     constructor({ position, color, offset, positionOfText, timeRemaining}) {
         this.position = position
         this.color = color
@@ -299,16 +314,19 @@ class Timer {
     }
 }
 
-class Indicators {
-    constructor({offset, direction}) {
-        this.position = {
-            x: canvas.width / 2,
-            y: 10
-        }
-        this.color = 'green'
+class HealthBar extends Indicator {
+    constructor({ offset, direction }) {
+        super({
+            position: {
+                x: canvas.width / 2,
+                y: 10
+            },
+            color: 'green',
+            width: 417,
+            height: 70,
+            offset: offset
+        })
         this.maxWidth =  417
-        this.height = 70
-        this.offset = offset
         this.direction = direction
     }
 

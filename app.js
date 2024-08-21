@@ -156,14 +156,7 @@ const playerHealthIndicators = new HealthBar({
     direction: -1
 })
 
-const timer = new Timer({
-    position: {
-        x: canvas.width / 2,
-        y: 10
-    },
-    color: 'grey',
-    timeRemaining: 60
-})
+const timer = new Timer()
 
 function animate() {
     window.requestAnimationFrame(animate)

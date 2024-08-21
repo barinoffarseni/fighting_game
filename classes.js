@@ -291,9 +291,7 @@ class Timer extends Indicator {
                 x: -50,
                 y: 0
             },
-            
         })
-        this.styleOfText = 'bold 48px serif'
         this.text = {
             position: {
                 x: canvas.width / 2,
@@ -302,7 +300,8 @@ class Timer extends Indicator {
             offset: {
                 x: -23,
                 y: 0
-            }
+            },
+            style: 'bold 48px serif'
         }
         this.timeRemaining = 60
         this.startTimer()
@@ -311,7 +310,7 @@ class Timer extends Indicator {
     draw() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
-        ctx.font = this.styleOfText
+        ctx.font = this.text.style
         ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 

@@ -66,9 +66,6 @@ class SpriteAnimated {
                 this.currentFrame = 0
             }
 
-            // if (this.condition == 'attack1') {
-            //     console.log(this.currentFrame)
-            // }
             this.dx = this.currentFrame * this.img.width / this.imgFrames
         }
     }
@@ -80,7 +77,7 @@ class SpriteAnimated {
 }
 
 class Fighter extends SpriteAnimated {
-    constructor({ position, velocity, sprites, offset, takingDamageFrameOffSet}) {
+    constructor({ position, velocity, sprites, offset, attackFrame}) {
         super({
             position,
             imgSrc: './img/samuraiMack/Idle.png',
@@ -104,7 +101,7 @@ class Fighter extends SpriteAnimated {
             }
         }
         this.isAttack = false
-        this.takingDamageFrameOffSet = takingDamageFrameOffSet
+        this.attackFrame = attackFrame
         this.health = 100
         this.sprites = sprites
         this.condition = 'idle'
@@ -244,8 +241,7 @@ class Fighter extends SpriteAnimated {
     }
 
     tryAttack(enemy) {
-        if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.dx >= this.takingDamageFrameOffSet) {
-            // console.log("attack success")
+        if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.attackFrame == this.currentFrame) {
             enemy.health -= 10
 
             if (enemy.health <= 0) {
@@ -253,12 +249,14 @@ class Fighter extends SpriteAnimated {
                 enemy.conditionSet('death')
             } else {
                 enemy.conditionSet('takeHit')
+                console.log(enemy.condition)
             }
-        }
-
-        if (this.isAttack && this.dx >= this.takingDamageFrameOffSet) {
             this.isAttack = false
         }
+
+        // if (this.isAttack && this.dx >= this.takingDamageFrameOffSet) {
+        //     this.isAttack = false
+        // }
     }
 }
 

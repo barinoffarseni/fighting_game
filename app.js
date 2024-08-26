@@ -64,7 +64,7 @@ const player = new Fighter({
         x: -215,
         y: -155
     },
-    takingDamageFrameOffSet: 1000
+    attackFrame: 4
 })
 
 const enemy = new Fighter({
@@ -114,7 +114,7 @@ const enemy = new Fighter({
         x: -215,
         y: -170
     },
-    takingDamageFrameOffSet: 400
+    attackFrame: 1
 })
 
 const background = new SpriteStatic({

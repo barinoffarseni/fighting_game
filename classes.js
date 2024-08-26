@@ -236,8 +236,10 @@ class Fighter extends SpriteAnimated {
     }
 
     attack() {
-        this.conditionSet('attack1')
-        this.isAttack = true
+        if (this.condition != 'attack1') {
+            this.conditionSet('attack1')
+            this.isAttack = true
+        }
     }
 
     tryAttack(enemy) {

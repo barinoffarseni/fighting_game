@@ -33,7 +33,7 @@ class SpriteAnimated {
         this.scale = scale
         this.imgFrames = imgFrames
         this.offset = offset
-        this.animateIsEnd = false
+        this.canChangeAnimation = false
         this.currentFrame = 0
         this.stopAnimate = false
     }
@@ -59,10 +59,10 @@ class SpriteAnimated {
             if (!this.stopAnimate) {
                 this.currentFrame++
             }
-            this.animateIsEnd = false;
 
+            this.canChangeAnimation = false;
             if (this.currentFrame == this.imgFrames) {
-                this.animateIsEnd = true;
+                this.canChangeAnimation = true;
                 this.currentFrame = 0
             }
 
@@ -126,19 +126,19 @@ class Fighter extends SpriteAnimated {
     }
 
     conditionSet(newCondition) {
-        if (this.condition == 'attack1' && this.animateIsEnd == false) {
+        if (this.condition == 'attack1' && this.canChangeAnimation == false) {
             return
         }
 
         if (this.condition == 'death') {
-            if (this.animateIsEnd == true) {
+            if (this.currentFrame == this.imgFrames - 1) {
                 this.currentFrame = this.imgFrames - 1
                 this.stopAnimate = true
             }
             return
         }
 
-        if (this.condition == 'takeHit' && this.animateIsEnd == false) {
+        if (this.condition == 'takeHit' && this.canChangeAnimation == false) {
             return
         }
 
@@ -244,7 +244,9 @@ class Fighter extends SpriteAnimated {
 
     tryAttack(enemy) {
         if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.attackFrame == this.currentFrame) {
-            enemy.health -= 10
+            if (enemy.health > 0) {
+                enemy.health -= 10
+            }
 
             if (enemy.health <= 0) {
                 enemy.health = 0
@@ -255,10 +257,6 @@ class Fighter extends SpriteAnimated {
             }
             this.isAttack = false
         }
-
-        // if (this.isAttack && this.dx >= this.takingDamageFrameOffSet) {
-        //     this.isAttack = false
-        // }
     }
 }
 

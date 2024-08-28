@@ -172,6 +172,7 @@ class Fighter extends SpriteAnimated {
                     this.img.src = this.sprites.attack1.src
                     this.imgFrames = this.sprites.attack1.frames
                     this.currentFrame = -1
+                    this.canChangeAnimation = false
                     break;
                 case 'attack2':
                     this.img.src = this.sprites.attack2.src
@@ -182,6 +183,7 @@ class Fighter extends SpriteAnimated {
                     this.img.src = this.sprites.takeHit.src
                     this.imgFrames = this.sprites.takeHit.frames
                     this.currentFrame = -1
+                    this.canChangeAnimation = false
                     break;
                 case 'death':
                     this.img.src = this.sprites.death.src
@@ -256,8 +258,8 @@ class Fighter extends SpriteAnimated {
                 enemy.conditionSet('death')
             } else {
                 enemy.conditionSet('takeHit')
-                console.log(enemy.condition)
             }
+
             this.isAttack = false
         }
     }

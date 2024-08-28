@@ -67,6 +67,9 @@ class SpriteAnimated {
             }
 
             this.dx = this.currentFrame * this.img.width / this.imgFrames
+            if (this.condition == 'takeHit') {
+                console.log(this.currentFrame)
+            }
         }
     }
 
@@ -148,42 +151,42 @@ class Fighter extends SpriteAnimated {
                 case 'idle':
                     this.img.src = this.sprites.idle.src
                     this.imgFrames = this.sprites.idle.frames
-                    this.currentFrame = 0
+                    this.currentFrame = -1
                     break;
                 case 'run':
                     this.img.src = this.sprites.run.src
                     this.imgFrames = this.sprites.run.frames
-                    this.currentFrame = 0
+                    this.currentFrame = -1
                     break;
                 case 'jump':
                     this.img.src = this.sprites.jump.src
                     this.imgFrames = this.sprites.jump.frames
-                    this.currentFrame = 0
+                    this.currentFrame = -1
                     break;
                 case 'fall':
                     this.img.src = this.sprites.fall.src
                     this.imgFrames = this.sprites.fall.frames
-                    this.currentFrame = 0
+                    this.currentFrame = -1
                     break;
                 case 'attack1':
                     this.img.src = this.sprites.attack1.src
                     this.imgFrames = this.sprites.attack1.frames
-                    this.currentFrame = 0
+                    this.currentFrame = -1
                     break;
                 case 'attack2':
                     this.img.src = this.sprites.attack2.src
                     this.imgFrames = this.sprites.attack2.frames
-                    this.currentFrame = 0
+                    this.currentFrame = -1
                     break;
                 case 'takeHit':
                     this.img.src = this.sprites.takeHit.src
                     this.imgFrames = this.sprites.takeHit.frames
-                    this.currentFrame = 0
+                    this.currentFrame = -1
                     break;
                 case 'death':
                     this.img.src = this.sprites.death.src
                     this.imgFrames = this.sprites.death.frames
-                    this.currentFrame = 0
+                    this.currentFrame = -1
                     break;
 
                 default:

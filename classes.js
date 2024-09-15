@@ -68,7 +68,6 @@ class SpriteAnimated extends SpriteStatic {
             }
         }
 
-
         this.dx = this.currentFrame * this.img.width / this.imgFrames
     }
 }
@@ -129,9 +128,6 @@ class Fighter extends SpriteAnimated {
         super.render()
 
         if (debug) {
-            ctx.fillRect(this.attackBoxXMin, this.getAttackBoxPosition().y, this.atackBox.width, this.atackBox.height)
-            ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-    
             ctx.fillStyle = 'red'
             ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
 
@@ -224,23 +220,6 @@ class Fighter extends SpriteAnimated {
 
         super.update()
     }
-
-    // tryAttack(enemy) {
-    //     if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.attackFrame == this.currentFrame) {
-    //         if (enemy.health > 0) {
-    //             enemy.health -= 10
-    //         }
-
-    //         if (enemy.health <= 0) {
-    //             enemy.health = 0
-    //             enemy.conditionSet('death')
-    //         } else {
-    //             enemy.conditionSet('takeHit')
-    //         }
-
-    //         this.isAttack = false
-    //     }
-    // }
 }
 
 class Indicator {

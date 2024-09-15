@@ -115,85 +115,21 @@ class Fighter extends SpriteAnimated {
         }
     }
 
-    // conditionSet(newCondition) {
-    //     if (this.condition == 'attack1' && this.canChangeAnimation == false) {
-    //         return
-    //     }
+    render() {
+        super.render()
 
-    //     if (this.condition == 'death') {
-    //         if (this.currentFrame == this.imgFrames - 1) {
-    //             this.currentFrame = this.imgFrames - 1
-    //             this.stopAnimate = true
-    //         }
-    //         return
-    //     }
-
-    //     if (this.condition == 'takeHit' && this.canChangeAnimation == false) {
-    //         return
-    //     }
-
-    //     if (this.condition != newCondition) {
-    //         this.condition = newCondition
-    //         switch (newCondition) {
-    //             case 'idle':
-    //                 this.img.src = this.sprites.idle.src
-    //                 this.imgFrames = this.sprites.idle.frames
-    //                 this.currentFrame = -1
-    //                 break;
-    //             case 'run':
-    //                 this.img.src = this.sprites.run.src
-    //                 this.imgFrames = this.sprites.run.frames
-    //                 this.currentFrame = -1
-    //                 break;
-    //             case 'jump':
-    //                 this.img.src = this.sprites.jump.src
-    //                 this.imgFrames = this.sprites.jump.frames
-    //                 this.currentFrame = -1
-    //                 break;
-    //             case 'fall':
-    //                 this.img.src = this.sprites.fall.src
-    //                 this.imgFrames = this.sprites.fall.frames
-    //                 this.currentFrame = -1
-    //                 break;
-    //             case 'attack1':
-    //                 this.img.src = this.sprites.attack1.src
-    //                 this.imgFrames = this.sprites.attack1.frames
-    //                 this.currentFrame = -1
-    //                 this.canChangeAnimation = false
-    //                 break;
-    //             case 'attack2':
-    //                 this.img.src = this.sprites.attack2.src
-    //                 this.imgFrames = this.sprites.attack2.frames
-    //                 this.currentFrame = -1
-    //                 break;
-    //             case 'takeHit':
-    //                 this.img.src = this.sprites.takeHit.src
-    //                 this.imgFrames = this.sprites.takeHit.frames
-    //                 this.currentFrame = -1
-    //                 this.canChangeAnimation = false
-    //                 break;
-    //             case 'death':
-    //                 this.img.src = this.sprites.death.src
-    //                 this.imgFrames = this.sprites.death.frames
-    //                 this.currentFrame = -1
-    //                 break;
-
-    //             default:
-    //                 break;
-    //         }
-    //     }
-    // }
-
-    // draw() {
-    //     ctx.fillStyle = 'red'
-    //     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-    //     if (this.isAttack) {
-    //         ctx.fillStyle = 'yellow'
-    //         ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
-    //     }
-    // }
-
-    // render() {}
+        if (debug) {
+            ctx.fillRect(this.attackBoxXMin, this.getAttackBoxPosition().y, this.atackBox.width, this.atackBox.height)
+            ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+    
+            ctx.fillStyle = 'red'
+            ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+            if (this.state == 'attack1') {
+                ctx.fillStyle = 'yellow'
+                ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
+            }
+        }
+    }
 
     setState() {
         if (this.state == 'attack1' && this.animateIsComplete) {
@@ -260,9 +196,6 @@ class Fighter extends SpriteAnimated {
     }
 
     update() {
-        // this.draw()
-        // this.animate()
-
         this.newState = 'idle';
 
         if (this.velocity.x != 0) {
@@ -285,9 +218,6 @@ class Fighter extends SpriteAnimated {
 
         setAttackBoxMinMaxPosition(this)
 
-        // ctx.fillRect(this.attackBoxXMin, this.getAttackBoxPosition().y, this.atackBox.width, this.atackBox.height)
-        // ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
@@ -297,8 +227,6 @@ class Fighter extends SpriteAnimated {
         } else {
             this.velocity.y += gravity
         }
-
-        console.log(this.state);
 
         super.update()
     }

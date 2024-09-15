@@ -223,13 +223,13 @@ function update() {
     player.atackBox.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.direction = getAttackBoxDirection(enemy.position.x, player.position.x)
 
-    // if (checkAttackIsSuccess(player, enemy)) {
-    //     enemy.health -= 10
-    // }
+    if (checkAttackIsSuccess(player, enemy)) {
+        enemy.health -= 10
+    }
     
-    // if (checkAttackIsSuccess(enemy, player)) {
-    //     player.health -= 10
-    // }
+    if (checkAttackIsSuccess(enemy, player)) {
+        player.health -= 10
+    }
 
     gameObjects.forEach(gameObject => {
         gameObject.update()
@@ -319,22 +319,28 @@ function checkAttackIsSuccess(attacker, victim) {
         return false
     }
 
-    attacker.setAttackBoxMinMaxPosition()
+    if (attacker.currentFrame != attacker.attackFrame) {
+        return false
+    }
 
-    xMin = victim.position.x
-    xMax = victim.position.x + victim.width
-
-    if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
-        if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
-            return true
-        }
-
-        if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
-            return true
-        }
-
-        if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
-            return true
+    if (attacker.framesElapsed % attacker.framesHold === 0) {
+        attacker.setAttackBoxMinMaxPosition()
+    
+        xMin = victim.position.x
+        xMax = victim.position.x + victim.width
+    
+        if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
+            if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
+                return true
+            }
+    
+            if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
+                return true
+            }
+    
+            if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
+                return true
+            }
         }
     }
 }

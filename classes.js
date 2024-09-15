@@ -48,8 +48,10 @@ class SpriteAnimated extends SpriteStatic {
     }
 
     update() {
-        if (!this.stop && !this.animateIsComplete) {
-        }
+        // if (this.stop && this.animateIsComplete) {
+        //     return;
+        // }
+
         this.framesElapsed++
         this.animateIsComplete = false
 
@@ -171,32 +173,38 @@ class Fighter extends SpriteAnimated {
     }
 
     update() {
-        this.newState = 'idle';
-
-        if (this.velocity.x != 0) {
-            this.newState = 'run';
+        if (this.state != 'death') {
+            this.newState = 'idle';
+    
+            if (this.velocity.x != 0) {
+                this.newState = 'run';
+            }
+    
+            if (this.velocity.y < 0) {
+                this.newState = 'jump';
+            }
+    
+            if (this.velocity.y > 0) {
+                this.newState = 'fall';
+            }
+    
+            if (this.attack) {
+                this.newState = 'attack1';
+            }
+    
+            if (this.health <= 0) {
+                this.newState = 'death';
+            }
+    
+            this.setState()
         }
 
-        if (this.velocity.y < 0) {
-            this.newState = 'jump';
-        }
-
-        if (this.velocity.y > 0) {
-            this.newState = 'fall';
-        }
-
-        if (this.attack) {
-            this.newState = 'attack1';
-        }
-
-        if (this.health <= 0) {
-            this.newState = 'death';
-        }
-
-        this.setState()
 
         if (this.state == 'death') {
             this.velocity.x = 0
+            if (this.velocity.y < 0) {
+                this.velocity.y = 0
+            }
         }
 
         this.position.x += this.velocity.x

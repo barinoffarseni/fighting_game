@@ -1,31 +1,24 @@
 class SpriteStatic {
     constructor({ position, imgSrc }) {
         this.position = position
-        this.width = 50
-        this.height = 150
         this.img = new Image()
         this.img.src = imgSrc
     }
 
-    draw() {
+    render() {
         ctx.drawImage(this.img,
             this.position.x,
             this.position.y
         )
     }
 
-    update() {
-        this.draw()
-    }
+    update() {}
 }
 
-class SpriteAnimated {
+class SpriteAnimated extends SpriteStatic {
     constructor({ position, imgSrc, scale , framesHold, imgFrames, offset}) {
-        this.position = position
-        this.width = 50
-        this.height = 150
-        this.img = new Image()
-        this.img.src = imgSrc
+        super({ position, imgSrc });
+
         this.dx = 0
         this.dy = 0
         this.framesElapsed = 0
@@ -38,7 +31,7 @@ class SpriteAnimated {
         this.stopAnimate = false
     }
 
-    draw() {
+    render() {
         ctx.drawImage(
             this.img,
             this.dx,
@@ -52,7 +45,7 @@ class SpriteAnimated {
         )
     }
 
-    animate() {
+    update() {
         this.framesElapsed++
 
         if (this.framesElapsed % this.framesHold === 0) {
@@ -71,11 +64,6 @@ class SpriteAnimated {
                 console.log(this.currentFrame)
             }
         }
-    }
-
-    update() {
-        this.animate()
-        this.draw()
     }
 }
 

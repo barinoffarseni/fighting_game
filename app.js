@@ -97,55 +97,66 @@ const player = new Fighter({
 
 gameObjects.push(player)
 
-// const enemy = new Fighter({
-//     position: {
-//         x: canvas.width / 2,
-//         y: 0
-//     },
-//     velocity: {
-//         x: 0,
-//         y: 0
-//     },
-//     sprites: {
-//         idle: {
-//             src: './img/kenji/Idle.png',
-//             frames: 4
-//         },
-//         run: {
-//             src: './img/kenji/Run.png',
-//             frames: 8
-//         },
-//         jump: {
-//             src: './img/kenji/Jump.png',
-//             frames: 2
-//         },
-//         fall: {
-//             src: './img/kenji/Fall.png',
-//             frames: 2
-//         },
-//         attack1: {
-//             src: './img/kenji/Attack1.png',
-//             frames: 4
-//         },
-//         attack2: {
-//             src: './img/kenji/Attack2.png',
-//             frames: 4
-//         },
-//         takeHit: {
-//             src: './img/kenji/Take Hit.png',
-//             frames: 3
-//         },
-//         death: {
-//             src: './img/kenji/Death.png',
-//             frames: 7
-//         }
-//     },
+// const playerHealthIndicators = new HealthBar({
 //     offset: {
-//         x: -215,
-//         y: -170
+//         x: -50,
+//         y: 0
 //     },
-//     attackFrame: 1
+//     direction: -1
 // })
+
+const enemy = new Fighter({
+    position: {
+        x: canvas.width / 2,
+        y: 0
+    },
+    velocity: {
+        x: 0,
+        y: 0
+    },
+    sprites: {
+        idle: {
+            src: './img/kenji/Idle.png',
+            frames: 4
+        },
+        run: {
+            src: './img/kenji/Run.png',
+            frames: 8
+        },
+        jump: {
+            src: './img/kenji/Jump.png',
+            frames: 2
+        },
+        fall: {
+            src: './img/kenji/Fall.png',
+            frames: 2
+        },
+        attack1: {
+            src: './img/kenji/Attack1.png',
+            frames: 4
+        },
+        attack2: {
+            src: './img/kenji/Attack2.png',
+            frames: 4
+        },
+        takeHit: {
+            src: './img/kenji/Take Hit.png',
+            frames: 3
+        },
+        death: {
+            src: './img/kenji/Death.png',
+            frames: 7
+        }
+    },
+    offset: {
+        x: -215,
+        y: -170
+    },
+    attackFrame: 1
+})
+
+gameObjects.push(enemy)
+
 
 // const enemyHealthIndicators = new HealthBar({
 //     offset: {
@@ -155,26 +166,7 @@ gameObjects.push(player)
 //     direction: 1
 // })
 
-// const playerHealthIndicators = new HealthBar({
-//     offset: {
-//         x: -50,
-//         y: 0
-//     },
-//     direction: -1
-// })
 
-function update() {
-    gameObjects.forEach(gameObject => {
-        gameObject.update()
-    })
-}
-
-function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    gameObjects.forEach(gameObject => {
-        gameObject.render(ctx)
-    })
-}
 
 function gameLoop() {
 
@@ -228,8 +220,39 @@ function control() {
     } else {
         player.attack = false
     }
+    
+    enemy.velocity.x = 0
+    if (keys.up) {
+        enemy.velocity.y = -10
+    }
+
+    if (keys.right) {
+        enemy.velocity.x = 1
+    }
+
+    if (keys.left) {
+        enemy.velocity.x = -1
+    }
+
+    if (keys.down) {
+        enemy.attack = true
+    } else {
+        enemy.attack = false
+    }
 }
 
+function update() {
+    gameObjects.forEach(gameObject => {
+        gameObject.update()
+    })
+}
+
+function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    gameObjects.forEach(gameObject => {
+        gameObject.render(ctx)
+    })
+}
 
 window.addEventListener('keyup', keyup)
 function keyup(event) {

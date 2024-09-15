@@ -90,6 +90,7 @@ class Fighter extends SpriteAnimated {
         this.attackFrame = attackFrame
         this.health = 100
         this.sprites = sprites
+        this.attack = false;
         this.state = 'idle'
         this.newState = 'idle'
     }
@@ -199,44 +200,52 @@ class Fighter extends SpriteAnimated {
                 case 'idle':
                     this.img.src = this.sprites.idle.src
                     this.imgFrames = this.sprites.idle.frames
-                    this.currentFrame = -1
+                    this.currentFrame = 0
+                    this.framesElapsed = 0
                     break;
                 case 'run':
                     this.img.src = this.sprites.run.src
                     this.imgFrames = this.sprites.run.frames
-                    this.currentFrame = -1
+                    this.currentFrame = 0
+                    this.framesElapsed = 0
                     break;
                 case 'jump':
                     this.img.src = this.sprites.jump.src
                     this.imgFrames = this.sprites.jump.frames
-                    this.currentFrame = -1
+                    this.currentFrame = 0
+                    this.framesElapsed = 0
                     break;
                 case 'fall':
                     this.img.src = this.sprites.fall.src
                     this.imgFrames = this.sprites.fall.frames
-                    this.currentFrame = -1
+                    this.currentFrame = 0
+                    this.framesElapsed = 0
                     break;
                 case 'attack1':
                     this.img.src = this.sprites.attack1.src
                     this.imgFrames = this.sprites.attack1.frames
-                    this.currentFrame = -1
+                    this.currentFrame = 0
+                    this.framesElapsed = 0
                     this.canChangeAnimation = false
                     break;
                 case 'attack2':
                     this.img.src = this.sprites.attack2.src
                     this.imgFrames = this.sprites.attack2.frames
-                    this.currentFrame = -1
+                    this.currentFrame = 0
+                    this.framesElapsed = 0
                     break;
                 case 'takeHit':
                     this.img.src = this.sprites.takeHit.src
                     this.imgFrames = this.sprites.takeHit.frames
-                    this.currentFrame = -1
+                    this.currentFrame = 0
+                    this.framesElapsed = 0
                     this.canChangeAnimation = false
                     break;
                 case 'death':
                     this.img.src = this.sprites.death.src
                     this.imgFrames = this.sprites.death.frames
-                    this.currentFrame = -1
+                    this.currentFrame = 0
+                    this.framesElapsed = 0
                     break;
 
                 default:
@@ -263,6 +272,10 @@ class Fighter extends SpriteAnimated {
             this.newState = 'fall';
         }
 
+        if (this.attack) {
+            this.newState = 'attack1';
+        }
+
         this.setState()
 
         setAttackBoxMinMaxPosition(this)
@@ -280,32 +293,34 @@ class Fighter extends SpriteAnimated {
             this.velocity.y += gravity
         }
 
+        console.log(this.state);
+
         super.update()
     }
 
-    attack() {
-        if (this.condition != 'attack1') {
-            this.conditionSet('attack1')
-            this.isAttack = true
-        }
-    }
+    // attack() {
+    //     if (this.state != 'attack1') {
+    //         this.setState('attack1')
+    //         this.isAttack = true
+    //     }
+    // }
 
-    tryAttack(enemy) {
-        if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.attackFrame == this.currentFrame) {
-            if (enemy.health > 0) {
-                enemy.health -= 10
-            }
+    // tryAttack(enemy) {
+    //     if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.attackFrame == this.currentFrame) {
+    //         if (enemy.health > 0) {
+    //             enemy.health -= 10
+    //         }
 
-            if (enemy.health <= 0) {
-                enemy.health = 0
-                enemy.conditionSet('death')
-            } else {
-                enemy.conditionSet('takeHit')
-            }
+    //         if (enemy.health <= 0) {
+    //             enemy.health = 0
+    //             enemy.conditionSet('death')
+    //         } else {
+    //             enemy.conditionSet('takeHit')
+    //         }
 
-            this.isAttack = false
-        }
-    }
+    //         this.isAttack = false
+    //     }
+    // }
 }
 
 class Indicator {

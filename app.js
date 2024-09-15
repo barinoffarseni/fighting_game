@@ -223,25 +223,10 @@ function control() {
     }
 
     if (keys.s) {
-        player.attack()
+        player.attack = true
+    } else {
+        player.attack = false
     }
-
-    // enemy.velocity.x = 0
-    // if (keys.up) {
-    //     enemy.velocity.y = -10
-    // }
-
-    // if (keys.right) {
-    //     enemy.velocity.x = 1
-    // }
-
-    // if (keys.left) {
-    //     enemy.velocity.x = -1
-    // }
-
-    // if (keys.down) {
-    //     enemy.attack()
-    // }
 }
 
 

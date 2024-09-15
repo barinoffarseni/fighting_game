@@ -22,10 +22,12 @@ class SpriteAnimated extends SpriteStatic {
         this.dx = 0
         this.dy = 0
         this.framesElapsed = 0
+
         this.framesHold = framesHold
         this.scale = scale
         this.imgFrames = imgFrames
         this.offset = offset
+
         this.canChangeAnimation = false
         this.currentFrame = 0
         this.stopAnimate = false
@@ -49,21 +51,14 @@ class SpriteAnimated extends SpriteStatic {
         this.framesElapsed++
 
         if (this.framesElapsed % this.framesHold === 0) {
-            if (!this.stopAnimate) {
-                this.currentFrame++
-            }
+            this.currentFrame++
 
-            this.canChangeAnimation = false;
             if (this.currentFrame == this.imgFrames) {
-                this.canChangeAnimation = true;
                 this.currentFrame = 0
             }
-
-            this.dx = this.currentFrame * this.img.width / this.imgFrames
-            if (this.condition == 'takeHit') {
-                console.log(this.currentFrame)
-            }
         }
+
+        this.dx = this.currentFrame * this.img.width / this.imgFrames
     }
 }
 

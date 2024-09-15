@@ -180,15 +180,15 @@ class Fighter extends SpriteAnimated {
             if (this.velocity.x != 0) {
                 this.newState = 'run';
             }
-    
+
             if (this.velocity.y < 0) {
                 this.newState = 'jump';
             }
-    
+
             if (this.velocity.y > 0) {
                 this.newState = 'fall';
             }
-    
+
             if (this.attack) {
                 this.newState = 'attack1';
             }
@@ -196,7 +196,7 @@ class Fighter extends SpriteAnimated {
             if (this.health <= 0) {
                 this.newState = 'death';
             }
-    
+
             this.setState()
         }
 

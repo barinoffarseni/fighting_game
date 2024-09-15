@@ -43,7 +43,6 @@ gameObjects.push(new SpriteAnimated({
     }
 }))
 
-
 const player = new Fighter({
     position: {
         x: 0,
@@ -96,14 +95,6 @@ const player = new Fighter({
 
 gameObjects.push(player)
 
-gameObjects.push(new HealthBar({
-    offset: {
-        x: -50,
-        y: 0
-    },
-    direction: -1,
-    entity: player
-}))
 
 const enemy = new Fighter({
     position: {
@@ -166,6 +157,14 @@ gameObjects.push(new HealthBar({
     entity: enemy
 }))
 
+gameObjects.push(new HealthBar({
+    offset: {
+        x: -50,
+        y: 0
+    },
+    direction: -1,
+    entity: player
+}))
 gameObjects.push(new Timer())
 
 function gameLoop() {
@@ -239,7 +238,7 @@ function update() {
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     gameObjects.forEach(gameObject => {
-        gameObject.render(ctx)
+        gameObject.render()
     })
 }
 

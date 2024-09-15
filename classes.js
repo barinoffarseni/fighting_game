@@ -52,10 +52,10 @@ class SpriteAnimated extends SpriteStatic {
         if (!this.stop) {
             this.framesElapsed++
             this.animateIsComplete = false
-    
+
             if (this.framesElapsed % this.framesHold === 0) {
                 this.currentFrame++
-    
+
                 if (this.currentFrame == this.imgFrames) {
                     this.currentFrame = 0
                     this.animateIsComplete = true

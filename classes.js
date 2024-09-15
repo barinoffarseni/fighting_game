@@ -257,7 +257,7 @@ class Indicator {
         this.offset = offset
     }
 
-    draw() {
+    render() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
     }
@@ -278,6 +278,7 @@ class Timer extends Indicator {
                 y: 0
             },
         })
+
         this.text = {
             position: {
                 x: canvas.width / 2,
@@ -289,13 +290,17 @@ class Timer extends Indicator {
             },
             style: 'bold 48px serif'
         }
+
         this.timeRemaining = 60
         this.startTimer()
     }
 
-    draw() {
+    update() {}
+
+    render() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+
         ctx.font = this.text.style
         ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }

@@ -17,15 +17,17 @@ const keys = {
     right: false
 }
 
-const background = new SpriteStatic({
+const gameObjects = [];
+
+gameObjects.push(new SpriteStatic({
     position: {
         x: 0,
         y: 0
     },
     imgSrc: './img/background.png'
-})
+}))
 
-const shop = new SpriteAnimated({
+gameObjects.push(new SpriteAnimated({
     position: {
         x: 650,
         y: 173
@@ -38,7 +40,11 @@ const shop = new SpriteAnimated({
         x: 0,
         y: 0
     }
-})
+}))
+
+gameObjects.push(new Timer())
+
+
 
 // const player = new Fighter({
 //     position: {
@@ -155,18 +161,6 @@ const shop = new SpriteAnimated({
 //     },
 //     direction: -1
 // })
-
-// const timer = new Timer()
-
-const gameObjects = [
-    background,
-    shop,
-    // player,
-    // enemy,
-    // enemyHealthIndicators,
-    // playerHealthIndicators,
-    // timer
-]
 
 function update() {
     gameObjects.forEach(gameObject => {

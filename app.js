@@ -170,14 +170,10 @@ gameObjects.push(enemy)
 
 function gameLoop() {
 
-    control()
+    control();
     update();
     render();
 
-    // background.update()
-    // shop.update()
-    // player.update()
-    // enemy.update()
 
     // enemyHealthIndicators.draw(enemy.health * 100 / 10000)
     // playerHealthIndicators.draw(player.health * 100 / 10000)
@@ -185,16 +181,6 @@ function gameLoop() {
 
     // player.tryAttack(enemy)
     // enemy.tryAttack(player)
-
-    // // if (player.health == 0) {
-    // //     alert("player is dead")
-    // // }
-    // // if (enemy.health == 0) {
-    // //     alert("enemy is dead")
-    // // }
-
-    // player.atackBox.widthDirection = GetAttackBoxDirection(player.position.x, enemy.position.x)
-    // enemy.atackBox.widthDirection = GetAttackBoxDirection(enemy.position.x, player.position.x)
 
     window.requestAnimationFrame(gameLoop);
 }
@@ -242,6 +228,17 @@ function control() {
 }
 
 function update() {
+    player.atackBox.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
+    enemy.atackBox.direction = getAttackBoxDirection(enemy.position.x, player.position.x)
+
+    // if (checkAttackIsSuccess(player, enemy)) {
+    //     enemy.health -= 10
+    // }
+    
+    // if (checkAttackIsSuccess(enemy, player)) {
+    //     player.health -= 10
+    // }
+
     gameObjects.forEach(gameObject => {
         gameObject.update()
     })
@@ -269,6 +266,7 @@ function keyup(event) {
         case 's':
             keys.s = false
             break
+
         case 'ArrowRight':
             keys.right = false
             break
@@ -299,6 +297,8 @@ function keydown(event) {
         case 's':
             keys.s = true
             break
+
+
         case 'ArrowRight':
             keys.right = true
             break
@@ -314,7 +314,7 @@ function keydown(event) {
     }
 }
 
-function GetAttackBoxDirection(x1, x2) {
+function getAttackBoxDirection(x1, x2) {
     if (x1 >= x2) {
         return -1
     } else {
@@ -323,7 +323,11 @@ function GetAttackBoxDirection(x1, x2) {
 }
 
 function checkAttackIsSuccess(attacker, victim) {
-    setAttackBoxMinMaxPosition(attacker)
+    if (attacker.state != 'attack1') {
+        return false
+    }
+
+    attacker.setAttackBoxMinMaxPosition()
 
     xMin = victim.position.x
     xMax = victim.position.x + victim.width
@@ -340,15 +344,5 @@ function checkAttackIsSuccess(attacker, victim) {
         if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
             return true
         }
-    }
-}
-
-function setAttackBoxMinMaxPosition(attacker) {
-    if (attacker.atackBox.widthDirection > 0) {
-        attacker.attackBoxXMin = attacker.getAttackBoxPosition().x
-        attacker.attackBoxXMax = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
-    } else {
-        attacker.attackBoxXMin = attacker.getAttackBoxPosition().x + attacker.atackBox.width * attacker.atackBox.widthDirection
-        attacker.attackBoxXMax = attacker.getAttackBoxPosition().x
     }
 }

@@ -16,7 +16,7 @@ class SpriteStatic {
 }
 
 class SpriteAnimated extends SpriteStatic {
-    constructor({ position, imgSrc, scale , framesHold, imgFrames, offset}) {
+    constructor({ position, imgSrc, scale , framesHold, imgFrames, offset }) {
         super({ position, imgSrc });
 
         this.dx = 0
@@ -30,6 +30,7 @@ class SpriteAnimated extends SpriteStatic {
 
         this.currentFrame = 0
         this.animateIsComplete = false
+        this.stop = false
     }
 
     render() {
@@ -47,6 +48,8 @@ class SpriteAnimated extends SpriteStatic {
     }
 
     update() {
+        if (!this.stop && !this.animateIsComplete) {
+        }
         this.framesElapsed++
         this.animateIsComplete = false
 
@@ -64,7 +67,7 @@ class SpriteAnimated extends SpriteStatic {
 }
 
 class Fighter extends SpriteAnimated {
-    constructor({ position, velocity, sprites, offset, attackFrame}) {
+    constructor({position, velocity, sprites, offset, attackFrame}) {
         super({
             position,
             imgSrc: './img/samuraiMack/Idle.png',
@@ -81,7 +84,7 @@ class Fighter extends SpriteAnimated {
             position: this.position,
             width: 160,
             height: 90,
-            widthDirection: 1,
+            direction: 1,
             offset: {
                 x: 80,
                 y: 0
@@ -102,7 +105,7 @@ class Fighter extends SpriteAnimated {
     }
 
     getAttackBoxPosition() {
-        if (this.atackBox.widthDirection > 0) {
+        if (this.atackBox.direction > 0) {
             return {
                 x :this.position.x + this.atackBox.offset.x,
                 y :this.position.y + this.atackBox.offset.y
@@ -124,10 +127,13 @@ class Fighter extends SpriteAnimated {
     
             ctx.fillStyle = 'red'
             ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+
+            ctx.fillStyle = 'gray'
             if (this.state == 'attack1' && this.currentFrame == this.attackFrame) {
                 ctx.fillStyle = 'yellow'
-                ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
             }
+
+            ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.direction, this.atackBox.height)
         }
     }
 
@@ -147,6 +153,20 @@ class Fighter extends SpriteAnimated {
             if (this.state == 'attack1') {
                 this.stateCanBeChanged = false
             }
+
+            if (this.state == 'death') {
+                this.stop = true
+            }
+        }
+    }
+
+    setAttackBoxMinMaxPosition() {
+        if (this.atackBox.direction > 0) {
+            this.attackBoxXMin = this.getAttackBoxPosition().x
+            this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.atackBox.direction
+        } else {
+            this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.atackBox.direction
+            this.attackBoxXMax = this.getAttackBoxPosition().x
         }
     }
 
@@ -169,9 +189,15 @@ class Fighter extends SpriteAnimated {
             this.newState = 'attack1';
         }
 
+        if (this.health <= 0) {
+            this.newState = 'death';
+        }
+
         this.setState()
 
-        setAttackBoxMinMaxPosition(this)
+        if (this.state == 'death') {
+            this.velocity.x = 0
+        }
 
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
@@ -185,13 +211,6 @@ class Fighter extends SpriteAnimated {
 
         super.update()
     }
-
-    // attack() {
-    //     if (this.state != 'attack1') {
-    //         this.setState('attack1')
-    //         this.isAttack = true
-    //     }
-    // }
 
     // tryAttack(enemy) {
     //     if (this.isAttack && checkAttackIsSuccess(this, enemy) && this.attackFrame == this.currentFrame) {

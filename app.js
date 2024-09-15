@@ -5,7 +5,7 @@ canvas.width = 1024
 canvas.height = 576
 
 const gravity = 0.2
-let debug = false
+let debug = true
 
 const keys = {
     w: false,

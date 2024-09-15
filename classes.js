@@ -124,7 +124,7 @@ class Fighter extends SpriteAnimated {
     
             ctx.fillStyle = 'red'
             ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-            if (this.state == 'attack1') {
+            if (this.state == 'attack1' && this.currentFrame == this.attackFrame) {
                 ctx.fillStyle = 'yellow'
                 ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
             }
@@ -138,59 +138,14 @@ class Fighter extends SpriteAnimated {
 
         if (this.state != this.newState && this.stateCanBeChanged) {
             this.state = this.newState
-            switch (this.state) {
-                case 'idle':
-                    this.img.src = this.sprites.idle.src
-                    this.imgFrames = this.sprites.idle.frames
-                    this.currentFrame = 0
-                    this.framesElapsed = 0
-                    break;
-                case 'run':
-                    this.img.src = this.sprites.run.src
-                    this.imgFrames = this.sprites.run.frames
-                    this.currentFrame = 0
-                    this.framesElapsed = 0
-                    break;
-                case 'jump':
-                    this.img.src = this.sprites.jump.src
-                    this.imgFrames = this.sprites.jump.frames
-                    this.currentFrame = 0
-                    this.framesElapsed = 0
-                    break;
-                case 'fall':
-                    this.img.src = this.sprites.fall.src
-                    this.imgFrames = this.sprites.fall.frames
-                    this.currentFrame = 0
-                    this.framesElapsed = 0
-                    break;
-                case 'attack1':
-                    this.img.src = this.sprites.attack1.src
-                    this.imgFrames = this.sprites.attack1.frames
-                    this.currentFrame = 0
-                    this.framesElapsed = 0
-                    this.stateCanBeChanged = false
-                    break;
-                case 'attack2':
-                    this.img.src = this.sprites.attack2.src
-                    this.imgFrames = this.sprites.attack2.frames
-                    this.currentFrame = 0
-                    this.framesElapsed = 0
-                    break;
-                case 'takeHit':
-                    this.img.src = this.sprites.takeHit.src
-                    this.imgFrames = this.sprites.takeHit.frames
-                    this.currentFrame = 0
-                    this.framesElapsed = 0
-                    break;
-                case 'death':
-                    this.img.src = this.sprites.death.src
-                    this.imgFrames = this.sprites.death.frames
-                    this.currentFrame = 0
-                    this.framesElapsed = 0
-                    break;
 
-                default:
-                    break;
+            this.img.src = this.sprites[this.state].src
+            this.imgFrames = this.sprites[this.state].frames
+            this.currentFrame = 0
+            this.framesElapsed = 0
+
+            if (this.state == 'attack1') {
+                this.stateCanBeChanged = false
             }
         }
     }

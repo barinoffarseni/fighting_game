@@ -28,9 +28,7 @@ class SpriteAnimated extends SpriteStatic {
         this.imgFrames = imgFrames
         this.offset = offset
 
-        // this.canChangeAnimation = false
         this.currentFrame = 0
-        // this.stopAnimate = false
         this.animateIsComplete = false
     }
 

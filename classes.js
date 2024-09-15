@@ -299,7 +299,7 @@ class Timer extends Indicator {
 }
 
 class HealthBar extends Indicator {
-    constructor({ offset, direction }) {
+    constructor({ offset, direction, entity }) {
         super({
             position: {
                 x: canvas.width / 2,
@@ -312,10 +312,16 @@ class HealthBar extends Indicator {
         })
         this.maxWidth =  417
         this.direction = direction
+        this.healthValue = 1
+        this.entity = entity
     }
 
-    draw(healthPercent) {
+    render() {
         ctx.fillStyle = this.color
-        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.direction * healthPercent, this.height)
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.direction * this.healthValue, this.height)
+    }
+
+    update() {
+        this.healthValue = this.entity.health * 100 / 10000
     }
 }

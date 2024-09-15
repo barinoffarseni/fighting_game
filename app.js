@@ -43,7 +43,6 @@ gameObjects.push(new SpriteAnimated({
     }
 }))
 
-gameObjects.push(new Timer())
 
 const player = new Fighter({
     position: {
@@ -97,13 +96,14 @@ const player = new Fighter({
 
 gameObjects.push(player)
 
-// const playerHealthIndicators = new HealthBar({
-//     offset: {
-//         x: -50,
-//         y: 0
-//     },
-//     direction: -1
-// })
+gameObjects.push(new HealthBar({
+    offset: {
+        x: -50,
+        y: 0
+    },
+    direction: -1,
+    entity: player
+}))
 
 const enemy = new Fighter({
     position: {
@@ -157,30 +157,22 @@ const enemy = new Fighter({
 
 gameObjects.push(enemy)
 
+gameObjects.push(new HealthBar({
+    offset: {
+        x: 50,
+        y: 0
+    },
+    direction: 1,
+    entity: enemy
+}))
 
-// const enemyHealthIndicators = new HealthBar({
-//     offset: {
-//         x: 50,
-//         y: 0
-//     },
-//     direction: 1
-// })
-
-
+gameObjects.push(new Timer())
 
 function gameLoop() {
 
     control();
     update();
     render();
-
-
-    // enemyHealthIndicators.draw(enemy.health * 100 / 10000)
-    // playerHealthIndicators.draw(player.health * 100 / 10000)
-    // timer.draw()
-
-    // player.tryAttack(enemy)
-    // enemy.tryAttack(player)
 
     window.requestAnimationFrame(gameLoop);
 }

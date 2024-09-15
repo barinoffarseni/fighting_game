@@ -90,7 +90,8 @@ class Fighter extends SpriteAnimated {
         this.attackFrame = attackFrame
         this.health = 100
         this.sprites = sprites
-        this.condition = 'idle'
+        this.state = 'idle'
+        this.newState = 'idle'
     }
 
     getPosition() {
@@ -111,26 +112,90 @@ class Fighter extends SpriteAnimated {
         }
     }
 
-    conditionSet(newCondition) {
-        if (this.condition == 'attack1' && this.canChangeAnimation == false) {
-            return
-        }
+    // conditionSet(newCondition) {
+    //     if (this.condition == 'attack1' && this.canChangeAnimation == false) {
+    //         return
+    //     }
 
-        if (this.condition == 'death') {
-            if (this.currentFrame == this.imgFrames - 1) {
-                this.currentFrame = this.imgFrames - 1
-                this.stopAnimate = true
-            }
-            return
-        }
+    //     if (this.condition == 'death') {
+    //         if (this.currentFrame == this.imgFrames - 1) {
+    //             this.currentFrame = this.imgFrames - 1
+    //             this.stopAnimate = true
+    //         }
+    //         return
+    //     }
 
-        if (this.condition == 'takeHit' && this.canChangeAnimation == false) {
-            return
-        }
+    //     if (this.condition == 'takeHit' && this.canChangeAnimation == false) {
+    //         return
+    //     }
 
-        if (this.condition != newCondition) {
-            this.condition = newCondition
-            switch (newCondition) {
+    //     if (this.condition != newCondition) {
+    //         this.condition = newCondition
+    //         switch (newCondition) {
+    //             case 'idle':
+    //                 this.img.src = this.sprites.idle.src
+    //                 this.imgFrames = this.sprites.idle.frames
+    //                 this.currentFrame = -1
+    //                 break;
+    //             case 'run':
+    //                 this.img.src = this.sprites.run.src
+    //                 this.imgFrames = this.sprites.run.frames
+    //                 this.currentFrame = -1
+    //                 break;
+    //             case 'jump':
+    //                 this.img.src = this.sprites.jump.src
+    //                 this.imgFrames = this.sprites.jump.frames
+    //                 this.currentFrame = -1
+    //                 break;
+    //             case 'fall':
+    //                 this.img.src = this.sprites.fall.src
+    //                 this.imgFrames = this.sprites.fall.frames
+    //                 this.currentFrame = -1
+    //                 break;
+    //             case 'attack1':
+    //                 this.img.src = this.sprites.attack1.src
+    //                 this.imgFrames = this.sprites.attack1.frames
+    //                 this.currentFrame = -1
+    //                 this.canChangeAnimation = false
+    //                 break;
+    //             case 'attack2':
+    //                 this.img.src = this.sprites.attack2.src
+    //                 this.imgFrames = this.sprites.attack2.frames
+    //                 this.currentFrame = -1
+    //                 break;
+    //             case 'takeHit':
+    //                 this.img.src = this.sprites.takeHit.src
+    //                 this.imgFrames = this.sprites.takeHit.frames
+    //                 this.currentFrame = -1
+    //                 this.canChangeAnimation = false
+    //                 break;
+    //             case 'death':
+    //                 this.img.src = this.sprites.death.src
+    //                 this.imgFrames = this.sprites.death.frames
+    //                 this.currentFrame = -1
+    //                 break;
+
+    //             default:
+    //                 break;
+    //         }
+    //     }
+    // }
+
+    // draw() {
+    //     ctx.fillStyle = 'red'
+    //     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+    //     if (this.isAttack) {
+    //         ctx.fillStyle = 'yellow'
+    //         ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
+    //     }
+    // }
+
+    // render() {}
+
+    setState() {
+        if (this.state != this.newState) {
+            this.state = this.newState
+            switch (this.state) {
                 case 'idle':
                     this.img.src = this.sprites.idle.src
                     this.imgFrames = this.sprites.idle.frames
@@ -180,32 +245,25 @@ class Fighter extends SpriteAnimated {
         }
     }
 
-    // draw() {
-    //     ctx.fillStyle = 'red'
-    //     ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
-    //     if (this.isAttack) {
-    //         ctx.fillStyle = 'yellow'
-    //         ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.widthDirection, this.atackBox.height)
-    //     }
-    // }
-
     update() {
-        this.draw()
-        this.animate()
+        // this.draw()
+        // this.animate()
+
+        this.newState = 'idle';
 
         if (this.velocity.x != 0) {
-            this.conditionSet('run');
-        } else {
-            this.conditionSet('idle');
+            this.newState = 'run';
         }
 
         if (this.velocity.y < 0) {
-            this.conditionSet('jump')
+            this.newState = 'jump';
         }
 
         if (this.velocity.y > 0) {
-            this.conditionSet('fall')
+            this.newState = 'fall';
         }
+
+        this.setState()
 
         setAttackBoxMinMaxPosition(this)
 
@@ -221,6 +279,8 @@ class Fighter extends SpriteAnimated {
         } else {
             this.velocity.y += gravity
         }
+
+        super.update()
     }
 
     attack() {

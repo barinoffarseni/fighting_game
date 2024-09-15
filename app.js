@@ -44,57 +44,57 @@ gameObjects.push(new SpriteAnimated({
 
 gameObjects.push(new Timer())
 
+const player = new Fighter({
+    position: {
+        x: 0,
+        y: 0
+    },
+    velocity: {
+        x: 0,
+        y: 0
+    },
+    sprites: {
+        idle: {
+            src: './img/samuraiMack/Idle.png',
+            frames: 8
+        },
+        run: {
+            src: './img/samuraiMack/Run.png',
+            frames: 8
+        },
+        jump: {
+            src: './img/samuraiMack/Jump.png',
+            frames: 2
+        },
+        fall: {
+            src: './img/samuraiMack/Fall.png',
+            frames: 2
+        },
+        attack1: {
+            src: './img/samuraiMack/Attack1.png',
+            frames: 6
+        },
+        attack2: {
+            src: './img/samuraiMack/Attack2.png',
+            frames: 6
+        },
+        takeHit: {
+            src: './img/samuraiMack/Take Hit.png',
+            frames: 4
+        },
+        death: {
+            src: './img/samuraiMack/Death.png',
+            frames: 6
+        }
+    },
+    offset: {
+        x: -215,
+        y: -155
+    },
+    attackFrame: 4
+})
 
-
-// const player = new Fighter({
-//     position: {
-//         x: 0,
-//         y: 0
-//     },
-//     velocity: {
-//         x: 0,
-//         y: 0
-//     },
-//     sprites: {
-//         idle: {
-//             src: './img/samuraiMack/Idle.png',
-//             frames: 8
-//         },
-//         run: {
-//             src: './img/samuraiMack/Run.png',
-//             frames: 8
-//         },
-//         jump: {
-//             src: './img/samuraiMack/Jump.png',
-//             frames: 2
-//         },
-//         fall: {
-//             src: './img/samuraiMack/Fall.png',
-//             frames: 2
-//         },
-//         attack1: {
-//             src: './img/samuraiMack/Attack1.png',
-//             frames: 6
-//         },
-//         attack2: {
-//             src: './img/samuraiMack/Attack2.png',
-//             frames: 6
-//         },
-//         takeHit: {
-//             src: './img/samuraiMack/Take Hit.png',
-//             frames: 4
-//         },
-//         death: {
-//             src: './img/samuraiMack/Death.png',
-//             frames: 6
-//         }
-//     },
-//     offset: {
-//         x: -215,
-//         y: -155
-//     },
-//     attackFrame: 4
-// })
+gameObjects.push(player)
 
 // const enemy = new Fighter({
 //     position: {
@@ -177,10 +177,10 @@ function render() {
 
 function gameLoop() {
 
+    control()
     update();
     render();
 
-    // control()
     // background.update()
     // shop.update()
     // player.update()
@@ -226,22 +226,22 @@ function control() {
         player.attack()
     }
 
-    enemy.velocity.x = 0
-    if (keys.up) {
-        enemy.velocity.y = -10
-    }
+    // enemy.velocity.x = 0
+    // if (keys.up) {
+    //     enemy.velocity.y = -10
+    // }
 
-    if (keys.right) {
-        enemy.velocity.x = 1
-    }
+    // if (keys.right) {
+    //     enemy.velocity.x = 1
+    // }
 
-    if (keys.left) {
-        enemy.velocity.x = -1
-    }
+    // if (keys.left) {
+    //     enemy.velocity.x = -1
+    // }
 
-    if (keys.down) {
-        enemy.attack()
-    }
+    // if (keys.down) {
+    //     enemy.attack()
+    // }
 }
 
 

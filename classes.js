@@ -28,9 +28,10 @@ class SpriteAnimated extends SpriteStatic {
         this.imgFrames = imgFrames
         this.offset = offset
 
-        this.canChangeAnimation = false
+        // this.canChangeAnimation = false
         this.currentFrame = 0
-        this.stopAnimate = false
+        // this.stopAnimate = false
+        this.animateIsComplete = false
     }
 
     render() {
@@ -49,12 +50,14 @@ class SpriteAnimated extends SpriteStatic {
 
     update() {
         this.framesElapsed++
+        this.animateIsComplete = false
 
         if (this.framesElapsed % this.framesHold === 0) {
             this.currentFrame++
 
             if (this.currentFrame == this.imgFrames) {
                 this.currentFrame = 0
+                this.animateIsComplete = true
             }
         }
 
@@ -93,6 +96,7 @@ class Fighter extends SpriteAnimated {
         this.attack = false;
         this.state = 'idle'
         this.newState = 'idle'
+        this.stateCanBeChanged = true
     }
 
     getPosition() {
@@ -194,7 +198,11 @@ class Fighter extends SpriteAnimated {
     // render() {}
 
     setState() {
-        if (this.state != this.newState) {
+        if (this.state == 'attack1' && this.animateIsComplete) {
+            this.stateCanBeChanged = true
+        }
+
+        if (this.state != this.newState && this.stateCanBeChanged) {
             this.state = this.newState
             switch (this.state) {
                 case 'idle':
@@ -226,7 +234,7 @@ class Fighter extends SpriteAnimated {
                     this.imgFrames = this.sprites.attack1.frames
                     this.currentFrame = 0
                     this.framesElapsed = 0
-                    this.canChangeAnimation = false
+                    this.stateCanBeChanged = false
                     break;
                 case 'attack2':
                     this.img.src = this.sprites.attack2.src
@@ -239,7 +247,6 @@ class Fighter extends SpriteAnimated {
                     this.imgFrames = this.sprites.takeHit.frames
                     this.currentFrame = 0
                     this.framesElapsed = 0
-                    this.canChangeAnimation = false
                     break;
                 case 'death':
                     this.img.src = this.sprites.death.src

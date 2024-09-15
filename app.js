@@ -5,6 +5,7 @@ canvas.width = 1024
 canvas.height = 576
 
 const gravity = 0.2
+let debug = false
 
 const keys = {
     w: false,
@@ -16,6 +17,31 @@ const keys = {
     down: false,
     right: false
 }
+
+const gameObjects = [];
+
+gameObjects.push(new SpriteStatic({
+    position: {
+        x: 0,
+        y: 0
+    },
+    imgSrc: './img/background.png'
+}))
+
+gameObjects.push(new SpriteAnimated({
+    position: {
+        x: 650,
+        y: 173
+    },
+    imgSrc: './img/shop.png',
+    scale: 2.4,
+    framesHold: 10,
+    imgFrames: 6,
+    offset: {
+        x: 0,
+        y: 0
+    }
+}))
 
 const player = new Fighter({
     position: {
@@ -64,8 +90,11 @@ const player = new Fighter({
         x: -215,
         y: -155
     },
-    takingDamageFrameOffSet: 1000
+    attackFrame: 4
 })
+
+gameObjects.push(player)
+
 
 const enemy = new Fighter({
     position: {
@@ -114,121 +143,133 @@ const enemy = new Fighter({
         x: -215,
         y: -170
     },
-    takingDamageFrameOffSet: 400
+    attackFrame: 1
 })
 
-const background = new SpriteStatic({
-    position: {
-        x: 0,
-        y: 0
-    },
-    imgSrc: './img/background.png'
-})
+gameObjects.push(enemy)
 
-const shop = new SpriteAnimated({
-    position: {
-        x: 650,
-        y: 173
-    },
-    imgSrc: './img/shop.png',
-    scale: 2.4,
-    framesHold: 10,
-    imgFrames: 6,
-    offset: {
-        x: 0,
-        y: 0
-    }
-})
-
-const enemyHealthIndicators = new Indicators({
+gameObjects.push(new HealthBar({
     offset: {
         x: 50,
         y: 0
     },
-    direction: 1
-})
+    direction: 1,
+    entity: enemy
+}))
 
-const playerHealthIndicators = new Indicators({
+gameObjects.push(new HealthBar({
     offset: {
         x: -50,
         y: 0
     },
-    direction: -1
-})
+    direction: -1,
+    entity: player
+}))
+gameObjects.push(new Timer())
 
-const timer = new Timer({
-    position: {
-        x: canvas.width / 2,
-        y: 10
-    },
-    color: 'grey',
-    offset: {
-        x: -50,
-        y: 0
-    },
-    positionOfText: {
-        x: canvas.width / 2,
-        y: 75
-    },
-    timeRemaining: 60
-})
+function gameLoop() {
 
-function animate() {
-    window.requestAnimationFrame(animate)
+    control();
+    update();
+    render();
 
-    control()
-    background.update()
-    shop.update()
-    player.update()
-    enemy.update()
-
-    enemyHealthIndicators.draw(enemy.health * 100 / 10000)
-    playerHealthIndicators.draw(player.health * 100 / 10000)
-    timer.draw()
-
-    player.tryAttack(enemy)
-    enemy.tryAttack(player)
-
-    // if (player.health == 0) {
-    //     alert("player is dead")
-    // }
-    // if (enemy.health == 0) {
-    //     alert("enemy is dead")
-    // }
-
-    player.atackBox.widthDirection = GetAttackBoxDirection(player.position.x, enemy.position.x)
-    enemy.atackBox.widthDirection = GetAttackBoxDirection(enemy.position.x, player.position.x)
+    window.requestAnimationFrame(gameLoop);
 }
 
-animate()
+gameLoop()
 
 function control() {
     player.velocity.x = 0
     if (keys.w) {
         player.velocity.y = -10
     }
+
     if (keys.d) {
         player.velocity.x = 1
     }
+
     if (keys.a) {
         player.velocity.x = -1
     }
-    if (keys.s) {
-        player.attack()
-    }
 
+    if (keys.s) {
+        player.attack = true
+    } else {
+        player.attack = false
+    }
+    
     enemy.velocity.x = 0
     if (keys.up) {
         enemy.velocity.y = -10
     }
+
     if (keys.right) {
         enemy.velocity.x = 1
     }
+
     if (keys.left) {
         enemy.velocity.x = -1
     }
+
     if (keys.down) {
-        enemy.attack()
+        enemy.attack = true
+    } else {
+        enemy.attack = false
+    }
+}
+
+function update() {
+    player.atackBox.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
+    enemy.atackBox.direction = getAttackBoxDirection(enemy.position.x, player.position.x)
+
+    if (checkAttackIsSuccess(player, enemy)) {
+        enemy.health -= 10
+    }
+    
+    if (checkAttackIsSuccess(enemy, player)) {
+        player.health -= 10
+    }
+
+    gameObjects.forEach(gameObject => {
+        gameObject.update()
+    })
+}
+
+function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    gameObjects.forEach(gameObject => {
+        gameObject.render()
+    })
+}
+
+window.addEventListener('keyup', keyup)
+function keyup(event) {
+    switch (event.key) {
+        case 'd':
+            keys.d = false
+            break
+        case 'a':
+            keys.a = false
+            break
+        case 'w':
+            keys.w = false
+            break
+        case 's':
+            keys.s = false
+            break
+
+        case 'ArrowRight':
+            keys.right = false
+            break
+        case 'ArrowLeft':
+            keys.left = false
+            break
+        case 'ArrowUp':
+            keys.up = false
+            break
+        case 'ArrowDown':
+            keys.down = false
+            break
     }
 }
 
@@ -247,6 +288,8 @@ function keydown(event) {
         case 's':
             keys.s = true
             break
+
+
         case 'ArrowRight':
             keys.right = true
             break
@@ -262,32 +305,41 @@ function keydown(event) {
     }
 }
 
-window.addEventListener('keyup', keyup)
-function keyup(event) {
-    switch (event.key) {
-        case 'd':
-            keys.d = false
-            break
-        case 'a':
-            keys.a = false
-            break
-        case 'w':
-            keys.w = false
-            break
-        case 's':
-            keys.s = false
-            break
-        case 'ArrowRight':
-            keys.right = false
-            break
-        case 'ArrowLeft':
-            keys.left = false
-            break
-        case 'ArrowUp':
-            keys.up = false
-            break
-        case 'ArrowDown':
-            keys.down = false
-            break
+function getAttackBoxDirection(x1, x2) {
+    if (x1 >= x2) {
+        return -1
+    } else {
+        return 1
+    }
+}
+
+function checkAttackIsSuccess(attacker, victim) {
+    if (attacker.state != 'attack1') {
+        return false
+    }
+
+    if (attacker.currentFrame != attacker.attackFrame) {
+        return false
+    }
+
+    if (attacker.framesElapsed % attacker.framesHold === 0) {
+        attacker.setAttackBoxMinMaxPosition()
+    
+        xMin = victim.position.x
+        xMax = victim.position.x + victim.width
+    
+        if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
+            if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
+                return true
+            }
+    
+            if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
+                return true
+            }
+    
+            if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
+                return true
+            }
+        }
     }
 }

@@ -30,6 +30,7 @@ class SpriteAnimated extends SpriteStatic {
 
         this.currentFrame = 0
         this.animateIsComplete = false
+        this.compliteAnimationAndStop = false
         this.stop = false
     }
 
@@ -48,21 +49,25 @@ class SpriteAnimated extends SpriteStatic {
     }
 
     update() {
-        // if (this.stop && this.animateIsComplete) {
-        //     return;
-        // }
+        if (!this.stop) {
+            this.framesElapsed++
+            this.animateIsComplete = false
+    
+            if (this.framesElapsed % this.framesHold === 0) {
+                this.currentFrame++
+    
+                if (this.currentFrame == this.imgFrames) {
+                    this.currentFrame = 0
+                    this.animateIsComplete = true
 
-        this.framesElapsed++
-        this.animateIsComplete = false
-
-        if (this.framesElapsed % this.framesHold === 0) {
-            this.currentFrame++
-
-            if (this.currentFrame == this.imgFrames) {
-                this.currentFrame = 0
-                this.animateIsComplete = true
+                    if (this.compliteAnimationAndStop) {
+                        this.stop = true
+                        this.currentFrame = this.imgFrames - 1
+                    }
+                }
             }
         }
+
 
         this.dx = this.currentFrame * this.img.width / this.imgFrames
     }
@@ -157,7 +162,7 @@ class Fighter extends SpriteAnimated {
             }
 
             if (this.state == 'death') {
-                this.stop = true
+                this.compliteAnimationAndStop = true
             }
         }
     }

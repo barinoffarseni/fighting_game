@@ -197,9 +197,8 @@ class Fighter extends SpriteAnimated {
                 this.newState = 'fall';
             }
 
-            if (checkAttackIsSuccess(player, this)) {
-                this.newState = 'takeHit';
-            }
+            // if (checkAttackIsSuccess(player, this)) {
+            // }
 
             if (this.attack) {
                 this.newState = 'attack1';
@@ -250,7 +249,7 @@ class Indicator {
 }
 
 class Timer extends Indicator {
-    constructor() {
+    constructor(player, enemy) {
         super({
             position: {
                 x: canvas.width / 2,
@@ -277,8 +276,8 @@ class Timer extends Indicator {
             style: 'bold 48px serif'
         }
 
-        this.timeRemaining = 60
-        this.startTimer()
+        this.timeRemaining = 4
+        this.startTimer(player, enemy)
     }
 
     update() {}
@@ -291,14 +290,28 @@ class Timer extends Indicator {
         ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 
-    startTimer() {
-        const intervalId = setInterval(() => {
+    startTimer(player, enemy) {
+        setInterval(() => {
             if (this.timeRemaining <= 0) {
-                clearInterval(intervalId)
+                this.timyIsUp(player, enemy)
             } else {
                 this.timeRemaining--
             }
         }, 1000)
+    }
+
+
+    timyIsUp(player, enemy) {
+        if (player.health > enemy.health) {
+            enemy.state == 'death'
+            console.log(enemy.state)
+        }
+        if (player.health < enemy.health) {
+            player.state == 'death'
+        }
+        // if (player.health == enemy.health) {
+        //     player.state == 'death'
+        // }
     }
 }
 

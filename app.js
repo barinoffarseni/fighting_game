@@ -219,6 +219,9 @@ function control() {
 }
 
 function update() {
+    player.beer = Timer.startTimer()
+    enemy.beer = Timer.startTimer()
+    console.log(this.beer)
     player.atackBox.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.direction = getAttackBoxDirection(enemy.position.x, player.position.x)
 

@@ -104,6 +104,7 @@ class Fighter extends SpriteAnimated {
         this.state = 'idle'
         this.newState = 'idle'
         this.stateCanBeChanged = true
+        this.beer = false
     }
 
     getPosition() {
@@ -208,8 +209,8 @@ class Fighter extends SpriteAnimated {
             if (this.attack) {
                 this.newState = 'attack1';
             }
-    
-            if (this.health <= 0) {
+
+            if (this.health <= 0 || this.beer) {
                 this.newState = 'death';
             }
 
@@ -254,7 +255,7 @@ class Indicator {
 }
 
 class Timer extends Indicator {
-    constructor(player, enemy) {
+    constructor() {
         super({
             position: {
                 x: canvas.width / 2,
@@ -282,7 +283,7 @@ class Timer extends Indicator {
         }
 
         this.timeRemaining = 4
-        this.startTimer(player, enemy)
+        this.startTimer()
     }
 
     update() {}
@@ -295,29 +296,22 @@ class Timer extends Indicator {
         ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 
-    startTimer(player, enemy) {
+    startTimer() {
         setInterval(() => {
             if (this.timeRemaining <= 0) {
-                this.timyIsUp(player, enemy)
+                if (player.health > enemy.health) {
+                    return enemy.beer == true
+                }
+                if (player.health < enemy.health) {
+                    return player.beer == true
+                }
+                this.timeRemaining += 10
             } else {
                 this.timeRemaining--
             }
         }, 1000)
     }
 
-
-    timyIsUp(player, enemy) {
-        if (player.health > enemy.health) {
-            enemy.state == 'death'
-            console.log(enemy.state)
-        }
-        if (player.health < enemy.health) {
-            player.state == 'death'
-        }
-        // if (player.health == enemy.health) {
-        //     player.state == 'death'
-        // }
-    }
 }
 
 class HealthBar extends Indicator {

@@ -197,8 +197,13 @@ class Fighter extends SpriteAnimated {
                 this.newState = 'fall';
             }
 
-            // if (checkAttackIsSuccess(player, this)) {
-            // }
+            if (checkAttackIsSuccess(player, this)) {
+                this.newState = 'takeHit';
+            }
+
+            if (checkAttackIsSuccess(enemy, this)) {
+                this.newState = 'takeHit';
+            }
 
             if (this.attack) {
                 this.newState = 'attack1';

@@ -299,12 +299,6 @@ class Timer extends Indicator {
     startTimer() {
         setInterval(() => {
             if (this.timeRemaining <= 0) {
-                if (player.health > enemy.health) {
-                    return enemy.beer == true
-                }
-                if (player.health < enemy.health) {
-                    return player.beer == true
-                }
                 this.timeRemaining += 10
             } else {
                 this.timeRemaining--

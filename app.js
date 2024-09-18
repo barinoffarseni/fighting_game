@@ -219,9 +219,9 @@ function control() {
 }
 
 function update() {
-    player.beer = Timer.startTimer()
-    enemy.beer = Timer.startTimer()
-    console.log(this.beer)
+    enemy.beer = comparisonHealth(player, enemy)
+    player.beer = comparisonHealth(enemy, player)
+    console.log(player.beer, enemy.beer)
     player.atackBox.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.direction = getAttackBoxDirection(enemy.position.x, player.position.x)
 
@@ -344,5 +344,11 @@ function checkAttackIsSuccess(attacker, victim) {
                 return true
             }
         }
+    }
+}
+
+function comparisonHealth(attacker, victim) {
+    if (attacker.health > victim.health) {
+        return victim.beer == true
     }
 }

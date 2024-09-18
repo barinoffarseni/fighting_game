@@ -104,7 +104,7 @@ class Fighter extends SpriteAnimated {
         this.state = 'idle'
         this.newState = 'idle'
         this.stateCanBeChanged = true
-        this.beer = false
+        this.comparisonedHealth = false
     }
 
     getPosition() {
@@ -198,11 +198,7 @@ class Fighter extends SpriteAnimated {
                 this.newState = 'fall';
             }
 
-            if (checkAttackIsSuccess(player, this)) {
-                this.newState = 'takeHit';
-            }
-
-            if (checkAttackIsSuccess(enemy, this)) {
+            if (checkAttackIsSuccess(player, this) || checkAttackIsSuccess(enemy, this)) {
                 this.newState = 'takeHit';
             }
 
@@ -210,7 +206,7 @@ class Fighter extends SpriteAnimated {
                 this.newState = 'attack1';
             }
 
-            if (this.health <= 0 || this.beer) {
+            if (this.health <= 0 || this.comparisonedHealth) {
                 this.newState = 'death';
             }
 
@@ -282,7 +278,7 @@ class Timer extends Indicator {
             style: 'bold 48px serif'
         }
 
-        this.timeRemaining = 4
+        this.timeRemaining = 5
         this.startTimer(attacker, victim)
     }
 
@@ -297,16 +293,20 @@ class Timer extends Indicator {
     }
 
     startTimer(attacker, victim) {
-        setInterval(() => {
-            if (this.timeRemaining <= 0 & attacker.beer == victim.beer) {
-                this.timeRemaining += 10
+        const intervalId = setInterval(() => {
+            if (this.timeRemaining <= 0) {
+                if (attacker.comparisonedHealth == victim.comparisonedHealth) {
+                    this.timeRemaining += 10
+                    return
+                }
+            clearInterval(intervalId)
             } else {
                 this.timeRemaining--
             }
         }, 1000)
     }
 
-    comparisonHealth(attacker, victim) {
+    getComparisonedHealth(attacker, victim) {
         if (this.timeRemaining <= 0) {
             if (attacker.health > victim.health) {
                 return true

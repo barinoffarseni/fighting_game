@@ -221,8 +221,8 @@ function control() {
 }
 
 function update() {
-    enemy.beer = timerBar.comparisonHealth(player, enemy)
-    player.beer = timerBar.comparisonHealth(enemy, player)
+    enemy.comparisonedHealth = timerBar.getComparisonedHealth(player, enemy)
+    player.comparisonedHealth = timerBar.getComparisonedHealth(enemy, player)
 
     player.atackBox.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.direction = getAttackBoxDirection(enemy.position.x, player.position.x)

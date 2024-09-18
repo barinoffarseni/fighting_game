@@ -278,7 +278,7 @@ class Timer extends Indicator {
             style: 'bold 48px serif'
         }
 
-        this.timeRemaining = 5
+        this.timeRemaining = 30
         this.startTimer(attacker, victim)
     }
 

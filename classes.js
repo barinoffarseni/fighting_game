@@ -299,7 +299,6 @@ class Timer extends Indicator {
     startTimer() {
         setInterval(() => {
             if (this.timeRemaining <= 0) {
-                this.timeRemaining += 10
             } else {
                 this.timeRemaining--
             }
@@ -310,6 +309,9 @@ class Timer extends Indicator {
         if (this.timeRemaining <= 0) {
             if (attacker.health > victim.health) {
                 return true
+            }
+            if (attacker.health == victim.health) {
+                this.timeRemaining += 10
             }
         }
     }

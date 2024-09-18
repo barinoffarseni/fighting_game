@@ -348,9 +348,3 @@ function checkAttackIsSuccess(attacker, victim) {
         }
     }
 }
-
-// function comparisonHealth(attacker, victim) {
-//     if (attacker.health > victim.health) {
-//         return true
-//     }
-// }

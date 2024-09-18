@@ -166,7 +166,7 @@ gameObjects.push(new HealthBar({
     entity: player
 }))
 
-const timerBar = new Timer()
+const timerBar = new Timer(player, enemy)
 gameObjects.push(timerBar)
 
 function gameLoop() {
@@ -223,7 +223,7 @@ function control() {
 function update() {
     enemy.beer = timerBar.comparisonHealth(player, enemy)
     player.beer = timerBar.comparisonHealth(enemy, player)
-    console.log(player.beer, enemy.beer)
+
     player.atackBox.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.direction = getAttackBoxDirection(enemy.position.x, player.position.x)
 

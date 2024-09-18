@@ -255,7 +255,7 @@ class Indicator {
 }
 
 class Timer extends Indicator {
-    constructor() {
+    constructor(attacker, victim) {
         super({
             position: {
                 x: canvas.width / 2,
@@ -283,7 +283,7 @@ class Timer extends Indicator {
         }
 
         this.timeRemaining = 4
-        this.startTimer()
+        this.startTimer(attacker, victim)
     }
 
     update() {}
@@ -296,9 +296,10 @@ class Timer extends Indicator {
         ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 
-    startTimer() {
+    startTimer(attacker, victim) {
         setInterval(() => {
-            if (this.timeRemaining <= 0) {
+            if (this.timeRemaining <= 0 & attacker.beer == victim.beer) {
+                this.timeRemaining += 10
             } else {
                 this.timeRemaining--
             }
@@ -311,7 +312,7 @@ class Timer extends Indicator {
                 return true
             }
             if (attacker.health == victim.health) {
-                this.timeRemaining += 10
+                return false
             }
         }
     }

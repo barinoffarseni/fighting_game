@@ -306,6 +306,13 @@ class Timer extends Indicator {
         }, 1000)
     }
 
+    comparisonHealth(attacker, victim) {
+        if (this.timeRemaining <= 0) {
+            if (attacker.health > victim.health) {
+                return true
+            }
+        }
+    }
 }
 
 class HealthBar extends Indicator {

@@ -165,7 +165,9 @@ gameObjects.push(new HealthBar({
     direction: -1,
     entity: player
 }))
-gameObjects.push(new Timer(player, enemy))
+
+const timerBar = new Timer()
+gameObjects.push(timerBar)
 
 function gameLoop() {
 
@@ -219,8 +221,8 @@ function control() {
 }
 
 function update() {
-    enemy.beer = comparisonHealth(player, enemy)
-    player.beer = comparisonHealth(enemy, player)
+    enemy.beer = timerBar.comparisonHealth(player, enemy)
+    player.beer = timerBar.comparisonHealth(enemy, player)
     console.log(player.beer, enemy.beer)
     player.atackBox.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
     enemy.atackBox.direction = getAttackBoxDirection(enemy.position.x, player.position.x)
@@ -347,8 +349,8 @@ function checkAttackIsSuccess(attacker, victim) {
     }
 }
 
-function comparisonHealth(attacker, victim) {
-    if (attacker.health > victim.health) {
-        return true
-    }
-}
+// function comparisonHealth(attacker, victim) {
+//     if (attacker.health > victim.health) {
+//         return true
+//     }
+// }

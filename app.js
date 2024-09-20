@@ -180,16 +180,16 @@ gameLoop()
 
 function control() {
     player.velocity.x = 0
-    if (keys.w) {
+    if (keys.w && player.canJump) {
         player.velocity.y = -10
     }
 
     if (keys.d) {
-        player.velocity.x = 1
+        player.velocity.x = 4
     }
 
     if (keys.a) {
-        player.velocity.x = -1
+        player.velocity.x = -4
     }
 
     if (keys.s) {
@@ -199,16 +199,16 @@ function control() {
     }
     
     enemy.velocity.x = 0
-    if (keys.up) {
+    if (keys.up && enemy.canJump) {
         enemy.velocity.y = -10
     }
 
     if (keys.right) {
-        enemy.velocity.x = 1
+        enemy.velocity.x = 4
     }
 
     if (keys.left) {
-        enemy.velocity.x = -1
+        enemy.velocity.x = -4
     }
 
     if (keys.down) {

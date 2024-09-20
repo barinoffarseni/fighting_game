@@ -104,6 +104,7 @@ class Fighter extends SpriteAnimated {
         this.state = 'idle'
         this.newState = 'idle'
         this.stateCanBeChanged = true
+        this.canJump = false
     }
 
     getPosition() {
@@ -214,8 +215,10 @@ class Fighter extends SpriteAnimated {
         if (this.position.y + this.height >= canvas.height - 96) {
             this.velocity.y = 0
             this.position.y = canvas.height - 96 - this.height
+            this.canJump = true
         } else {
             this.velocity.y += gravity
+            this.canJump = false
         }
 
         super.update()

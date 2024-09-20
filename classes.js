@@ -99,6 +99,7 @@ class Fighter extends SpriteAnimated {
         this.isAttack = false
         this.attackFrame = attackFrame
         this.health = 100
+        this.previousHealth = 100
         this.sprites = sprites
         this.attack = false;
         this.state = 'idle'
@@ -188,6 +189,11 @@ class Fighter extends SpriteAnimated {
 
             if (this.velocity.y > 0) {
                 this.newState = 'fall';
+            }
+
+            if (this.health < this.previousHealth) {
+                this.newState = 'takeHit';
+                this.previousHealth = this.health
             }
 
             if (this.attack) {

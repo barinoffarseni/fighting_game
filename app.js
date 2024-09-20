@@ -183,7 +183,7 @@ gameLoop()
 function control() {
     player.velocity.x = 0
     // console.log(player.position.y)
-    if (keys.w & player.canJump == true) {
+    if (keys.w & player.canJump) {
         player.velocity.y = -10
     }
 
@@ -202,7 +202,7 @@ function control() {
     }
     
     enemy.velocity.x = 0
-    if (keys.up & enemy.canJump == true) {
+    if (keys.up & enemy.canJump) {
         enemy.velocity.y = -10
     }
 

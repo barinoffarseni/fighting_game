@@ -16,7 +16,7 @@ class SpriteStatic {
 }
 
 class SpriteAnimated extends SpriteStatic {
-    constructor({ position, imgSrc, scale , framesHold, imgFrames, offset }) {
+    constructor({ position, imgSrc, scale , framesHold, imgFrames, offset, body}) {
         super({ position, imgSrc });
 
         this.dx = 0
@@ -84,6 +84,7 @@ class Fighter extends SpriteAnimated {
         })
         this.position = position
         this.velocity = velocity
+        this.body = body
         this.width = 50
         this.height = 150
         this.atackBox = {
@@ -128,6 +129,7 @@ class Fighter extends SpriteAnimated {
     }
 
     render() {
+
         super.render()
 
         if (debug) {

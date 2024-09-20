@@ -178,11 +178,12 @@ function gameLoop() {
     window.requestAnimationFrame(gameLoop);
 }
 
+// ctx.translate(player.width, 0)
+// ctx.scale(-1, 1)
 gameLoop()
 
 function control() {
     player.velocity.x = 0
-    // console.log(player.position.y)
     if (keys.w & player.canJump) {
         player.velocity.y = -10
     }

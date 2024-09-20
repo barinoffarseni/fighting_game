@@ -184,14 +184,19 @@ class Fighter extends SpriteAnimated {
         }
     }
 
-    // gravityOfPlayers() {
-    //     this.velocity.y += gravity
-    // }
+    // beer() {
+    //     const canvas = document.getElementById('canvas');
+    //     const ctx = canvas.getContext('2d');
+
+    //     // Отражаем изображение по горизонтали
+    //     ctx.translate(canvas.width, 0); // Смещаем холст на ширину изображения
+    //     ctx.scale(-1, 1); // Отражаем по горизонтали
+    // };
 
     update() {
         if (this.state != 'death') {
             this.newState = 'idle';
-    
+
             if (this.velocity.x != 0) {
                 this.newState = 'run';
             }

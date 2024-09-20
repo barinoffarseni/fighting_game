@@ -104,7 +104,6 @@ class Fighter extends SpriteAnimated {
         this.state = 'idle'
         this.newState = 'idle'
         this.stateCanBeChanged = true
-        this.comparisonedHealth = false
         this.canJump = false
     }
 

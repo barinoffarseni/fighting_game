@@ -147,6 +147,10 @@ class Fighter extends SpriteAnimated {
             this.stateCanBeChanged = true
         }
 
+        if (this.state == 'takeHit' && this.animateIsComplete) {
+            this.stateCanBeChanged = true
+        }
+
         if (this.state != this.newState && this.stateCanBeChanged) {
             this.state = this.newState
 
@@ -156,6 +160,10 @@ class Fighter extends SpriteAnimated {
             this.framesElapsed = 0
 
             if (this.state == 'attack1') {
+                this.stateCanBeChanged = false
+            }
+
+            if (this.state == 'takeHit') {
                 this.stateCanBeChanged = false
             }
 

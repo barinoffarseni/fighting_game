@@ -180,7 +180,6 @@ gameLoop()
 
 function control() {
     player.velocity.x = 0
-    // console.log(player.position.y)
     if (keys.w & player.canJump == true) {
         player.velocity.y = -10
     }

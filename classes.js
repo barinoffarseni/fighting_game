@@ -175,10 +175,6 @@ class Fighter extends SpriteAnimated {
         }
     }
 
-    // gravityOfPlayers() {
-    //     this.velocity.y += gravity
-    // }
-
     update() {
         if (this.state != 'death') {
             this.newState = 'idle';

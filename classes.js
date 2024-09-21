@@ -99,6 +99,7 @@ class Fighter extends SpriteAnimated {
         this.isAttack = false
         this.attackFrame = attackFrame
         this.health = 100
+        this.previousHealth = 100
         this.sprites = sprites
         this.attack = false;
         this.state = 'idle'
@@ -146,6 +147,14 @@ class Fighter extends SpriteAnimated {
             this.stateCanBeChanged = true
         }
 
+        if (this.state == 'takeHit' && this.animateIsComplete) {
+            this.stateCanBeChanged = true
+        }
+
+        if (this.state == 'takeHit' && this.newState == 'attack1') {
+            this.stateCanBeChanged = true
+        }
+
         if (this.state != this.newState && this.stateCanBeChanged) {
             this.state = this.newState
 
@@ -155,6 +164,10 @@ class Fighter extends SpriteAnimated {
             this.framesElapsed = 0
 
             if (this.state == 'attack1') {
+                this.stateCanBeChanged = false
+            }
+
+            if (this.state == 'takeHit') {
                 this.stateCanBeChanged = false
             }
 
@@ -188,6 +201,11 @@ class Fighter extends SpriteAnimated {
 
             if (this.velocity.y > 0) {
                 this.newState = 'fall';
+            }
+
+            if (this.health < this.previousHealth) {
+                this.newState = 'takeHit';
+                this.previousHealth = this.health
             }
 
             if (this.attack) {

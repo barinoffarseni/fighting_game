@@ -151,6 +151,10 @@ class Fighter extends SpriteAnimated {
             this.stateCanBeChanged = true
         }
 
+        if (this.state == 'takeHit' && this.newState == 'attack1') {
+            this.stateCanBeChanged = true
+        }
+
         if (this.state != this.newState && this.stateCanBeChanged) {
             this.state = this.newState
 

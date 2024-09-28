@@ -106,6 +106,7 @@ class Fighter extends SpriteAnimated {
         this.newState = 'idle'
         this.stateCanBeChanged = true
         this.canJump = false
+        this.loserStatus = false
     }
 
     getPosition() {
@@ -225,6 +226,7 @@ class Fighter extends SpriteAnimated {
             if (this.velocity.y < 0) {
                 this.velocity.y = 0
             }
+            this.loserStatus = true
         }
 
         this.position.x += this.velocity.x
@@ -255,6 +257,36 @@ class Indicator {
     render() {
         ctx.fillStyle = this.color
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+    }
+}
+
+class WinBar extends Indicator{
+    constructor() {
+        super({
+            position: {
+                x: 30,
+                y: 83
+            },
+            color: 'grey',
+            width: 100,
+            height: 100,
+        })
+
+        this.text = {
+            position: this.position,
+            style: 'bold 48px serif'
+        }
+    }
+
+    update() {}
+
+    render() {
+        console.log(this.position)
+        ctx.fillStyle = this.color
+        // ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+
+        ctx.font = this.text.style
+        ctx.strokeText(0, this.text.position.x, this.text.position.y)
     }
 }
 

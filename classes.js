@@ -107,6 +107,7 @@ class Fighter extends SpriteAnimated {
         this.stateCanBeChanged = true
         this.canJump = false
         this.loserStatus = false
+        this.freezState = false
     }
 
     getPosition() {
@@ -144,6 +145,10 @@ class Fighter extends SpriteAnimated {
     }
 
     setState() {
+        if (this.freezState) {
+            this.state = 'idle'
+            return
+        }
         if (this.state == 'attack1' && this.animateIsComplete) {
             this.stateCanBeChanged = true
         }
@@ -188,6 +193,15 @@ class Fighter extends SpriteAnimated {
         }
     }
 
+    freez() {
+        this.velocity.x = 0
+        if (this.velocity.y < 0) {
+            this.velocity.y = 0
+            return
+        }
+        this.freezState = true
+    }
+
     update() {
         if (this.state != 'death') {
             this.newState = 'idle';
@@ -222,11 +236,12 @@ class Fighter extends SpriteAnimated {
 
 
         if (this.state == 'death') {
-            this.velocity.x = 0
-            if (this.velocity.y < 0) {
-                this.velocity.y = 0
-            }
             this.loserStatus = true
+        }
+
+        if (indicatorOfWin.gameOver) {
+            console.log(this.freezState)
+            this.freez()
         }
 
         this.position.x += this.velocity.x
@@ -288,37 +303,36 @@ class IndicatorOfWin extends Indicator{
         this.player1 = player1
         this.player2 = player2
         this.winner = ''
-        this.canRender = false
+        this.gameOver = false
         this.tie = false
     }
 
     update() {
         if (this.player1.loserStatus) {
             this.winner = 'Player 2'
-            this.canRender = true
+            this.gameOver = true
         }
         if (this.player2.loserStatus) {
             this.winner = 'Player 1'
-            this.canRender = true
+            this.gameOver = true
         }
         if (timer.timeOut) {
             if (this.player1.health > this.player2.health) {
                 this.winner = 'Player 1'
-                this.canRender = true
+                this.gameOver = true
             }
             if (this.player2.health > this.player1.health) {
                 this.winner = 'Player 2'
-                this.canRender = true
+                this.gameOver = true
             }
             if (this.player2.health == this.player1.health) {
                 this.tie = true
-                console.log(indicatorOfWin.tie)
             }
         }
     }
 
     render() {
-        if (this.canRender) {
+        if (this.gameOver) {
             ctx.fillStyle = this.color
             ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
@@ -357,7 +371,7 @@ class Timer extends Indicator {
             style: 'bold 48px serif'
         }
 
-        this.timeRemaining = 5
+        this.timeRemaining = 30
         this.timeOut = false
         this.startTimer()
     }
@@ -379,7 +393,6 @@ class Timer extends Indicator {
     startTimer() {
         const intervalId = setInterval(() => {
             if (this.timeOut) {
-                console.log(indicatorOfWin.tie)
                 if (indicatorOfWin.tie) {
                     this.timeRemaining += 10
                     this.timeOut = false

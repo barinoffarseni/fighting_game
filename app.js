@@ -165,7 +165,7 @@ gameObjects.push(new HealthBar({
     direction: -1,
     entity: player
 }))
-gameObjects.push(new IndicatorOfWin())
+gameObjects.push(new IndicatorOfWin(player, enemy))
 gameObjects.push(new Timer())
 
 function gameLoop() {

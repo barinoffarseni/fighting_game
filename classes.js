@@ -261,39 +261,51 @@ class Indicator {
 }
 
 class IndicatorOfWin extends Indicator{
-    constructor() {
+    constructor(player1, player2) {
         super({
             position: {
                 x: canvas.width / 2,
                 y: canvas.height / 2
             },
             offset: {
-                x: -23,
-                y: 0
+                x: -120,
+                y: -90
             },
-            color: 'yellow',
-            width: 100,
-            height: 100,
+            color: 'grey',
+            width: 220,
+            height: 60,
         })
 
         this.text = {
             position: this.position,
-            style: 'bold 30px Arial',
-            color: this.color,
-            offset: this.offset
+            style: 'bold 35px Arial',
+            color: 'yellow',
+            offset: {
+                x: -115,
+                y: -50
+            }
+        }
+        this.player1 = player1
+        this.player2 = player2
+        this.winner = ""
+    }
+
+    update() {
+        // if (this.player1.loserStatus) {
+            this.winner = "Player 2"
+        // }
+        if (this.player2.loserStatus) {
+            this.winner = "Player 1"
         }
     }
 
-    update() {}
-
     render() {
-        console.log(this.position)
         ctx.fillStyle = this.color
-        // ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
         ctx.font = this.text.style
         ctx.fillStyle = this.text.color
-        ctx.fillText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+        ctx.fillText(this.winner + " WIN", this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 }
 

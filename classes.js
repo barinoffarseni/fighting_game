@@ -288,24 +288,29 @@ class IndicatorOfWin extends Indicator{
         this.player1 = player1
         this.player2 = player2
         this.winner = ""
+        this.canRender = false
     }
 
     update() {
-        // if (this.player1.loserStatus) {
+        if (this.player1.loserStatus) {
             this.winner = "Player 2"
-        // }
+            this.canRender = true
+        }
         if (this.player2.loserStatus) {
             this.winner = "Player 1"
+            this.canRender = true
         }
     }
 
     render() {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        if (this.canRender) {
+            ctx.fillStyle = this.color
+            ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
-        ctx.font = this.text.style
-        ctx.fillStyle = this.text.color
-        ctx.fillText(this.winner + " WIN", this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+            ctx.font = this.text.style
+            ctx.fillStyle = this.text.color
+            ctx.fillText(this.winner + " WIN", this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+        }
     }
 }
 

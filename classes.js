@@ -383,6 +383,7 @@ class Timer extends Indicator {
                 if (indicatorOfWin.tie) {
                     this.timeRemaining += 10
                     this.timeOut = false
+                    indicatorOfWin.tie = false
                     return
                 }
                 clearInterval(intervalId)

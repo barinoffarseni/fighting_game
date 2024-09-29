@@ -260,21 +260,27 @@ class Indicator {
     }
 }
 
-class WinBar extends Indicator{
+class IndicatorOfWin extends Indicator{
     constructor() {
         super({
             position: {
-                x: 30,
-                y: 83
+                x: canvas.width / 2,
+                y: canvas.height / 2
             },
-            color: 'grey',
+            offset: {
+                x: -23,
+                y: 0
+            },
+            color: 'yellow',
             width: 100,
             height: 100,
         })
 
         this.text = {
             position: this.position,
-            style: 'bold 48px serif'
+            style: 'bold 30px Arial',
+            color: this.color,
+            offset: this.offset
         }
     }
 
@@ -286,7 +292,8 @@ class WinBar extends Indicator{
         // ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         ctx.font = this.text.style
-        ctx.strokeText(0, this.text.position.x, this.text.position.y)
+        ctx.fillStyle = this.text.color
+        ctx.fillText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 }
 

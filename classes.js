@@ -289,6 +289,7 @@ class IndicatorOfWin extends Indicator{
         this.player2 = player2
         this.winner = ''
         this.canRender = false
+        this.tie = false
     }
 
     update() {
@@ -301,7 +302,18 @@ class IndicatorOfWin extends Indicator{
             this.canRender = true
         }
         if (timer.timeOut) {
-            console.log(timer.timeOut)
+            if (this.player1.health > this.player2.health) {
+                this.winner = 'Player 1'
+                this.canRender = true
+            }
+            if (this.player2.health > this.player1.health) {
+                this.winner = 'Player 2'
+                this.canRender = true
+            }
+            if (this.player2.health == this.player1.health) {
+                this.tie = true
+                console.log(indicatorOfWin.tie)
+            }
         }
     }
 
@@ -350,7 +362,11 @@ class Timer extends Indicator {
         this.startTimer()
     }
 
-    update() {}
+    update() {
+        if (this.timeRemaining <= 0) {
+            this.timeOut = true
+        }
+    }
 
     render() {
         ctx.fillStyle = this.color
@@ -362,9 +378,14 @@ class Timer extends Indicator {
 
     startTimer() {
         const intervalId = setInterval(() => {
-            if (this.timeRemaining <= 0) {
+            if (this.timeOut) {
+                console.log(indicatorOfWin.tie)
+                if (indicatorOfWin.tie) {
+                    this.timeRemaining += 10
+                    this.timeOut = false
+                    return
+                }
                 clearInterval(intervalId)
-                this.timeOut = true
             } else {
                 this.timeRemaining--
             }

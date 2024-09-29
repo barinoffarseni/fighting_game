@@ -287,18 +287,21 @@ class IndicatorOfWin extends Indicator{
         }
         this.player1 = player1
         this.player2 = player2
-        this.winner = ""
+        this.winner = ''
         this.canRender = false
     }
 
     update() {
         if (this.player1.loserStatus) {
-            this.winner = "Player 2"
+            this.winner = 'Player 2'
             this.canRender = true
         }
         if (this.player2.loserStatus) {
-            this.winner = "Player 1"
+            this.winner = 'Player 1'
             this.canRender = true
+        }
+        if (timer.timeOut) {
+            console.log(timer.timeOut)
         }
     }
 
@@ -309,7 +312,7 @@ class IndicatorOfWin extends Indicator{
 
             ctx.font = this.text.style
             ctx.fillStyle = this.text.color
-            ctx.fillText(this.winner + " WIN", this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+            ctx.fillText(this.winner + ' WIN', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
         }
     }
 }
@@ -342,7 +345,8 @@ class Timer extends Indicator {
             style: 'bold 48px serif'
         }
 
-        this.timeRemaining = 60
+        this.timeRemaining = 5
+        this.timeOut = false
         this.startTimer()
     }
 
@@ -360,6 +364,7 @@ class Timer extends Indicator {
         const intervalId = setInterval(() => {
             if (this.timeRemaining <= 0) {
                 clearInterval(intervalId)
+                this.timeOut = true
             } else {
                 this.timeRemaining--
             }

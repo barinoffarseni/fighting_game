@@ -107,7 +107,6 @@ class Fighter extends SpriteAnimated {
         this.stateCanBeChanged = true
         this.canJump = false
         this.loserStatus = false
-        this.freezState = false
     }
 
     getPosition() {
@@ -145,10 +144,6 @@ class Fighter extends SpriteAnimated {
     }
 
     setState() {
-        if (this.freezState) {
-            this.state = 'idle'
-            return
-        }
         if (this.state == 'attack1' && this.animateIsComplete) {
             this.stateCanBeChanged = true
         }
@@ -199,13 +194,12 @@ class Fighter extends SpriteAnimated {
             this.velocity.y = 0
             return
         }
-        this.freezState = true
     }
 
     update() {
         if (this.state != 'death') {
             this.newState = 'idle';
-    
+
             if (this.velocity.x != 0) {
                 this.newState = 'run';
             }
@@ -240,8 +234,7 @@ class Fighter extends SpriteAnimated {
         }
 
         if (indicatorOfWin.gameOver) {
-            console.log(this.freezState)
-            this.freez()
+            this.newState = 'idle';
         }
 
         this.position.x += this.velocity.x

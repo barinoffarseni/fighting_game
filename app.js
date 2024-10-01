@@ -279,33 +279,35 @@ function keyup(event) {
 
 window.addEventListener('keydown', keydown)
 function keydown(event) {
-    switch (event.key) {
-        case 'd':
-            keys.d = true
-            break
-        case 'a':
-            keys.a = true
-            break
-        case 'w':
-            keys.w = true
-            break
-        case 's':
-            keys.s = true
-            break
+    if (!indicatorOfWin.gameOver) {
+        switch (event.key) {
+            case 'd':
+                keys.d = true
+                break
+            case 'a':
+                keys.a = true
+                break
+            case 'w':
+                keys.w = true
+                break
+            case 's':
+                keys.s = true
+                break
 
 
-        case 'ArrowRight':
-            keys.right = true
-            break
-        case 'ArrowLeft':
-            keys.left = true
-            break
-        case 'ArrowUp':
-            keys.up = true
-            break
-        case 'ArrowDown':
-            keys.down = true
-            break
+            case 'ArrowRight':
+                keys.right = true
+                break
+            case 'ArrowLeft':
+                keys.left = true
+                break
+            case 'ArrowUp':
+                keys.up = true
+                break
+            case 'ArrowDown':
+                keys.down = true
+                break
+        }
     }
 }
 

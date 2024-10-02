@@ -106,7 +106,6 @@ class Fighter extends SpriteAnimated {
         this.newState = 'idle'
         this.stateCanBeChanged = true
         this.canJump = false
-        this.loserStatus = false
     }
 
     getPosition() {
@@ -192,7 +191,6 @@ class Fighter extends SpriteAnimated {
         this.velocity.x = 0
         if (this.velocity.y < 0) {
             this.velocity.y = 0
-            return
         }
     }
 
@@ -226,11 +224,6 @@ class Fighter extends SpriteAnimated {
             }
 
             this.setState()
-        }
-
-
-        if (this.state == 'death') {
-            this.loserStatus = true
         }
 
         if (winIndicator.gameOver) {
@@ -300,11 +293,11 @@ class WinIndicator extends Indicator{
     }
 
     update() {
-        if (this.player1.loserStatus) {
+        if (this.player1.state == 'death') {
             this.winner = 'Player 2'
             gameOver = true
         }
-        if (this.player2.loserStatus) {
+        if (this.player2.state == 'death') {
             this.winner = 'Player 1'
             gameOver = true
         }

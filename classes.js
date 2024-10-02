@@ -296,27 +296,26 @@ class IndicatorOfWin extends Indicator{
         this.player1 = player1
         this.player2 = player2
         this.winner = ''
-        this.gameOver = false
         this.tie = false
     }
 
     update() {
         if (this.player1.loserStatus) {
             this.winner = 'Player 2'
-            this.gameOver = true
+            gameOver = true
         }
         if (this.player2.loserStatus) {
             this.winner = 'Player 1'
-            this.gameOver = true
+            gameOver = true
         }
         if (timer.timeOut) {
             if (this.player1.health > this.player2.health) {
                 this.winner = 'Player 1'
-                this.gameOver = true
+                gameOver = true
             }
             if (this.player2.health > this.player1.health) {
                 this.winner = 'Player 2'
-                this.gameOver = true
+                gameOver = true
             }
             if (this.player2.health == this.player1.health) {
                 this.tie = true
@@ -325,7 +324,7 @@ class IndicatorOfWin extends Indicator{
     }
 
     render() {
-        if (this.gameOver) {
+        if (gameOver) {
             ctx.fillStyle = this.color
             ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 

@@ -5,6 +5,8 @@ canvas.width = 1024
 canvas.height = 576
 
 const gravity = 0.2
+let gameOver = false
+
 let debug = false
 
 const keys = {
@@ -279,7 +281,7 @@ function keyup(event) {
 
 window.addEventListener('keydown', keydown)
 function keydown(event) {
-    if (!indicatorOfWin.gameOver) {
+    if (!gameOver) {
         switch (event.key) {
             case 'd':
                 keys.d = true

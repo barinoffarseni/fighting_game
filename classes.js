@@ -233,7 +233,7 @@ class Fighter extends SpriteAnimated {
             this.loserStatus = true
         }
 
-        if (indicatorOfWin.gameOver) {
+        if (winIndicator.gameOver) {
             this.newState = 'idle';
         }
 
@@ -268,7 +268,7 @@ class Indicator {
     }
 }
 
-class IndicatorOfWin extends Indicator{
+class WinIndicator extends Indicator{
     constructor(player1, player2) {
         super({
             position: {
@@ -385,10 +385,10 @@ class Timer extends Indicator {
     startTimer() {
         const intervalId = setInterval(() => {
             if (this.timeOut) {
-                if (indicatorOfWin.tie) {
+                if (winIndicator.tie) {
                     this.timeRemaining += 10
                     this.timeOut = false
-                    indicatorOfWin.tie = false
+                    winIndicator.tie = false
                     return
                 }
                 clearInterval(intervalId)

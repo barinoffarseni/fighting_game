@@ -168,8 +168,8 @@ gameObjects.push(new HealthBar({
 
 const timer = new Timer()
 gameObjects.push(timer)
-const indicatorOfWin = new IndicatorOfWin(player, enemy)
-gameObjects.push(indicatorOfWin)
+const winIndicator = new WinIndicator(player, enemy)
+gameObjects.push(winIndicator)
 
 function gameLoop() {
 
@@ -279,7 +279,7 @@ function keyup(event) {
 
 window.addEventListener('keydown', keydown)
 function keydown(event) {
-    if (!indicatorOfWin.gameOver) {
+    if (!winIndicator.gameOver) {
         switch (event.key) {
             case 'd':
                 keys.d = true

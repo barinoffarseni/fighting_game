@@ -269,7 +269,7 @@ class Indicator {
 }
 
 class WinIndicator extends Indicator{
-    constructor(player1, player2) {
+    constructor(player1, player2, timer) {
         super({
             position: {
                 x: canvas.width / 2,
@@ -295,6 +295,7 @@ class WinIndicator extends Indicator{
         }
         this.player1 = player1
         this.player2 = player2
+        this.timer = timer
         this.winner = ''
         this.tie = false
     }
@@ -336,7 +337,7 @@ class WinIndicator extends Indicator{
 }
 
 class Timer extends Indicator {
-    constructor() {
+    constructor(tie) {
         super({
             position: {
                 x: canvas.width / 2,
@@ -365,6 +366,7 @@ class Timer extends Indicator {
 
         this.timeRemaining = 30
         this.timeOut = false
+        this.tie = tie
         this.startTimer()
     }
 
@@ -385,10 +387,10 @@ class Timer extends Indicator {
     startTimer() {
         const intervalId = setInterval(() => {
             if (this.timeOut) {
-                if (winIndicator.tie) {
+                if (this.tie) {
                     this.timeRemaining += 10
                     this.timeOut = false
-                    winIndicator.tie = false
+                    this.tie = false
                     return
                 }
                 clearInterval(intervalId)

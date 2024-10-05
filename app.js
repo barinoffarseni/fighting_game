@@ -168,9 +168,9 @@ gameObjects.push(new HealthBar({
     entity: player
 }))
 
-const timer = new Timer()
+const timer = new Timer(winIndicator.tie)
 gameObjects.push(timer)
-const winIndicator = new WinIndicator(player, enemy)
+const winIndicator = new WinIndicator(player, enemy, timer)
 gameObjects.push(winIndicator)
 
 function gameLoop() {

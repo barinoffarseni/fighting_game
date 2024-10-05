@@ -424,36 +424,42 @@ class Button {
     constructor() {
         this.position = {
             x: canvas.width / 2,
-            y: canvas.height / 1.7
+            y: canvas.height / 1.6
         }
         this.offset = {
-            x: -50,
-            y: 0
+            x: -70,
+            y: -50
         }
         this.text = {
-            position: {
-                x: canvas.width / 1.7,
-                y: 75
-            },
+            position: this.position,
             offset: {
-                x: -23,
-                y: 0
+                x: -65,
+                y: -10
+            },
+            style: 'bold 35px Arial',
+            color: {
+                first: 'black',
+                second: 'white'
             }
         }
-        this.color_1 = 'grey'
-        this.color_2 = 'white'
-        this.width = 100
-        this.height = 100
+        this.color = {
+            first: 'grey',
+            second: 'black'
+        }
+        this.push_color = 'white'
+        this.width = 130
+        this.height = 60
     }
 
     update() {
     }
 
     render() {
-        ctx.fillStyle = this.color
+        ctx.fillStyle = this.color.first
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
         ctx.font = this.text.style
-        ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+        ctx.fillStyle = this.text.color.first
+        ctx.fillText('Restart', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 }

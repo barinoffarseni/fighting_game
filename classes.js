@@ -419,3 +419,41 @@ class HealthBar extends Indicator {
         this.healthValue = this.entity.health * 100 / 10000
     }
 }
+
+class Button {
+    constructor() {
+        this.position = {
+            x: canvas.width / 2,
+            y: canvas.height / 1.7
+        }
+        this.offset = {
+            x: -50,
+            y: 0
+        }
+        this.text = {
+            position: {
+                x: canvas.width / 1.7,
+                y: 75
+            },
+            offset: {
+                x: -23,
+                y: 0
+            }
+        }
+        this.color_1 = 'grey'
+        this.color_2 = 'white'
+        this.width = 100
+        this.height = 100
+    }
+
+    update() {
+    }
+
+    render() {
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+
+        ctx.font = this.text.style
+        ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+    }
+}

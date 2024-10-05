@@ -172,7 +172,8 @@ const timer = new Timer()
 gameObjects.push(timer)
 const winIndicator = new WinIndicator(player, enemy)
 gameObjects.push(winIndicator)
-gameObjects.push(new Button())
+const restartButton = new Button()
+gameObjects.push(restartButton)
 
 
 function gameLoop() {

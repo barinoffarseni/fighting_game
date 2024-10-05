@@ -452,6 +452,17 @@ class Button {
     }
 
     update() {
+        canvas.addEventListener('click', function(event) {
+            // Получаем координаты клика
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            // Проверяем, был ли клик по кнопке
+            if (mouseX > this.position.x && mouseX < this.position.y + this.width && mouseY > this.position.y && mouseY < this.position.y + this.height) {
+                reloadScript();  // Если да, то вызываем перезапуск
+            }
+        })
     }
 
     render() {

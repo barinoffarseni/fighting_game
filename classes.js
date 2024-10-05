@@ -456,7 +456,9 @@ class Button {
 
     render() {
         ctx.fillStyle = this.color.first
+        ctx.strokeStyle = 'black'
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
         ctx.font = this.text.style
         ctx.fillStyle = this.text.color.first

@@ -457,28 +457,32 @@ class Button {
     }
 
     update() {
+        if (gameOver) {
         // this.mouse.getMousePosition()
-        canvas.addEventListener('click', function(event) {
-            // Получаем координаты клика
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = event.clientX - rect.left;
-            const mouseY = event.clientY - rect.top;
+            canvas.addEventListener('click', function(event) {
+                // Получаем координаты клика
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const mouseY = event.clientY - rect.top;
 
-            if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
-                location.reload();
-            }
-        })
+                if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+                    location.reload();
+                }
+            })
+        }
     }
 
     render() {
-        ctx.fillStyle = this.color.first
-        ctx.strokeStyle = 'black'
-        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
-        ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        if (gameOver) {
+            ctx.fillStyle = this.color.first
+            ctx.strokeStyle = 'black'
+            ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+            ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
-        ctx.font = this.text.style
-        ctx.fillStyle = this.text.color.first
-        ctx.fillText('Restart', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+            ctx.font = this.text.style
+            ctx.fillStyle = this.text.color.first
+            ctx.fillText('Restart', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+        }
     }
 }
 

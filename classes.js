@@ -421,7 +421,7 @@ class HealthBar extends Indicator {
 }
 
 class Button {
-    constructor() {
+    constructor(mouse) {
         this.position = {
             x: canvas.width / 2,
             y: canvas.height / 1.6
@@ -449,18 +449,23 @@ class Button {
         this.push_color = 'white'
         this.width = 130
         this.height = 60
+        this.mouse = mouse
+        this.minX = this.position.x + this.offset.x
+        this.maxX = this.position.x + this.offset.x + this.width
+        this.minY = this.position.y + this.offset.y
+        this.maxY = this.position.y + this.offset.y + this.width
     }
 
     update() {
+        // this.mouse.getMousePosition()
         canvas.addEventListener('click', function(event) {
             // Получаем координаты клика
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
 
-            // Проверяем, был ли клик по кнопке
-            if (mouseX > this.position.x && mouseX < this.position.y + this.width && mouseY > this.position.y && mouseY < this.position.y + this.height) {
-                reloadScript();  // Если да, то вызываем перезапуск
+            if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+                location.reload();
             }
         })
     }
@@ -476,3 +481,25 @@ class Button {
         ctx.fillText('Restart', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
     }
 }
+
+// class Mouse {
+//     constructor() {
+//         this.position = {
+//             x: 0,
+//             y: 0
+//         }
+//     }
+
+//     getClickPosition(event) {
+//         const rect = canvas.getBoundingClientRect();
+//         return {
+//             x: event.clientX - rect.left,
+//             y: event.clientY - rect.top
+//         }
+//     }
+//     getMousePosition() {
+//         canvas.addEventListener('click', this.getClickPosition())
+//         this.position = getClickPosition()
+//         }
+
+// }

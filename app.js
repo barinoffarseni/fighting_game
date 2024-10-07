@@ -141,40 +141,6 @@ const enemy = new Fighter({
     },
     sprites: {
         idle: {
-            src: './img/kenji/Idle.png',
-            frames: 4
-        },
-        run: {
-            src: './img/kenji/Run.png',
-            frames: 8
-        },
-        jump: {
-            src: './img/kenji/Jump.png',
-            frames: 2
-        },
-        fall: {
-            src: './img/kenji/Fall.png',
-            frames: 2
-        },
-        attack1: {
-            src: './img/kenji/Attack1.png',
-            frames: 4
-        },
-        attack2: {
-            src: './img/kenji/Attack2.png',
-            frames: 4
-        },
-        takeHit: {
-            src: './img/kenji/Take Hit.png',
-            frames: 3
-        },
-        death: {
-            src: './img/kenji/Death.png',
-            frames: 7
-        }
-    },
-    spritesInverted: {
-        idle: {
             src: './img/kenji/Idle inverted.png',
             frames: 4
         },
@@ -204,6 +170,40 @@ const enemy = new Fighter({
         },
         death: {
             src: './img/kenji/Death inverted.png',
+            frames: 7
+        }
+    },
+    spritesInverted: {
+        idle: {
+            src: './img/kenji/Idle.png',
+            frames: 4
+        },
+        run: {
+            src: './img/kenji/Run.png',
+            frames: 8
+        },
+        jump: {
+            src: './img/kenji/Jump.png',
+            frames: 2
+        },
+        fall: {
+            src: './img/kenji/Fall.png',
+            frames: 2
+        },
+        attack1: {
+            src: './img/kenji/Attack1.png',
+            frames: 4
+        },
+        attack2: {
+            src: './img/kenji/Attack2.png',
+            frames: 4
+        },
+        takeHit: {
+            src: './img/kenji/Take Hit.png',
+            frames: 3
+        },
+        death: {
+            src: './img/kenji/Death.png',
             frames: 7
         }
     },
@@ -287,8 +287,8 @@ function control() {
 }
 
 function update() {
-    player.atackBox.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
-    enemy.atackBox.direction = getAttackBoxDirection(enemy.position.x, player.position.x)
+    player.direction = getAttackBoxDirection(player.position.x, enemy.position.x)
+    enemy.direction = getAttackBoxDirection(enemy.position.x, player.position.x)
 
     if (checkAttackIsSuccess(player, enemy)) {
         enemy.health -= 10

@@ -90,12 +90,12 @@ class Fighter extends SpriteAnimated {
             position: this.position,
             width: 160,
             height: 90,
-            direction: 1,
             offset: {
                 x: 80,
                 y: 0
             }
         }
+        this.direction = 1,
         this.isAttack = false
         this.attackFrame = attackFrame
         this.health = 100
@@ -114,7 +114,7 @@ class Fighter extends SpriteAnimated {
     }
 
     getAttackBoxPosition() {
-        if (this.atackBox.direction > 0) {
+        if (this.direction > 0) {
             return {
                 x :this.position.x + this.atackBox.offset.x,
                 y :this.position.y + this.atackBox.offset.y
@@ -139,7 +139,7 @@ class Fighter extends SpriteAnimated {
                 ctx.fillStyle = 'yellow'
             }
 
-            ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.atackBox.direction, this.atackBox.height)
+            ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.direction, this.atackBox.height)
         }
     }
 
@@ -159,8 +159,14 @@ class Fighter extends SpriteAnimated {
         if (this.state != this.newState && this.stateCanBeChanged) {
             this.state = this.newState
 
-            this.img.src = this.spritesInverted[this.state].src
-            this.imgFrames = this.spritesInverted[this.state].frames
+            console.log(this.direction)
+            if (this.direction < 0) {
+                this.img.src = this.spritesInverted[this.state].src
+                this.imgFrames = this.spritesInverted[this.state].frames
+            } else {
+                this.img.src = this.sprites[this.state].src
+                this.imgFrames = this.sprites[this.state].frames
+            }
             this.currentFrame = 0
             this.framesElapsed = 0
 
@@ -179,11 +185,11 @@ class Fighter extends SpriteAnimated {
     }
 
     setAttackBoxMinMaxPosition() {
-        if (this.atackBox.direction > 0) {
+        if (this.direction > 0) {
             this.attackBoxXMin = this.getAttackBoxPosition().x
-            this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.atackBox.direction
+            this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.direction
         } else {
-            this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.atackBox.direction
+            this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.direction
             this.attackBoxXMax = this.getAttackBoxPosition().x
         }
     }

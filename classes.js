@@ -106,7 +106,6 @@ class Fighter extends SpriteAnimated {
         this.newState = 'idle'
         this.stateCanBeChanged = true
         this.canJump = false
-        this.loserStatus = false
     }
 
     getPosition() {
@@ -192,7 +191,6 @@ class Fighter extends SpriteAnimated {
         this.velocity.x = 0
         if (this.velocity.y < 0) {
             this.velocity.y = 0
-            return
         }
     }
 
@@ -226,11 +224,6 @@ class Fighter extends SpriteAnimated {
             }
 
             this.setState()
-        }
-
-
-        if (this.state == 'death') {
-            this.loserStatus = true
         }
 
         if (winIndicator.gameOver) {
@@ -295,21 +288,21 @@ class WinIndicator extends Indicator{
         }
         this.player1 = player1
         this.player2 = player2
-        this.timer = timer
         this.winner = ''
         this.tie = false
+        this.timer = timer
     }
 
     update() {
-        if (this.player1.loserStatus) {
+        if (this.player1.state == 'death') {
             this.winner = 'Player 2'
             gameOver = true
         }
-        if (this.player2.loserStatus) {
+        if (this.player2.state == 'death') {
             this.winner = 'Player 1'
             gameOver = true
         }
-        if (timer.timeOut) {
+        if (this.timer.timeOut) {
             if (this.player1.health > this.player2.health) {
                 this.winner = 'Player 1'
                 gameOver = true
@@ -337,7 +330,7 @@ class WinIndicator extends Indicator{
 }
 
 class Timer extends Indicator {
-    constructor(tie) {
+    constructor() {
         super({
             position: {
                 x: canvas.width / 2,
@@ -366,7 +359,6 @@ class Timer extends Indicator {
 
         this.timeRemaining = 30
         this.timeOut = false
-        this.tie = tie
         this.startTimer()
     }
 
@@ -387,12 +379,6 @@ class Timer extends Indicator {
     startTimer() {
         const intervalId = setInterval(() => {
             if (this.timeOut) {
-                if (this.tie) {
-                    this.timeRemaining += 10
-                    this.timeOut = false
-                    this.tie = false
-                    return
-                }
                 clearInterval(intervalId)
             } else {
                 this.timeRemaining--

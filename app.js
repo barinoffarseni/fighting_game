@@ -168,7 +168,7 @@ gameObjects.push(new HealthBar({
     entity: player
 }))
 
-const timer = new Timer(winIndicator.tie)
+const timer = new Timer()
 gameObjects.push(timer)
 const winIndicator = new WinIndicator(player, enemy, timer)
 gameObjects.push(winIndicator)
@@ -234,6 +234,12 @@ function update() {
     
     if (checkAttackIsSuccess(enemy, player)) {
         player.health -= 10
+    }
+
+    if (winIndicator.tie) {
+        timer.timeRemaining += 10
+        timer.timeOut = false
+        winIndicator.tie = false
     }
 
     gameObjects.forEach(gameObject => {

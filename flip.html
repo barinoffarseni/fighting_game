@@ -1,0 +1,67 @@
+<canvas id="canvas" width=600 height=200></canvas>
+<img src='./img/kenji/Take hit.png'>
+<style>
+    #canvas{border:1px solid red; margin:0 auto; }
+</style>
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let img = new Image();
+    img.onload = start;
+    img.src = "./img/kenji/Take hit.png";
+    let imgFrames = 3;
+    let dy = 0;
+
+    function start() {
+
+        // НЕ перевернуто
+        // for (let currentFrame = 0; currentFrame < imgFrames; currentFrame++) {
+        //     dx = currentFrame * img.width / imgFrames
+        //     ctx.drawImage(
+        //         img,
+        //         dx,
+        //         dy,
+        //         img.width / imgFrames,
+        //         img.height,
+        //         dx,
+        //         0,
+        //         img.width / imgFrames,
+        //         img.height
+        //     )
+        // }
+
+        // перевернуто
+        for (let currentFrame = 0; currentFrame < imgFrames; currentFrame++) {
+            dx = currentFrame * img.width / imgFrames
+
+            ctx.save();
+            // move to x + img's width
+            // adding img.width is necessary because we're flipping from
+            //     the right side of the img so after flipping it's still
+            //     at [x,y]
+            ctx.translate(dx + img.width / imgFrames, 0);
+
+            // scaleX by -1; this "trick" flips horizontally
+            ctx.scale(-1, 1);
+
+            // draw the img
+            // no need for x,y since we've already translated
+            ctx.drawImage(
+                img,
+                dx,
+                dy,
+                img.width / imgFrames,
+                img.height,
+                0,
+                0,
+                img.width / imgFrames,
+                img.height
+            )
+
+            ctx.restore();
+        }
+    }
+</script>
+
+<!-- вот отсюда взята логика https://stackoverflow.com/questions/35973441/how-to-horizontally-flip-an-image -->

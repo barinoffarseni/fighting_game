@@ -73,7 +73,7 @@ class SpriteAnimated extends SpriteStatic {
 }
 
 class Fighter extends SpriteAnimated {
-    constructor({position, velocity, sprites, offset, attackFrame}) {
+    constructor({position, velocity, sprites, spritesInverted, offset, attackFrame}) {
         super({
             position,
             imgSrc: './img/samuraiMack/Idle.png',
@@ -101,6 +101,7 @@ class Fighter extends SpriteAnimated {
         this.health = 100
         this.previousHealth = 100
         this.sprites = sprites
+        this.spritesInverted = spritesInverted
         this.attack = false;
         this.state = 'idle'
         this.newState = 'idle'
@@ -158,8 +159,8 @@ class Fighter extends SpriteAnimated {
         if (this.state != this.newState && this.stateCanBeChanged) {
             this.state = this.newState
 
-            this.img.src = this.sprites[this.state].src
-            this.imgFrames = this.sprites[this.state].frames
+            this.img.src = this.spritesInverted[this.state].src
+            this.imgFrames = this.spritesInverted[this.state].frames
             this.currentFrame = 0
             this.framesElapsed = 0
 

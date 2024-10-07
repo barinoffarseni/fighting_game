@@ -86,6 +86,40 @@ const player = new Fighter({
             frames: 6
         }
     },
+    spritesInverted: {
+        idle: {
+            src: './img/samuraiMack/Idle inverted.png',
+            frames: 8
+        },
+        run: {
+            src: './img/samuraiMack/Run inverted.png',
+            frames: 8
+        },
+        jump: {
+            src: './img/samuraiMack/Jump inverted.png',
+            frames: 2
+        },
+        fall: {
+            src: './img/samuraiMack/Fall inverted.png',
+            frames: 2
+        },
+        attack1: {
+            src: './img/samuraiMack/Attack1 inverted.png',
+            frames: 6
+        },
+        attack2: {
+            src: './img/samuraiMack/Attack2 inverted.png',
+            frames: 6
+        },
+        takeHit: {
+            src: './img/samuraiMack/Take Hit inverted.png',
+            frames: 4
+        },
+        death: {
+            src: './img/samuraiMack/Death inverted.png',
+            frames: 6
+        }
+    },
     offset: {
         x: -215,
         y: -155
@@ -136,6 +170,40 @@ const enemy = new Fighter({
         },
         death: {
             src: './img/kenji/Death.png',
+            frames: 7
+        }
+    },
+    spritesInverted: {
+        idle: {
+            src: './img/kenji/Idle inverted.png',
+            frames: 4
+        },
+        run: {
+            src: './img/kenji/Run inverted.png',
+            frames: 8
+        },
+        jump: {
+            src: './img/kenji/Jump inverted.png',
+            frames: 2
+        },
+        fall: {
+            src: './img/kenji/Fall inverted.png',
+            frames: 2
+        },
+        attack1: {
+            src: './img/kenji/Attack1 inverted.png',
+            frames: 4
+        },
+        attack2: {
+            src: './img/kenji/Attack2 inverted.png',
+            frames: 4
+        },
+        takeHit: {
+            src: './img/kenji/Take Hit inverted.png',
+            frames: 3
+        },
+        death: {
+            src: './img/kenji/Death inverted.png',
             frames: 7
         }
     },

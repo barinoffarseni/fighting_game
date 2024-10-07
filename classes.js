@@ -159,7 +159,6 @@ class Fighter extends SpriteAnimated {
         if (this.state != this.newState && this.stateCanBeChanged) {
             this.state = this.newState
 
-            console.log(this.direction)
             if (this.direction < 0) {
                 this.img.src = this.spritesInverted[this.state].src
                 this.imgFrames = this.spritesInverted[this.state].frames

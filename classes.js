@@ -451,9 +451,7 @@ class Button {
 
     update() {
         if (gameOver) {
-        // this.mouse.getMousePosition()
             canvas.addEventListener('click', function(event) {
-                // Получаем координаты клика
                 const rect = canvas.getBoundingClientRect();
                 const mouseX = event.clientX - rect.left;
                 const mouseY = event.clientY - rect.top;
@@ -478,25 +476,3 @@ class Button {
         }
     }
 }
-
-// class Mouse {
-//     constructor() {
-//         this.position = {
-//             x: 0,
-//             y: 0
-//         }
-//     }
-
-//     getClickPosition(event) {
-//         const rect = canvas.getBoundingClientRect();
-//         return {
-//             x: event.clientX - rect.left,
-//             y: event.clientY - rect.top
-//         }
-//     }
-//     getMousePosition() {
-//         canvas.addEventListener('click', this.getClickPosition())
-//         this.position = getClickPosition()
-//         }
-
-// }

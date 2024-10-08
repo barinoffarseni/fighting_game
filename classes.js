@@ -159,10 +159,10 @@ class Fighter extends SpriteAnimated {
             this.state = this.newState
 
             if (this.direction < 0) {
-                this.img.src = this.sprites[this.state].invSrc
+                this.img.src = this.sprites[this.state].leftScr
                 this.imgFrames = this.sprites[this.state].frames
             } else {
-                this.img.src = this.sprites[this.state].src
+                this.img.src = this.sprites[this.state].rightSrc
                 this.imgFrames = this.sprites[this.state].frames
             }
             this.currentFrame = 0

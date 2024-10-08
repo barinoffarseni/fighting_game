@@ -54,43 +54,43 @@ const player = new Fighter({
     },
     sprites: {
         idle: {
-            src: './img/samuraiMack/Idle.png',
-            invSrc: './img/samuraiMack/Idle inverted.png',
+            rightSrc: './img/samuraiMack/Idle.png',
+            leftScr: './img/samuraiMack/Idle inverted.png',
             frames: 8
         },
         run: {
-            src: './img/samuraiMack/Run.png',
-            invSrc: './img/samuraiMack/Run inverted.png',
+            rightSrc: './img/samuraiMack/Run.png',
+            leftScr: './img/samuraiMack/Run inverted.png',
             frames: 8
         },
         jump: {
-            src: './img/samuraiMack/Jump.png',
-            invSrc: './img/samuraiMack/Jump inverted.png',
+            rightSrc: './img/samuraiMack/Jump.png',
+            leftScr: './img/samuraiMack/Jump inverted.png',
             frames: 2
         },
         fall: {
-            src: './img/samuraiMack/Fall.png',
-            invSrc: './img/samuraiMack/Fall inverted.png',
+            rightSrc: './img/samuraiMack/Fall.png',
+            leftScr: './img/samuraiMack/Fall inverted.png',
             frames: 2
         },
         attack1: {
-            src: './img/samuraiMack/Attack1.png',
-            invSrc: './img/samuraiMack/Attack1 inverted.png',
+            rightSrc: './img/samuraiMack/Attack1.png',
+            leftScr: './img/samuraiMack/Attack1 inverted.png',
             frames: 6
         },
         attack2: {
-            src: './img/samuraiMack/Attack2.png',
-            invSrc: './img/samuraiMack/Attack2 inverted.png',
+            rightSrc: './img/samuraiMack/Attack2.png',
+            leftScr: './img/samuraiMack/Attack2 inverted.png',
             frames: 6
         },
         takeHit: {
-            src: './img/samuraiMack/Take Hit.png',
-            invSrc: './img/samuraiMack/Take Hit inverted.png',
+            rightSrc: './img/samuraiMack/Take Hit.png',
+            leftScr: './img/samuraiMack/Take Hit inverted.png',
             frames: 4
         },
         death: {
-            src: './img/samuraiMack/Death.png',
-            invSrc: './img/samuraiMack/Death inverted.png',
+            rightSrc: './img/samuraiMack/Death.png',
+            leftScr: './img/samuraiMack/Death inverted.png',
             frames: 6
         }
     },
@@ -115,43 +115,43 @@ const enemy = new Fighter({
     },
     sprites: {
         idle: {
-            src: './img/kenji/Idle.png',
-            invSrc: './img/kenji/Idle inverted.png',
+            rightSrc: './img/kenji/Idle inverted.png',
+            leftScr: './img/kenji/Idle.png',
             frames: 4
         },
         run: {
-            src: './img/kenji/Run.png',
-            invSrc: './img/kenji/Run inverted.png',
+            rightSrc: './img/kenji/Run inverted.png',
+            leftScr: './img/kenji/Run.png',
             frames: 8
         },
         jump: {
-            src: './img/kenji/Jump.png',
-            invSrc: './img/kenji/Jump inverted.png',
+            rightSrc: './img/kenji/Jump inverted.png',
+            leftScr: './img/kenji/Jump.png',
             frames: 2
         },
         fall: {
-            src: './img/kenji/Fall.png',
-            invSrc: './img/kenji/Fall inverted.png',
+            rightSrc: './img/kenji/Fall inverted.png',
+            leftScr: './img/kenji/Fall.png',
             frames: 2
         },
         attack1: {
-            src: './img/kenji/Attack1.png',
-            invSrc: './img/kenji/Attack1 inverted.png',
+            rightSrc: './img/kenji/Attack1 inverted.png',
+            leftScr: './img/kenji/Attack1.png',
             frames: 4
         },
         attack2: {
-            src: './img/kenji/Attack2.png',
-            invSrc: './img/kenji/Attack2 inverted.png',
+            rightSrc: './img/kenji/Attack2 inverted.png',
+            leftScr: './img/kenji/Attack2.png',
             frames: 4
         },
         takeHit: {
-            src: './img/kenji/Take Hit.png',
-            invSrc: './img/kenji/Take Hit inverted.png',
+            rightSrc: './img/kenji/Take Hit inverted.png',
+            leftScr: './img/kenji/Take Hit.png',
             frames: 3
         },
         death: {
-            src: './img/kenji/Death.png',
-            invSrc: './img/kenji/Death inverted.png',
+            rightSrc: './img/kenji/Death inverted.png',
+            leftScr: './img/kenji/Death.png',
             frames: 7
         }
     },

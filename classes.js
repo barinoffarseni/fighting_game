@@ -134,7 +134,7 @@ class Fighter extends SpriteAnimated {
             ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
 
             ctx.fillStyle = 'gray'
-            if (this.state == 'attack1' && this.currentFrame == this.attackFrame) {
+            if (this.state == 'attack1' || this.state == 'attack2' && this.currentFrame == this.attackFrame) {
                 ctx.fillStyle = 'yellow'
             }
 
@@ -233,7 +233,7 @@ class Fighter extends SpriteAnimated {
                 this.newState = 'attack1';
             }
 
-            if (this.state == 'attack1') {
+            if (this.state == 'attack1' && this.attack) {
                 this.newState = 'attack2'
             }
     

@@ -263,11 +263,11 @@ function update() {
         winIndicator.tie = false
     }
 
+    // console.log(player.attack)
     gameObjects.forEach(gameObject => {
         gameObject.update()
     })
 }
-
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     gameObjects.forEach(gameObject => {
@@ -349,15 +349,16 @@ function getFighterDirection(x1, x2) {
 }
 
 function checkAttackIsSuccess(attacker, victim) {
-    if (attacker.state != 'attack1') {
+    if (attacker.state != 'attack1' && attacker.state != 'attack2') {
         return false
     }
-
+    
     if (attacker.currentFrame != attacker.attackFrame) {
         return false
     }
-
+    
     if (attacker.framesElapsed % attacker.framesHold === 0) {
+        console.log(attacker.state)
         attacker.setAttackBoxMinMaxPosition()
     
         xMin = victim.position.x

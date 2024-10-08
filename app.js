@@ -349,14 +349,14 @@ function getFighterDirection(x1, x2) {
 }
 
 function checkAttackIsSuccess(attacker, victim) {
-    if (attacker.state != 'attack1') {
+    if (attacker.state != 'attack1' && attacker.state != 'attack2') {
         return false
     }
-
+    
     if (attacker.currentFrame != attacker.attackFrame) {
         return false
     }
-
+    
     if (attacker.framesElapsed % attacker.framesHold === 0) {
         attacker.setAttackBoxMinMaxPosition()
     

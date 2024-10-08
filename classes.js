@@ -134,7 +134,7 @@ class Fighter extends SpriteAnimated {
             ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
 
             ctx.fillStyle = 'gray'
-            if (this.state == 'attack1' && this.currentFrame == this.attackFrame) {
+            if (this.state == 'attack1' || this.state == 'attack2' && this.currentFrame == this.attackFrame) {
                 ctx.fillStyle = 'yellow'
             }
 
@@ -146,6 +146,11 @@ class Fighter extends SpriteAnimated {
         if (this.state == 'attack1' && this.animateIsComplete) {
             this.stateCanBeChanged = true
         }
+
+        if (this.state == 'attack2' && this.animateIsComplete) {
+            this.stateCanBeChanged = true
+        }
+
 
         if (this.state == 'takeHit' && this.animateIsComplete) {
             this.stateCanBeChanged = true
@@ -169,6 +174,10 @@ class Fighter extends SpriteAnimated {
             this.framesElapsed = 0
 
             if (this.state == 'attack1') {
+                this.stateCanBeChanged = false
+            }
+
+            if (this.state == 'attack2') {
                 this.stateCanBeChanged = false
             }
 
@@ -222,6 +231,10 @@ class Fighter extends SpriteAnimated {
 
             if (this.attack) {
                 this.newState = 'attack1';
+            }
+
+            if (this.state == 'attack1' && this.attack) {
+                this.newState = 'attack2'
             }
     
             if (this.health <= 0) {

@@ -414,3 +414,60 @@ class HealthBar extends Indicator {
         this.healthValue = this.entity.health * 100 / 10000
     }
 }
+
+class Button {
+    constructor(mouse) {
+        this.position = {
+            x: canvas.width / 2,
+            y: canvas.height / 1.6
+        }
+        this.offset = {
+            x: -70,
+            y: -50
+        }
+        this.text = {
+            position: this.position,
+            offset: {
+                x: -65,
+                y: -10
+            },
+            style: 'bold 35px Arial',
+            color: 'black'
+        }
+        this.color = 'grey'
+        this.width = 130
+        this.height = 60
+        this.mouse = mouse
+        this.minX = this.position.x + this.offset.x
+        this.maxX = this.position.x + this.offset.x + this.width
+        this.minY = this.position.y + this.offset.y
+        this.maxY = this.position.y + this.offset.y + this.width
+    }
+
+    update() {
+        if (gameOver) {
+            canvas.addEventListener('click', function(event) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const mouseY = event.clientY - rect.top;
+
+                if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+                    location.reload();
+                }
+            })
+        }
+    }
+
+    render() {
+        if (gameOver) {
+            ctx.fillStyle = this.color
+            ctx.strokeStyle = 'black'
+            ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+            ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+
+            ctx.font = this.text.style
+            ctx.fillStyle = this.text.color
+            ctx.fillText('Restart', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+        }
+    }
+}

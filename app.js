@@ -170,8 +170,13 @@ gameObjects.push(new HealthBar({
 
 const timer = new Timer()
 gameObjects.push(timer)
+
 const winIndicator = new WinIndicator(player, enemy, timer)
 gameObjects.push(winIndicator)
+
+const restartButton = new Button()
+gameObjects.push(restartButton)
+
 
 function gameLoop() {
 

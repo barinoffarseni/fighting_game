@@ -187,10 +187,17 @@ class Fighter extends SpriteAnimated {
         }
     }
 
+    freez() {
+        this.velocity.x = 0
+        if (this.velocity.y < 0) {
+            this.velocity.y = 0
+        }
+    }
+
     update() {
         if (this.state != 'death') {
             this.newState = 'idle';
-    
+
             if (this.velocity.x != 0) {
                 this.newState = 'run';
             }
@@ -219,12 +226,8 @@ class Fighter extends SpriteAnimated {
             this.setState()
         }
 
-
-        if (this.state == 'death') {
-            this.velocity.x = 0
-            if (this.velocity.y < 0) {
-                this.velocity.y = 0
-            }
+        if (winIndicator.gameOver) {
+            this.newState = 'idle';
         }
 
         this.position.x += this.velocity.x
@@ -258,6 +261,74 @@ class Indicator {
     }
 }
 
+class WinIndicator extends Indicator{
+    constructor(player1, player2, timer) {
+        super({
+            position: {
+                x: canvas.width / 2,
+                y: canvas.height / 2
+            },
+            offset: {
+                x: -120,
+                y: -90
+            },
+            color: 'grey',
+            width: 220,
+            height: 60,
+        })
+
+        this.text = {
+            position: this.position,
+            style: 'bold 35px Arial',
+            color: 'yellow',
+            offset: {
+                x: -115,
+                y: -50
+            }
+        }
+        this.player1 = player1
+        this.player2 = player2
+        this.winner = ''
+        this.tie = false
+        this.timer = timer
+    }
+
+    update() {
+        if (this.player1.state == 'death') {
+            this.winner = 'Player 2'
+            gameOver = true
+        }
+        if (this.player2.state == 'death') {
+            this.winner = 'Player 1'
+            gameOver = true
+        }
+        if (this.timer.timeOut) {
+            if (this.player1.health > this.player2.health) {
+                this.winner = 'Player 1'
+                gameOver = true
+            }
+            if (this.player2.health > this.player1.health) {
+                this.winner = 'Player 2'
+                gameOver = true
+            }
+            if (this.player2.health == this.player1.health) {
+                this.tie = true
+            }
+        }
+    }
+
+    render() {
+        if (gameOver) {
+            ctx.fillStyle = this.color
+            ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+
+            ctx.font = this.text.style
+            ctx.fillStyle = this.text.color
+            ctx.fillText(this.winner + ' WIN', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+        }
+    }
+}
+
 class Timer extends Indicator {
     constructor() {
         super({
@@ -286,11 +357,16 @@ class Timer extends Indicator {
             style: 'bold 48px serif'
         }
 
-        this.timeRemaining = 60
+        this.timeRemaining = 30
+        this.timeOut = false
         this.startTimer()
     }
 
-    update() {}
+    update() {
+        if (this.timeRemaining <= 0) {
+            this.timeOut = true
+        }
+    }
 
     render() {
         ctx.fillStyle = this.color
@@ -302,7 +378,7 @@ class Timer extends Indicator {
 
     startTimer() {
         const intervalId = setInterval(() => {
-            if (this.timeRemaining <= 0) {
+            if (this.timeOut) {
                 clearInterval(intervalId)
             } else {
                 this.timeRemaining--
@@ -336,5 +412,62 @@ class HealthBar extends Indicator {
 
     update() {
         this.healthValue = this.entity.health * 100 / 10000
+    }
+}
+
+class Button {
+    constructor(mouse) {
+        this.position = {
+            x: canvas.width / 2,
+            y: canvas.height / 1.6
+        }
+        this.offset = {
+            x: -70,
+            y: -50
+        }
+        this.text = {
+            position: this.position,
+            offset: {
+                x: -65,
+                y: -10
+            },
+            style: 'bold 35px Arial',
+            color: 'black'
+        }
+        this.color = 'grey'
+        this.width = 130
+        this.height = 60
+        this.mouse = mouse
+        this.minX = this.position.x + this.offset.x
+        this.maxX = this.position.x + this.offset.x + this.width
+        this.minY = this.position.y + this.offset.y
+        this.maxY = this.position.y + this.offset.y + this.width
+    }
+
+    update() {
+        if (gameOver) {
+            canvas.addEventListener('click', function(event) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const mouseY = event.clientY - rect.top;
+
+                if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+                    location.reload();
+                }
+            })
+        }
+    }
+
+    render() {
+        if (gameOver) {
+            ctx.fillStyle = this.color
+            ctx.strokeStyle = 'black'
+            ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+            ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+
+            ctx.font = this.text.style
+            ctx.fillStyle = this.text.color
+            ctx.fillText('Restart', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+        }
     }
 }

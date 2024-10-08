@@ -263,7 +263,6 @@ function update() {
         winIndicator.tie = false
     }
 
-    // console.log(player.attack)
     gameObjects.forEach(gameObject => {
         gameObject.update()
     })

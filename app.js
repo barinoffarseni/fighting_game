@@ -358,7 +358,6 @@ function checkAttackIsSuccess(attacker, victim) {
     }
     
     if (attacker.framesElapsed % attacker.framesHold === 0) {
-        console.log(attacker.state)
         attacker.setAttackBoxMinMaxPosition()
     
         xMin = victim.position.x

@@ -106,6 +106,7 @@ class Fighter extends SpriteAnimated {
         this.newState = 'idle'
         this.stateCanBeChanged = true
         this.canJump = false
+        this.restartState = false
     }
 
     getPosition() {
@@ -161,11 +162,11 @@ class Fighter extends SpriteAnimated {
 
         if (this.state == 'takeHit' && this.newState == 'takeHit') {
             this.stateCanBeChanged = true
-            this.willRestart = true
+            this.restartState = true
         }
 
         if (this.state != this.newState && this.stateCanBeChanged ||
-            this.willRestart && this.stateCanBeChanged
+            this.restartState && this.stateCanBeChanged
         ) {
             this.state = this.newState
 

@@ -161,13 +161,10 @@ class Fighter extends SpriteAnimated {
         }
 
         if (this.state == 'takeHit' && this.newState == 'takeHit') {
-            this.stateCanBeChanged = true
             this.restartState = true
         }
 
-        if (this.state != this.newState && this.stateCanBeChanged ||
-            this.restartState && this.stateCanBeChanged
-        ) {
+        if (this.state != this.newState && this.stateCanBeChanged || this.restartState) {
             this.state = this.newState
 
             if (this.direction < 0) {
@@ -190,7 +187,7 @@ class Fighter extends SpriteAnimated {
 
             if (this.state == 'takeHit') {
                 this.stateCanBeChanged = false
-                this.willRestart = false
+                this.restartState = false
             }
 
             if (this.state == 'death') {

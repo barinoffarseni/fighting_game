@@ -106,6 +106,7 @@ class Fighter extends SpriteAnimated {
         this.newState = 'idle'
         this.stateCanBeChanged = true
         this.canJump = false
+        this.restartState = false
     }
 
     getPosition() {
@@ -151,7 +152,6 @@ class Fighter extends SpriteAnimated {
             this.stateCanBeChanged = true
         }
 
-
         if (this.state == 'takeHit' && this.animateIsComplete) {
             this.stateCanBeChanged = true
         }
@@ -160,7 +160,11 @@ class Fighter extends SpriteAnimated {
             this.stateCanBeChanged = true
         }
 
-        if (this.state != this.newState && this.stateCanBeChanged) {
+        if (this.state == 'takeHit' && this.newState == 'takeHit') {
+            this.restartState = true
+        }
+
+        if (this.state != this.newState && this.stateCanBeChanged || this.restartState) {
             this.state = this.newState
 
             if (this.direction < 0) {
@@ -183,6 +187,7 @@ class Fighter extends SpriteAnimated {
 
             if (this.state == 'takeHit') {
                 this.stateCanBeChanged = false
+                this.restartState = false
             }
 
             if (this.state == 'death') {
@@ -287,7 +292,7 @@ class WinIndicator extends Indicator{
                 y: canvas.height / 2
             },
             offset: {
-                x: -120,
+                x: -110,
                 y: -90
             },
             color: 'grey',
@@ -300,7 +305,7 @@ class WinIndicator extends Indicator{
             style: 'bold 35px Arial',
             color: 'yellow',
             offset: {
-                x: -115,
+                x: 0,
                 y: -50
             }
         }
@@ -342,7 +347,8 @@ class WinIndicator extends Indicator{
 
             ctx.font = this.text.style
             ctx.fillStyle = this.text.color
-            ctx.fillText(this.winner + ' WIN', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+            ctx.textAlign = 'center'
+            ctx.fillText(this.winner + ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
         }
     }
 }
@@ -369,7 +375,7 @@ class Timer extends Indicator {
                 y: 75
             },
             offset: {
-                x: -23,
+                x: 0,
                 y: 0
             },
             style: 'bold 48px serif'
@@ -391,7 +397,8 @@ class Timer extends Indicator {
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
         ctx.font = this.text.style
-        ctx.strokeText(this.timeRemaining, this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+        ctx.textAlign = 'center'
+        ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
     }
 
     startTimer() {
@@ -440,13 +447,13 @@ class Button {
             y: canvas.height / 1.6
         }
         this.offset = {
-            x: -70,
+            x: -65,
             y: -50
         }
         this.text = {
             position: this.position,
             offset: {
-                x: -65,
+                x: 0,
                 y: -10
             },
             style: 'bold 35px Arial',
@@ -485,7 +492,8 @@ class Button {
 
             ctx.font = this.text.style
             ctx.fillStyle = this.text.color
-            ctx.fillText('Restart', this.text.position.x + this.text.offset.x, this.text.position.y + this.text.offset.y)
+            ctx.textAlign = 'center'
+            ctx.fillText('Restart', this.text.position.x , this.text.position.y + this.text.offset.y)
         }
     }
 }

@@ -263,6 +263,10 @@ function update() {
         winIndicator.tie = false
     }
 
+    if (gameOver) {
+        timer.timeOut = true
+    }
+    
     gameObjects.forEach(gameObject => {
         gameObject.update()
     })

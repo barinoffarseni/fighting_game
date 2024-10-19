@@ -10,5 +10,14 @@
     <canvas></canvas>
     <script src="classes.js"></script>
     <script src="app.js"></script>
+    <script src="node_modules/socket.io/client-dist/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.emit('event-name', 'Привет серверу от браузера!');
+
+        socket.on('event-name', function(msg) {
+          alert(msg);
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,10 @@
+services:
+  node:
+    image: node:23-alpine3.20
+    container_name: node
+    ports:
+      - 80:3000
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ash -c "npm install && node index.js"

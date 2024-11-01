@@ -10,9 +10,15 @@ app.use(express.static('./'))
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
+// let userIndificators = {
 
+// }
+// function getUserIndificators() {
+//   while ()
+// }
 io.on('connection', (socket) => {
   console.log('a user connected');
+  console.log(socket.handshake.issued)
 
   io.emit('event-name', 'Привет браузеру от сервера!');
 

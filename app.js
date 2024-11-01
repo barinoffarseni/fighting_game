@@ -315,29 +315,37 @@ function keydown(event) {
     if (!gameOver) {
         switch (event.key) {
             case 'd':
+                socket.emit('event-name', 'D');
                 keys.d = true
                 break
             case 'a':
+                socket.emit('event-name', 'a');
                 keys.a = true
                 break
             case 'w':
+                socket.emit('event-name', 'w');
                 keys.w = true
                 break
             case 's':
+                socket.emit('event-name', 's');
                 keys.s = true
                 break
 
 
             case 'ArrowRight':
+                socket.emit('event-name', 'ArrowRight');
                 keys.right = true
                 break
             case 'ArrowLeft':
+                socket.emit('event-name', 'ArrowLeft');
                 keys.left = true
                 break
             case 'ArrowUp':
+                socket.emit('event-name', 'ArrowUp');
                 keys.up = true
                 break
             case 'ArrowDown':
+                socket.emit('event-name', 'ArrowDown');
                 keys.down = true
                 break
         }

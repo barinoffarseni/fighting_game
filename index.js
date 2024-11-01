@@ -10,15 +10,14 @@ app.use(express.static('./'))
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
-// let userIndificators = {
-
-// }
+const userIndificators = []
 // function getUserIndificators() {
 //   while ()
 // }
 io.on('connection', (socket) => {
   console.log('a user connected');
-  console.log(socket.handshake.issued)
+  userIndificators.push(socket.handshake.issued)
+  console.log(userIndificators)
 
   io.emit('event-name', 'Привет браузеру от сервера!');
 

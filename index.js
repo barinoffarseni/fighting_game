@@ -4,20 +4,29 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const users = {
+  user1: {
+      indificator: 0
+  },
+  user2: {
+      indificator: 0
+  }
+}
+const userIndificators = []
 
 app.use(express.static('./'))
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
-const userIndificators = []
+
 // function getUserIndificators() {
 //   while ()
 // }
 io.on('connection', (socket) => {
-  console.log('a user connected');
   userIndificators.push(socket.handshake.issued)
-  console.log(userIndificators)
+  console.log(userIndificators);
+  io.emit('id', userIndificators[0]);
 
   io.emit('event-name', 'Привет браузеру от сервера!');
 

@@ -258,20 +258,19 @@ function control() {
 
 socket.on('id', function(msg) {
     id = msg
-    alert(id);
   });
 
 function update() {
     // users.user1.indificator = userIndificators[0]
     // users.user2.indificator = userIndificators[1]
-    // console.log(aaa)
+    console.log(id)
     player.direction = getFighterDirection(player.position.x, enemy.position.x)
     enemy.direction = getFighterDirection(enemy.position.x, player.position.x)
 
     if (checkAttackIsSuccess(player, enemy)) {
         enemy.health -= 10
     }
-    
+
     if (checkAttackIsSuccess(enemy, player)) {
         player.health -= 10
     }

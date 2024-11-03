@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const userIds = []
+// const userIds = []
 
 app.use(express.static('./'))
 
@@ -15,25 +15,25 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   const id = socket.handshake.issued
-  console.log(id + 'user connected'); // оставь не трогай
+  console.log(id + ' user connected'); // оставь не трогай
 
-  userIds.push(id)
+  // userIds.push(id)
 
-  console.log(userIds);
-  io.emit('set-id', userIds[0]);
+  io.emit('set-id', id);
 
-  io.emit('event-name', 'Привет браузеру от сервера!');
+  // io.emit('event-name', 'Привет браузеру от сервера!');
 
   socket.on('disconnect', () => {
-    console.log(id + 'user disconnected');// оставь не трогай
+    console.log(id + ' user disconnected');// оставь не трогай
   });
 
   socket.on('event-name', (msg) => {
     console.log('message: ' + msg);
   });
 
-  socket.on('control', (data) => {
-    console.log(data);
+  socket.on('control', (key) => {
+    io.emit('control2', {id: id, key: key});
+    console.log(key);
   });
 });
 

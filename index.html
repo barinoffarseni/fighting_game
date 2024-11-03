@@ -12,7 +12,7 @@
     <script>
         const socket = io();
         // console.log(socket.handshake.issued);
-        socket.emit('event-name', 'Привет серверу от браузера!');
+        // socket.emit('event-name', 'Привет серверу от браузера!');
 
         socket.on('event-name', function(msg) {
           alert(msg);

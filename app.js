@@ -18,7 +18,7 @@ let gameOver = false
 
 let debug = false
 
-let id
+let id = false
 
 const keys = {
     w: false,
@@ -32,7 +32,17 @@ const keys = {
 }
 
 socket.on('set-id', function(msg) {
-    id = msg
+    if (!id) {
+        id = msg
+    }
+});
+
+socket.on('control2', function(data) {
+    // console.log(data)
+    // console.log(id)
+    if (id != data.id) {
+        console.log('xlskvsklvm'+data.key)
+    }
 });
 
 const gameObjects = [];
@@ -263,7 +273,7 @@ function control() {
 function update() {
     // users.user1.indificator = userIndificators[0]
     // users.user2.indificator = userIndificators[1]
-    console.log(id)
+    // console.log(id)
     player.direction = getFighterDirection(player.position.x, enemy.position.x)
     enemy.direction = getFighterDirection(enemy.position.x, player.position.x)
 

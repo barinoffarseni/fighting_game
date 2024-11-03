@@ -4,15 +4,8 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const users = {
-  user1: {
-      indificator: 0
-  },
-  user2: {
-      indificator: 0
-  }
-}
-const userIndificators = []
+
+const userIds = []
 
 app.use(express.static('./'))
 
@@ -20,22 +13,27 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-// function getUserIndificators() {
-//   while ()
-// }
 io.on('connection', (socket) => {
-  userIndificators.push(socket.handshake.issued)
-  console.log(userIndificators);
-  io.emit('id', userIndificators[0]);
+  const id = socket.handshake.issued
+  console.log(id + 'user connected'); // оставь не трогай
+
+  userIds.push(id)
+
+  console.log(userIds);
+  io.emit('set-id', userIds[0]);
 
   io.emit('event-name', 'Привет браузеру от сервера!');
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log(id + 'user disconnected');// оставь не трогай
   });
 
   socket.on('event-name', (msg) => {
     console.log('message: ' + msg);
+  });
+
+  socket.on('control', (data) => {
+    console.log(data);
   });
 });
 

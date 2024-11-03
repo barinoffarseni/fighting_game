@@ -31,6 +31,10 @@ const keys = {
     right: false
 }
 
+socket.on('set-id', function(msg) {
+    id = msg
+});
+
 const gameObjects = [];
 
 gameObjects.push(new SpriteStatic({
@@ -256,10 +260,6 @@ function control() {
     }
 }
 
-socket.on('id', function(msg) {
-    id = msg
-  });
-
 function update() {
     // users.user1.indificator = userIndificators[0]
     // users.user2.indificator = userIndificators[1]
@@ -333,37 +333,37 @@ function keydown(event) {
     if (!gameOver) {
         switch (event.key) {
             case 'd':
-                socket.emit('event-name', 'D');
+                socket.emit('control', 'D');
                 keys.d = true
                 break
             case 'a':
-                socket.emit('event-name', 'a');
+                socket.emit('control', 'a');
                 keys.a = true
                 break
             case 'w':
-                socket.emit('event-name', 'w');
+                socket.emit('control', 'w');
                 keys.w = true
                 break
             case 's':
-                socket.emit('event-name', 's');
+                socket.emit('control', 's');
                 keys.s = true
                 break
 
 
             case 'ArrowRight':
-                socket.emit('event-name', 'ArrowRight');
+                socket.emit('control', 'ArrowRight');
                 keys.right = true
                 break
             case 'ArrowLeft':
-                socket.emit('event-name', 'ArrowLeft');
+                socket.emit('control', 'ArrowLeft');
                 keys.left = true
                 break
             case 'ArrowUp':
-                socket.emit('event-name', 'ArrowUp');
+                socket.emit('control', 'ArrowUp');
                 keys.up = true
                 break
             case 'ArrowDown':
-                socket.emit('event-name', 'ArrowDown');
+                socket.emit('control', 'ArrowDown');
                 keys.down = true
                 break
         }

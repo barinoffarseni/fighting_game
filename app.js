@@ -1,15 +1,6 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
-const users = {
-    user1: {
-        indificator: 0
-    },
-    user2: {
-        indificator: 0
-    }
-}
-
 canvas.width = 1024
 canvas.height = 576
 
@@ -19,6 +10,7 @@ let gameOver = false
 let debug = false
 
 let id = false
+let id2 = false
 
 const keys = {
     w: false,
@@ -34,6 +26,8 @@ const keys = {
 socket.on('set-id', function(msg) {
     if (!id) {
         id = msg
+    } else {
+        id2 = msg
     }
 });
 
@@ -41,7 +35,7 @@ socket.on('control2', function(data) {
     // console.log(data)
     // console.log(id)
     if (id != data.id) {
-        console.log('xlskvsklvm'+data.key)
+        console.log(id + ' '+data.key)
     }
 });
 
@@ -70,66 +64,67 @@ gameObjects.push(new SpriteAnimated({
     }
 }))
 
-const player = new Fighter({
-    position: {
-        x: 0,
-        y: 0
-    },
-    velocity: {
-        x: 0,
-        y: 0
-    },
-    sprites: {
-        idle: {
-            rightSrc: './img/samuraiMack/Idle.png',
-            leftScr: './img/samuraiMack/Idle inverted.png',
-            frames: 8
+if (id) {
+    const player = new Fighter({
+        position: {
+            x: 0,
+            y: 0
         },
-        run: {
-            rightSrc: './img/samuraiMack/Run.png',
-            leftScr: './img/samuraiMack/Run inverted.png',
-            frames: 8
+        velocity: {
+            x: 0,
+            y: 0
         },
-        jump: {
-            rightSrc: './img/samuraiMack/Jump.png',
-            leftScr: './img/samuraiMack/Jump inverted.png',
-            frames: 2
+        sprites: {
+            idle: {
+                rightSrc: './img/samuraiMack/Idle.png',
+                leftScr: './img/samuraiMack/Idle inverted.png',
+                frames: 8
+            },
+            run: {
+                rightSrc: './img/samuraiMack/Run.png',
+                leftScr: './img/samuraiMack/Run inverted.png',
+                frames: 8
+            },
+            jump: {
+                rightSrc: './img/samuraiMack/Jump.png',
+                leftScr: './img/samuraiMack/Jump inverted.png',
+                frames: 2
+            },
+            fall: {
+                rightSrc: './img/samuraiMack/Fall.png',
+                leftScr: './img/samuraiMack/Fall inverted.png',
+                frames: 2
+            },
+            attack1: {
+                rightSrc: './img/samuraiMack/Attack1.png',
+                leftScr: './img/samuraiMack/Attack1 inverted.png',
+                frames: 6
+            },
+            attack2: {
+                rightSrc: './img/samuraiMack/Attack2.png',
+                leftScr: './img/samuraiMack/Attack2 inverted.png',
+                frames: 6
+            },
+            takeHit: {
+                rightSrc: './img/samuraiMack/Take Hit.png',
+                leftScr: './img/samuraiMack/Take Hit inverted.png',
+                frames: 4
+            },
+            death: {
+                rightSrc: './img/samuraiMack/Death.png',
+                leftScr: './img/samuraiMack/Death inverted.png',
+                frames: 6
+            }
         },
-        fall: {
-            rightSrc: './img/samuraiMack/Fall.png',
-            leftScr: './img/samuraiMack/Fall inverted.png',
-            frames: 2
+        offset: {
+            x: -215,
+            y: -155
         },
-        attack1: {
-            rightSrc: './img/samuraiMack/Attack1.png',
-            leftScr: './img/samuraiMack/Attack1 inverted.png',
-            frames: 6
-        },
-        attack2: {
-            rightSrc: './img/samuraiMack/Attack2.png',
-            leftScr: './img/samuraiMack/Attack2 inverted.png',
-            frames: 6
-        },
-        takeHit: {
-            rightSrc: './img/samuraiMack/Take Hit.png',
-            leftScr: './img/samuraiMack/Take Hit inverted.png',
-            frames: 4
-        },
-        death: {
-            rightSrc: './img/samuraiMack/Death.png',
-            leftScr: './img/samuraiMack/Death inverted.png',
-            frames: 6
-        }
-    },
-    offset: {
-        x: -215,
-        y: -155
-    },
-    attackFrame: 4
-})
+        attackFrame: 4
+    })
 
-gameObjects.push(player)
-
+    gameObjects.push(player)
+}
 
 const enemy = new Fighter({
     position: {

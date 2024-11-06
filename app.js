@@ -23,13 +23,6 @@ const keys = {
     right: false
 }
 
-socket.on('set-id', function(msg) {
-    if (!id) {
-        id = msg
-    } else {
-        id2 = msg
-    }
-});
 
 socket.on('control2', function(data) {
     // console.log(data)
@@ -64,67 +57,65 @@ gameObjects.push(new SpriteAnimated({
     }
 }))
 
-if (id) {
-    const player = new Fighter({
-        position: {
-            x: 0,
-            y: 0
-        },
-        velocity: {
-            x: 0,
-            y: 0
-        },
-        sprites: {
-            idle: {
-                rightSrc: './img/samuraiMack/Idle.png',
-                leftScr: './img/samuraiMack/Idle inverted.png',
-                frames: 8
-            },
-            run: {
-                rightSrc: './img/samuraiMack/Run.png',
-                leftScr: './img/samuraiMack/Run inverted.png',
-                frames: 8
-            },
-            jump: {
-                rightSrc: './img/samuraiMack/Jump.png',
-                leftScr: './img/samuraiMack/Jump inverted.png',
-                frames: 2
-            },
-            fall: {
-                rightSrc: './img/samuraiMack/Fall.png',
-                leftScr: './img/samuraiMack/Fall inverted.png',
-                frames: 2
-            },
-            attack1: {
-                rightSrc: './img/samuraiMack/Attack1.png',
-                leftScr: './img/samuraiMack/Attack1 inverted.png',
-                frames: 6
-            },
-            attack2: {
-                rightSrc: './img/samuraiMack/Attack2.png',
-                leftScr: './img/samuraiMack/Attack2 inverted.png',
-                frames: 6
-            },
-            takeHit: {
-                rightSrc: './img/samuraiMack/Take Hit.png',
-                leftScr: './img/samuraiMack/Take Hit inverted.png',
-                frames: 4
-            },
-            death: {
-                rightSrc: './img/samuraiMack/Death.png',
-                leftScr: './img/samuraiMack/Death inverted.png',
-                frames: 6
-            }
-        },
-        offset: {
-            x: -215,
-            y: -155
-        },
-        attackFrame: 4
-    })
 
-    gameObjects.push(player)
-}
+const player = new Fighter({
+    position: {
+        x: 0,
+        y: 0
+    },
+    velocity: {
+        x: 0,
+        y: 0
+    },
+    sprites: {
+        idle: {
+            rightSrc: './img/samuraiMack/Idle.png',
+            leftScr: './img/samuraiMack/Idle inverted.png',
+            frames: 8
+        },
+        run: {
+            rightSrc: './img/samuraiMack/Run.png',
+            leftScr: './img/samuraiMack/Run inverted.png',
+            frames: 8
+        },
+        jump: {
+            rightSrc: './img/samuraiMack/Jump.png',
+            leftScr: './img/samuraiMack/Jump inverted.png',
+            frames: 2
+        },
+        fall: {
+            rightSrc: './img/samuraiMack/Fall.png',
+            leftScr: './img/samuraiMack/Fall inverted.png',
+            frames: 2
+        },
+        attack1: {
+            rightSrc: './img/samuraiMack/Attack1.png',
+            leftScr: './img/samuraiMack/Attack1 inverted.png',
+            frames: 6
+        },
+        attack2: {
+            rightSrc: './img/samuraiMack/Attack2.png',
+            leftScr: './img/samuraiMack/Attack2 inverted.png',
+            frames: 6
+        },
+        takeHit: {
+            rightSrc: './img/samuraiMack/Take Hit.png',
+            leftScr: './img/samuraiMack/Take Hit inverted.png',
+            frames: 4
+        },
+        death: {
+            rightSrc: './img/samuraiMack/Death.png',
+            leftScr: './img/samuraiMack/Death inverted.png',
+            frames: 6
+        }
+    },
+    offset: {
+        x: -215,
+        y: -155
+    },
+    attackFrame: 4
+})
+
 
 const enemy = new Fighter({
     position: {
@@ -223,7 +214,36 @@ function gameLoop() {
     window.requestAnimationFrame(gameLoop);
 }
 
-gameLoop()
+function waitForData() {
+    return new Promise((resolve) => {
+        socket.on('set-id', function(msg) {
+            if (!id) {
+                id = msg
+                resolve(id)
+            } 
+            // else {
+            //     id2 = msg
+            //     resolve(id2)
+            // }
+        });
+    });
+}
+
+async function WaitingForPlayers() {
+    const id = await waitForData()
+    console.log(id)
+    if (!id) {
+        WaitingForPlayers()
+    }
+    if (id) {
+        console.log(id)
+        gameObjects.push(player)
+    } 
+
+    gameLoop()
+}
+
+WaitingForPlayers()
 
 function control() {
     player.velocity.x = 0

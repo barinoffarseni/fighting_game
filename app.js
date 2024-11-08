@@ -217,28 +217,24 @@ function gameLoop() {
 function waitForData() {
     return new Promise((resolve) => {
         socket.on('set-id', function(msg) {
-            if (!id) {
                 id = msg
                 resolve(id)
-            } 
-            // else {
-            //     id2 = msg
-            //     resolve(id2)
-            // }
         });
     });
 }
 
 async function WaitingForPlayers() {
+    socket.on('receive_data', (id) => {
+        console.log('Получены данные из другой вкладки:', id);
+    });
+
     const id = await waitForData()
+
     console.log(id)
-    if (!id) {
-        WaitingForPlayers()
-    }
-    if (id) {
-        console.log(id)
-        gameObjects.push(player)
-    } 
+    gameObjects.push(player)
+    socket.emit('playerId', id)
+
+    
 
     gameLoop()
 }

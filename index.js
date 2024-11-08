@@ -21,6 +21,12 @@ io.on('connection', (socket) => {
 
   io.emit('set-id', id);
 
+  socket.on('playerId', (id) => {
+    console.log('Получены данные от вкладки:', id);
+
+    socket.broadcast.emit('receive_data', id);
+  })
+
   // io.emit('event-name', 'Привет браузеру от сервера!');
 
   socket.on('disconnect', () => {

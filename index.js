@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-// const userIds = []
+const userIds = []
 
 app.use(express.static('./'))
 
@@ -17,19 +17,21 @@ io.on('connection', (socket) => {
   const id = socket.handshake.issued
   console.log(id + ' user connected'); // оставь не трогай
 
-  // userIds.push(id)
+  userIds.push(id) 
 
   io.emit('set-id', id);
 
-  socket.on('playerId', (id) => {
+  socket.on('send-id', (id) => {
     console.log('Получены данные от вкладки:', id);
 
-    socket.broadcast.emit('receive_data', id);
+    socket.emit('receive_data', userIds);
   })
 
   // io.emit('event-name', 'Привет браузеру от сервера!');
 
   socket.on('disconnect', () => {
+    userIds.splice(userIds.indexOf(id), userIds.indexOf(id))
+    console.log(userIds)
     console.log(id + ' user disconnected');// оставь не трогай
   });
 

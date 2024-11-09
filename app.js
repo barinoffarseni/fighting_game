@@ -23,6 +23,9 @@ const keys = {
     right: false
 }
 
+let playerId = false
+let enemyId = false
+
 
 socket.on('control2', function(data) {
     // console.log(data)
@@ -175,8 +178,6 @@ const enemy = new Fighter({
     attackFrame: 1
 })
 
-gameObjects.push(enemy)
-
 gameObjects.push(new HealthBar({
     offset: {
         x: 50,
@@ -214,7 +215,7 @@ function gameLoop() {
     window.requestAnimationFrame(gameLoop);
 }
 
-function waitForData() {
+function waitForid() {
     return new Promise((resolve) => {
         socket.on('set-id', function(msg) {
                 id = msg
@@ -223,18 +224,39 @@ function waitForData() {
     });
 }
 
-async function WaitingForPlayers() {
-    socket.on('receive_data', (id) => {
-        console.log('Получены данные из другой вкладки:', id);
+function waitForUserIds() {
+    return new Promise((resolve) => {
+        socket.on('receive_id', (userIds) => {
+            resolve(userIds)
+        });
     });
+}
 
-    const id = await waitForData()
+async function WaitingForPlayers() {
 
-    console.log(id)
-    gameObjects.push(player)
-    socket.emit('playerId', id)
-
+    const id = await waitForid()
     
+    const userIds = await waitForUserIds()
+    console.log(userIds)
+    if (userIds[0] = id) {
+        console.log(id)
+    
+        playerId = id
+        socket.emit('send-id', playerId)
+
+        gameObjects.push(player)
+    }
+
+    if (userIds[1] = id) {
+        enemyId = id
+        socket.emit('send-id', enemyId)
+
+        gameObjects.push(enemy)
+    }
+
+
+    console.log(playerId)
+    console.log(enemyId)
 
     gameLoop()
 }

@@ -21,17 +21,12 @@ io.on('connection', (socket) => {
 
   io.emit('set-id', id);
 
-  socket.on('send-id', (id) => {
-    console.log('Получены данные от вкладки:', id);
-
-    socket.emit('receive_data', userIds);
-  })
+  socket.emit('receive_id', userIds);
 
   // io.emit('event-name', 'Привет браузеру от сервера!');
 
   socket.on('disconnect', () => {
     userIds.splice(userIds.indexOf(id), userIds.indexOf(id))
-    console.log(userIds)
     console.log(id + ' user disconnected');// оставь не трогай
   });
 

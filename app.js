@@ -242,14 +242,11 @@ async function WaitingForPlayers() {
         console.log(id)
     
         playerId = id
-        socket.emit('send-id', playerId)
-
         gameObjects.push(player)
     }
 
     if (userIds[1] = id) {
         enemyId = id
-        socket.emit('send-id', enemyId)
 
         gameObjects.push(enemy)
     }

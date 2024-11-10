@@ -5,7 +5,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const userIds = []
+const users = []
+let numberOfUsers = 0
 
 app.use(express.static('./'))
 
@@ -17,17 +18,21 @@ io.on('connection', (socket) => {
   const id = socket.handshake.issued
   console.log(id + ' user connected'); // оставь не трогай
 
-  userIds.push(id) 
-
+  numberOfUsers += 1
+  users.push({number: numberOfUsers, id: id}) 
+  
   io.emit('set-id', id);
-
-  socket.emit('receive_id', userIds);
+  
+  console.log(users);
+  io.emit('send-user-ids', users);
 
   // io.emit('event-name', 'Привет браузеру от сервера!');
 
   socket.on('disconnect', () => {
-    userIds.splice(userIds.indexOf(id), userIds.indexOf(id))
-    console.log(id + ' user disconnected');// оставь не трогай
+    for (number in users) {
+      users.splice(users.indexOf(id), users.indexOf(id))
+      console.log(id + ' user disconnected');// оставь не трогай
+    }
   });
 
   socket.on('event-name', (msg) => {

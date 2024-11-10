@@ -224,36 +224,40 @@ function waitForid() {
     });
 }
 
-function waitForUserIds() {
-    return new Promise((resolve) => {
-        socket.on('receive_id', (userIds) => {
-            resolve(userIds)
-        });
-    });
-}
+// function waitForUserIds() {
+//     return new Promise((resolve) => {
+//         socket.on('receive_id', (userIds) => {
+//             resolve(userIds)
+//         });
+//     });
+// }
 
 async function WaitingForPlayers() {
 
     const id = await waitForid()
     
-    const userIds = await waitForUserIds()
-    console.log(userIds)
-    if (userIds[0] = id) {
-        console.log(id)
+    // const userIds = await waitForUserIds()
+
+    socket.on('send-user-ids', (userIds) => {
+        console.log(userIds)
+
+        if (userIds[0] = id) {
+            playerId = id
+            gameObjects.push(player)
+
+            console.log(playerId)
+        }
     
-        playerId = id
-        gameObjects.push(player)
-    }
+        if (userIds[1] = id) {
+            enemyId = id
+    
+            gameObjects.push(enemy)
+            console.log(enemyId)
+        }
+    });
 
-    if (userIds[1] = id) {
-        enemyId = id
-
-        gameObjects.push(enemy)
-    }
-
-
-    console.log(playerId)
-    console.log(enemyId)
+    // console.log(playerId)
+    // console.log(enemyId)
 
     gameLoop()
 }

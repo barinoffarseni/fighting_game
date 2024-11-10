@@ -29,10 +29,9 @@ io.on('connection', (socket) => {
   // io.emit('event-name', 'Привет браузеру от сервера!');
 
   socket.on('disconnect', () => {
-    for (number in users) {
-      users.splice(users.indexOf(id), users.indexOf(id))
-      console.log(id + ' user disconnected');// оставь не трогай
-    }
+    console.log(id)
+    delete users[users.findIndex(user => user.id == id)]
+    console.log(id + ' user disconnected');// оставь не трогай
   });
 
   socket.on('event-name', (msg) => {

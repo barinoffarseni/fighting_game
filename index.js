@@ -19,14 +19,15 @@ io.on('connection', (socket) => {
   const id = socket.handshake.issued
   console.log(id + ' user connected'); // оставь не трогай
 
-  users.push(id)
-
-  if (users.length < 2) {
+  console.log(users.length)
+  if (users.length < 1) {
     type = 'player' 
   } else {
     type = 'enemy'
   }
   
+  users.push({type: type, id: id})
+
   io.emit('set-id', id);
   io.emit('set-data', {type: type, id: id});
 

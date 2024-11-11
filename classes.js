@@ -107,6 +107,7 @@ class Fighter extends SpriteAnimated {
         this.stateCanBeChanged = true
         this.canJump = false
         this.restartState = false
+        this.id = false
     }
 
     getPosition() {

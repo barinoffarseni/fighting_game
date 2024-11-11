@@ -215,49 +215,38 @@ function gameLoop() {
     window.requestAnimationFrame(gameLoop);
 }
 
-function waitForid() {
-    return new Promise((resolve) => {
-        socket.on('set-id', function(msg) {
-                id = msg
-                resolve(id)
+function WaitingForPlayers() {
+
+    socket.on('set-id', function(msg) {
+        const id = msg
+        
+        // if (userIds[0] == id) {
+        //     player.id = id
+            
+        //     gameObjects.push(player)
+            
+        //     console.log(playerId)
+        // }
+        socket.on('set-data', function({type: type, id: id}) {
+            const user = {type: type, id: id}
+            console.log(user)
         });
+    
+        // socket.on('get-status', (playerId) => {
+        //     player.id = playerId
+    
+        //     gameObjects.push(player)
+    
+        //     enemy.id = id
+        //     enemyId = id
+        //     socket.emit('send-status', enemyId)
+        
+        //     gameObjects.push(enemyId)
+        
+        //     console.log(playerId)
+        //     console.log(enemyId)
+        // });
     });
-}
-
-// function waitForUserIds() {
-//     return new Promise((resolve) => {
-//         socket.on('receive_id', (userIds) => {
-//             resolve(userIds)
-//         });
-//     });
-// }
-
-async function WaitingForPlayers() {
-
-    const id = await waitForid()
-    
-    // const userIds = await waitForUserIds()
-
-    socket.on('send-user-ids', (userIds) => {
-        console.log(userIds)
-
-        if (userIds[0] = id) {
-            playerId = id
-            gameObjects.push(player)
-
-            console.log(playerId)
-        }
-    
-        if (userIds[1] = id) {
-            enemyId = id
-    
-            gameObjects.push(enemy)
-            console.log(enemyId)
-        }
-    });
-
-    // console.log(playerId)
-    // console.log(enemyId)
 
     gameLoop()
 }

@@ -7,6 +7,8 @@ const io = new Server(server);
 
 const users = []
 
+let changeType = false
+
 let type = ''
 
 app.use(express.static('./'))
@@ -25,10 +27,20 @@ io.on('connection', (socket) => {
   } else {
     type = 'enemy'
   }
-  
+  console.log(changeType)
+  // if (changeType) {
+  //   if (type == 'player') {
+  //     type = 'enemy'
+  //   } else {
+  //     type = 'player'
+  //   }
+  //   changeType = false
+  // }
+
   users.push({type: type, id: id})
 
-  io.emit('set-id', id);
+  io.emit('set-id', id)
+
   io.emit('set-data', {type: type, id: id});
 
   console.log(users);
@@ -38,12 +50,13 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log("dddaddadadaadadddddddddddddddd")
-
-    const index = users.indexOf(id);
+    const index = users.findIndex(user => user.id == id);
+    console.log(index)
     if (index > -1) { // only splice array when item is found
       users.splice(index, 1); // 2nd parameter means remove one item only
     }
 
+    changeType = true
     console.log(users)
     console.log(id + ' user disconnected');// оставь не трогай
   });

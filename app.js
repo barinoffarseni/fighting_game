@@ -26,6 +26,9 @@ const keys = {
 let playerId = false
 let enemyId = false
 
+let user = false
+let user2 = false
+
 
 socket.on('control2', function(data) {
     // console.log(data)
@@ -228,8 +231,28 @@ function WaitingForPlayers() {
         //     console.log(playerId)
         // }
         socket.on('set-data', function({type: type, id: id}) {
-            const user = {type: type, id: id}
+            if (!user) {
+                user = {type: type, id: id}
+
+                if (user.type == 'player'){
+                    gameObjects.push(player)
+                } else {
+                    gameObjects.push(player)
+                }
+                console.log(user)
+            } else {
+                const user2 = {type: type, id: id}
+
+                if (user2.type == 'player'){
+                    gameObjects.push(player)
+                } else {
+                    gameObjects.push(player)
+                }
+            }
+
+
             console.log(user)
+            console.log(user2)
         });
     
         // socket.on('get-status', (playerId) => {

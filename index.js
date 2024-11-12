@@ -39,9 +39,6 @@ io.on('connection', (socket) => {
   io.emit('set-data', {type: type, id: id});
 
   console.log(users);
-  // io.emit('send-user-ids', users);
-
-  // io.emit('event-name', 'Привет браузеру от сервера!');
 
   socket.on('disconnect', () => {
     console.log("dddaddadadaadadddddddddddddddd")
@@ -49,8 +46,8 @@ io.on('connection', (socket) => {
 
     changedType = users[index]['type']
 
-    if (index > -1) { // only splice array when item is found
-      users.splice(index, 1); // 2nd parameter means remove one item only
+    if (index > -1) {
+      users.splice(index, 1);
     }
 
     console.log(id + ' user disconnected');// оставь не трогай

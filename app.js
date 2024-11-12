@@ -9,9 +9,6 @@ let gameOver = false
 
 let debug = false
 
-let id = false
-let id2 = false
-
 const keys = {
     w: false,
     a: false,
@@ -23,8 +20,8 @@ const keys = {
     right: false
 }
 
-let playerId = false
-let enemyId = false
+let enemyIsHere = false
+let id = false
 
 let user = false
 let user2 = false
@@ -221,15 +218,12 @@ function gameLoop() {
 function WaitingForPlayers() {
 
     socket.on('set-id', function(msg) {
-        const id = msg
-        
-        // if (userIds[0] == id) {
-        //     player.id = id
-            
-        //     gameObjects.push(player)
-            
-        //     console.log(playerId)
-        // }
+        if (!id) {
+            id = msg
+        } else {
+            enemyIsHere = true
+        }
+        console.log(enemyIsHere)
         socket.on('set-data', function({type: type, id: id}) {
             if (!user) {
                 user = {type: type, id: id}
@@ -237,22 +231,18 @@ function WaitingForPlayers() {
                 if (user.type == 'player'){
                     gameObjects.push(player)
                 } else {
-                    gameObjects.push(player)
+                    gameObjects.push(enemy)
                 }
-                console.log(user)
             } else {
                 const user2 = {type: type, id: id}
 
                 if (user2.type == 'player'){
                     gameObjects.push(player)
                 } else {
-                    gameObjects.push(player)
+                    gameObjects.push(enemy)
                 }
             }
 
-
-            console.log(user)
-            console.log(user2)
         });
     
         // socket.on('get-status', (playerId) => {

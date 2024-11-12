@@ -7,6 +7,7 @@ const io = new Server(server);
 
 const users = []
 
+let userHaveEntered = false
 let changedType = false
 
 let type = ''
@@ -22,9 +23,12 @@ io.on('connection', (socket) => {
   console.log(id + ' user connected'); // оставь не трогай
 
   if (users.length < 1) {
-    type = 'player' 
+    type = 'player'
   } else {
     type = 'enemy'
+
+    userHaveEntered = true
+    io.emit('everyone-came-in', userHaveEntered)
   }
 
   if (changedType) {

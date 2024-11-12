@@ -20,7 +20,6 @@ const keys = {
     right: false
 }
 
-let enemyIsHere = false
 let id = false
 
 let user = false
@@ -220,45 +219,27 @@ function WaitingForPlayers() {
     socket.on('set-id', function(msg) {
         if (!id) {
             id = msg
-        } else {
-            enemyIsHere = true
         }
-        console.log(enemyIsHere)
+
         socket.on('set-data', function({type: type, id: id}) {
             if (!user) {
                 user = {type: type, id: id}
 
                 if (user.type == 'player'){
                     gameObjects.push(player)
-                } else {
-                    gameObjects.push(enemy)
-                }
-            } else {
-                const user2 = {type: type, id: id}
 
-                if (user2.type == 'player'){
-                    gameObjects.push(player)
+                    socket.on('everyone-came-in', function(userHaveEntered) {
+                        if (userHaveEntered) {
+                            gameObjects.push(enemy)
+                        }
+                    })
                 } else {
                     gameObjects.push(enemy)
+
+                    gameObjects.push(player)
                 }
             }
-
         });
-    
-        // socket.on('get-status', (playerId) => {
-        //     player.id = playerId
-    
-        //     gameObjects.push(player)
-    
-        //     enemy.id = id
-        //     enemyId = id
-        //     socket.emit('send-status', enemyId)
-        
-        //     gameObjects.push(enemyId)
-        
-        //     console.log(playerId)
-        //     console.log(enemyId)
-        // });
     });
 
     gameLoop()

@@ -212,38 +212,31 @@ function gameLoop() {
     window.requestAnimationFrame(gameLoop);
 }
 
-function WaitingForPlayers() {
+function waitingForPlayers() {
+    socket.on('set-data', function({type: type, id: id}) {
+        if (!user) {
+            user = {type: type, id: id}
 
-    socket.on('set-id', function(msg) {
-        if (!id) {
-            id = msg
-        }
+            if (user.type == 'player'){
+                gameObjects.push(player)
 
-        socket.on('set-data', function({type: type, id: id}) {
-            if (!user) {
-                user = {type: type, id: id}
+                socket.on('everyone-came-in', function(userHaveEntered) {
+                    if (userHaveEntered) {
+                        gameObjects.push(enemy)
+                    }
+                })
+            } else {
+                gameObjects.push(enemy)
 
-                if (user.type == 'player'){
-                    gameObjects.push(player)
-
-                    socket.on('everyone-came-in', function(userHaveEntered) {
-                        if (userHaveEntered) {
-                            gameObjects.push(enemy)
-                        }
-                    })
-                } else {
-                    gameObjects.push(enemy)
-
-                    gameObjects.push(player)
-                }
+                gameObjects.push(player)
             }
-        });
+        }
     });
 
     gameLoop()
 }
 
-WaitingForPlayers()
+waitingForPlayers()
 
 function control() {
     player.velocity.x = 0

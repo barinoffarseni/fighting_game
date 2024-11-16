@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   const id = socket.handshake.issued
-  console.log(id + ' user connected'); // оставь не трогай
+  console.log(id + ' user connected');
 
   if (users.length < 1) {
     type = 'player'
@@ -45,7 +45,6 @@ io.on('connection', (socket) => {
   console.log(users);
 
   socket.on('disconnect', () => {
-    console.log("dddaddadadaadadddddddddddddddd")
     const index = users.findIndex(user => user.id == id);
 
     changedType = users[index]['type']
@@ -54,7 +53,7 @@ io.on('connection', (socket) => {
       users.splice(index, 1);
     }
 
-    console.log(id + ' user disconnected');// оставь не трогай
+    console.log(id + ' user disconnected');
   });
 
   socket.on('event-name', (msg) => {

@@ -27,8 +27,6 @@ let user2 = false
 
 
 socket.on('control2', function(data) {
-    // console.log(data)
-    // console.log(id)
     if (id != data.id) {
         console.log(id + ' '+data.key)
     }
@@ -288,9 +286,6 @@ function control() {
 }
 
 function update() {
-    // users.user1.indificator = userIndificators[0]
-    // users.user2.indificator = userIndificators[1]
-    // console.log(id)
     player.direction = getFighterDirection(player.position.x, enemy.position.x)
     enemy.direction = getFighterDirection(enemy.position.x, player.position.x)
 

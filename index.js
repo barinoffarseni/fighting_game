@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
   const id = socket.handshake.issued
   console.log(id + ' user connected');
 
-  if (users.length > 1) {
+  if (users.length > 0) {
     type = 'enemy'
   }
 

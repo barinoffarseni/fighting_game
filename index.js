@@ -5,6 +5,10 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+const users = []
+
+let type = 'player'
+
 app.use(express.static('./'))
 
 app.get('/', (req, res) => {
@@ -12,12 +16,27 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  const id = socket.handshake.issued
+  console.log(id + ' user connected');
 
-  io.emit('event-name', 'Привет браузеру от сервера!');
+  if (users.length > 0) {
+    type = 'enemy'
+  }
+
+  users.push({type: type, id: id})
+
+  io.emit('set-data', {type: type, id: id});
+
+  console.log(users);
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    const index = users.findIndex(user => user.id == id);
+
+    if (index > -1) {
+      users.splice(index, 1);
+    }
+
+    console.log(id + ' user disconnected');
   });
 
   socket.on('event-name', (msg) => {

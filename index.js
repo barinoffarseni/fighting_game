@@ -7,7 +7,6 @@ const io = new Server(server);
 
 const users = []
 
-let userHaveEntered = false
 let changedType = false
 
 let type = ''
@@ -27,8 +26,7 @@ io.on('connection', (socket) => {
   } else {
     type = 'enemy'
 
-    userHaveEntered = true
-    io.emit('everyone-came-in', userHaveEntered)
+    io.emit('everyone-came-in', true)
   }
 
   if (changedType) {

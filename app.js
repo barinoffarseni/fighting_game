@@ -211,9 +211,7 @@ function waitingForPlayers() {
                 gameObjects.push(player)
 
                 socket.on('everyone-came-in', function(userHaveEntered) {
-                    if (userHaveEntered) {
-                        gameObjects.push(enemy)
-                    }
+                    gameObjects.push(enemy)
                 })
             }
 

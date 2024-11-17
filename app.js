@@ -21,7 +21,6 @@ const keys = {
 }
 
 let user = false
-let user2 = false
 
 const gameObjects = [];
 

@@ -38,8 +38,6 @@ io.on('connection', (socket) => {
 
   users.push({type: type, id: id})
 
-  io.emit('set-id', id)
-
   io.emit('set-data', {type: type, id: id});
 
   console.log(users);

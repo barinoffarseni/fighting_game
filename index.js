@@ -59,11 +59,6 @@ io.on('connection', (socket) => {
   socket.on('event-name', (msg) => {
     console.log('message: ' + msg);
   });
-
-  socket.on('control', (key) => {
-    io.emit('control2', {id: id, key: key});
-    console.log(key);
-  });
 });
 
 server.listen(3000, () => {

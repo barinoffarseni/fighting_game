@@ -25,13 +25,6 @@ let id = false
 let user = false
 let user2 = false
 
-
-socket.on('control2', function(data) {
-    if (id != data.id) {
-        console.log(id + ' '+data.key)
-    }
-});
-
 const gameObjects = [];
 
 gameObjects.push(new SpriteStatic({
@@ -217,7 +210,7 @@ function waitingForPlayers() {
         if (!user) {
             user = {type: type, id: id}
 
-            if (user.type == 'player'){
+            if (user.type == 'player') {
                 gameObjects.push(player)
 
                 socket.on('everyone-came-in', function(userHaveEntered) {
@@ -225,7 +218,9 @@ function waitingForPlayers() {
                         gameObjects.push(enemy)
                     }
                 })
-            } else {
+            }
+
+            if (user.type == 'enemy') {
                 gameObjects.push(enemy)
 
                 gameObjects.push(player)
@@ -348,37 +343,30 @@ function keydown(event) {
     if (!gameOver) {
         switch (event.key) {
             case 'd':
-                socket.emit('control', 'D');
                 keys.d = true
                 break
             case 'a':
-                socket.emit('control', 'a');
                 keys.a = true
                 break
             case 'w':
-                socket.emit('control', 'w');
                 keys.w = true
                 break
             case 's':
-                socket.emit('control', 's');
                 keys.s = true
                 break
 
 
             case 'ArrowRight':
-                socket.emit('control', 'ArrowRight');
                 keys.right = true
                 break
             case 'ArrowLeft':
-                socket.emit('control', 'ArrowLeft');
+
                 keys.left = true
                 break
             case 'ArrowUp':
-                socket.emit('control', 'ArrowUp');
                 keys.up = true
                 break
             case 'ArrowDown':
-                socket.emit('control', 'ArrowDown');
                 keys.down = true
                 break
         }

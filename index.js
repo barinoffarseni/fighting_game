@@ -7,9 +7,7 @@ const io = new Server(server);
 
 const users = []
 
-let changedType = false
-
-let type = ''
+let type = 'player'
 
 app.use(express.static('./'))
 
@@ -21,15 +19,8 @@ io.on('connection', (socket) => {
   const id = socket.handshake.issued
   console.log(id + ' user connected');
 
-  if (users.length < 1) {
-    type = 'player'
-  } else {
+  if (users.length > 1) {
     type = 'enemy'
-  }
-
-  if (changedType) {
-    type = changedType
-    changedType = false
   }
 
   users.push({type: type, id: id})
@@ -40,8 +31,6 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     const index = users.findIndex(user => user.id == id);
-
-    changedType = users[index]['type']
 
     if (index > -1) {
       users.splice(index, 1);

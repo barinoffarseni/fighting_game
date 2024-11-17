@@ -209,16 +209,15 @@ function waitingForPlayers() {
 
             if (user.type == 'player') {
                 gameObjects.push(player)
-
-                socket.on('everyone-came-in', function(userHaveEntered) {
-                    gameObjects.push(enemy)
-                })
             }
 
             if (user.type == 'enemy') {
                 gameObjects.push(enemy)
-
                 gameObjects.push(player)
+            }
+        } else {
+            if (user.type == 'player') {
+                gameObjects.push(enemy)
             }
         }
     });

@@ -25,8 +25,6 @@ io.on('connection', (socket) => {
     type = 'player'
   } else {
     type = 'enemy'
-
-    io.emit('everyone-came-in', true)
   }
 
   if (changedType) {

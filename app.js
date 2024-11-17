@@ -20,8 +20,6 @@ const keys = {
     right: false
 }
 
-let id = false
-
 let user = false
 let user2 = false
 

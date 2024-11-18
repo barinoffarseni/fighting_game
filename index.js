@@ -5,8 +5,6 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const userIndificators = []
-
 const users = []
 
 let type = 'player'
@@ -17,9 +15,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-// function getUserIndificators() {
-//   while ()
-// }
 io.on('connection', (socket) => {
   const id = socket.handshake.issued
   console.log(id + ' user connected');

@@ -1,15 +1,6 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
-const users = {
-    user1: {
-        indificator: 0
-    },
-    user2: {
-        indificator: 0
-    }
-}
-
 canvas.width = 1024
 canvas.height = 576
 
@@ -17,8 +8,6 @@ const gravity = 0.2
 let gameOver = false
 
 let debug = false
-
-let id
 
 const keys = {
     w: false,
@@ -283,9 +272,6 @@ socket.on('id', function(msg) {
   });
 
 function update() {
-    // users.user1.indificator = userIndificators[0]
-    // users.user2.indificator = userIndificators[1]
-    console.log(id)
     player.direction = getFighterDirection(player.position.x, enemy.position.x)
     enemy.direction = getFighterDirection(enemy.position.x, player.position.x)
 

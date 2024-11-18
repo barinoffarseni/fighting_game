@@ -4,14 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const users = {
-  user1: {
-      indificator: 0
-  },
-  user2: {
-      indificator: 0
-  }
-}
+
 const userIndificators = []
 
 const users = []
@@ -30,7 +23,7 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   const id = socket.handshake.issued
   console.log(id + ' user connected');
-  
+
   if (users.length > 0) {
     type = 'enemy'
   }

@@ -31,6 +31,8 @@ const keys = {
     right: false
 }
 
+let user = false
+
 const gameObjects = [];
 
 gameObjects.push(new SpriteStatic({
@@ -55,6 +57,7 @@ gameObjects.push(new SpriteAnimated({
         y: 0
     }
 }))
+
 
 const player = new Fighter({
     position: {
@@ -113,8 +116,6 @@ const player = new Fighter({
     },
     attackFrame: 4
 })
-
-gameObjects.push(player)
 
 
 const enemy = new Fighter({
@@ -175,8 +176,6 @@ const enemy = new Fighter({
     attackFrame: 1
 })
 
-gameObjects.push(enemy)
-
 gameObjects.push(new HealthBar({
     offset: {
         x: 50,
@@ -214,7 +213,30 @@ function gameLoop() {
     window.requestAnimationFrame(gameLoop);
 }
 
-gameLoop()
+function waitingForPlayers() {
+    socket.on('set-data', function({type: type, id: id}) {
+        if (!user) {
+            user = {type: type, id: id}
+
+            if (user.type == 'player') {
+                gameObjects.push(player)
+            }
+
+            if (user.type == 'enemy') {
+                gameObjects.push(enemy)
+                gameObjects.push(player)
+            }
+        } else {
+            if (user.type == 'player') {
+                gameObjects.push(enemy)
+            }
+        }
+    });
+
+    gameLoop()
+}
+
+waitingForPlayers()
 
 function control() {
     player.velocity.x = 0

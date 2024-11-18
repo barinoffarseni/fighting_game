@@ -14,6 +14,10 @@ const users = {
 }
 const userIndificators = []
 
+const users = []
+
+let type = 'player'
+
 app.use(express.static('./'))
 
 app.get('/', (req, res) => {
@@ -24,14 +28,27 @@ app.get('/', (req, res) => {
 //   while ()
 // }
 io.on('connection', (socket) => {
-  userIndificators.push(socket.handshake.issued)
-  console.log(userIndificators);
-  io.emit('id', userIndificators[0]);
+  const id = socket.handshake.issued
+  console.log(id + ' user connected');
+  
+  if (users.length > 0) {
+    type = 'enemy'
+  }
 
-  io.emit('event-name', 'Привет браузеру от сервера!');
+  users.push({type: type, id: id})
+
+  io.emit('set-data', {type: type, id: id});
+
+  console.log(users);
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    const index = users.findIndex(user => user.id == id);
+
+    if (index > -1) {
+      users.splice(index, 1);
+    }
+
+    console.log(id + ' user disconnected');
   });
 
   socket.on('event-name', (msg) => {

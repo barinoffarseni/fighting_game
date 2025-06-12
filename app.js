@@ -341,42 +341,76 @@ function keydown(event) {
     if (!gameOver) {
         switch (event.key) {
             case 'd':
-                socket.emit('event-name', 'D');
+                socket.emit('key-down', 'd');
                 keys.d = true
                 break
             case 'a':
-                socket.emit('event-name', 'a');
+                socket.emit('key-down', 'a');
                 keys.a = true
                 break
             case 'w':
-                socket.emit('event-name', 'w');
+                socket.emit('key-down', 'w');
                 keys.w = true
                 break
             case 's':
-                socket.emit('event-name', 's');
+                socket.emit('key-down', 's');
                 keys.s = true
                 break
 
 
             case 'ArrowRight':
-                socket.emit('event-name', 'ArrowRight');
+                socket.emit('key-down', 'ArrowRight');
                 keys.right = true
                 break
             case 'ArrowLeft':
-                socket.emit('event-name', 'ArrowLeft');
+                socket.emit('key-down', 'ArrowLeft');
                 keys.left = true
                 break
             case 'ArrowUp':
-                socket.emit('event-name', 'ArrowUp');
+                socket.emit('key-down', 'ArrowUp');
                 keys.up = true
                 break
             case 'ArrowDown':
-                socket.emit('event-name', 'ArrowDown');
+                socket.emit('key-down', 'ArrowDown');
                 keys.down = true
                 break
         }
     }
 }
+
+socket.on('key-down-two', function(keyName) {
+    console.log(keyName)
+    if (!gameOver) {
+        switch (keyName) {
+            case 'd':
+                keys.d = true
+                break
+            case 'a':
+                keys.a = true
+                break
+            case 'w':
+                keys.w = true
+                break
+            case 's':
+                keys.s = true
+                break
+
+
+            case 'ArrowRight':
+                keys.right = true
+                break
+            case 'ArrowLeft':
+                keys.left = true
+                break
+            case 'ArrowUp':
+                keys.up = true
+                break
+            case 'ArrowDown':
+                keys.down = true
+                break
+        }
+    }
+});
 
 function getFighterDirection(x1, x2) {
     if (x1 >= x2) {

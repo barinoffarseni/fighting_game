@@ -42,8 +42,19 @@ io.on('connection', (socket) => {
   socket.on('event-name', (msg) => {
     console.log('message: ' + msg);
   });
+
+  socket.on('key-down', (keyName) => {
+    console.log('message: ' + keyName);
+
+    // io.broadcast.emit('key-down-two', keyName);
+    socket.broadcast.emit('key-down-two', keyName);
+  });
 });
 
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
+
+// io.on('connection', (socket) => {
+//   socket.broadcast.emit('hi');
+// });

@@ -25,8 +25,8 @@ const keys = {
 }
 
 let user = false
-let currentUserType = ''
-let oppositeUserType = ''
+let playerType = ''
+let enemyType = ''
 
 const gameObjects = [];
 
@@ -216,16 +216,16 @@ function waitingForPlayers() {
             if (user.type == 'samurai') {
                 gameObjects.push(samurai)
 
-                currentUserType = 'samurai'
-                oppositeUserType = 'ninja'
+                playerType = 'samurai'
+                enemyType = 'ninja'
             }
 
             if (user.type == 'ninja') {
                 gameObjects.push(ninja)
                 gameObjects.push(samurai)
 
-                currentUserType = 'ninja'
-                oppositeUserType = 'samurai'
+                playerType = 'ninja'
+                enemyType = 'samurai'
             }
         } else {
             if (user.type == 'samurai') {
@@ -321,19 +321,19 @@ window.addEventListener('keyup', keyup)
 function keyup(event) {
     switch (event.key) {
         case 'd':
-            keys[currentUserType].d = false
+            keys[playerType].d = false
             socket.emit('key-up', 'd');
             break
         case 'a':
-            keys[currentUserType].a = false
+            keys[playerType].a = false
             socket.emit('key-up', 'a');
             break
         case 'w':
-            keys[currentUserType].w = false
+            keys[playerType].w = false
             socket.emit('key-up', 'w');
             break
         case 's':
-            keys[currentUserType].s = false
+            keys[playerType].s = false
             socket.emit('key-up', 's');
             break
     }
@@ -345,19 +345,19 @@ function keydown(event) {
         switch (event.key) {
             case 'd':
                 socket.emit('key-down', 'd');
-                keys[currentUserType].d = true
+                keys[playerType].d = true
                 break
             case 'a':
                 socket.emit('key-down', 'a');
-                keys[currentUserType].a = true
+                keys[playerType].a = true
                 break
             case 'w':
                 socket.emit('key-down', 'w');
-                keys[currentUserType].w = true
+                keys[playerType].w = true
                 break
             case 's':
                 socket.emit('key-down', 's');
-                keys[currentUserType].s = true
+                keys[playerType].s = true
                 break
         }
     }
@@ -367,16 +367,16 @@ socket.on('key-down-two', function(keyName) {
     if (!gameOver) {
         switch (keyName) {
             case 'd':
-                keys[oppositeUserType].d = true
+                keys[enemyType].d = true
                 break
             case 'a':
-                keys[oppositeUserType].a = true
+                keys[enemyType].a = true
                 break
             case 'w':
-                keys[oppositeUserType].w = true
+                keys[enemyType].w = true
                 break
             case 's':
-                keys[oppositeUserType].s = true
+                keys[enemyType].s = true
                 break
         }
     }
@@ -385,16 +385,16 @@ socket.on('key-down-two', function(keyName) {
 socket.on('key-up-two', function(keyName) {
     switch (keyName) {
         case 'd':
-            keys[oppositeUserType].d = false
+            keys[enemyType].d = false
             break
         case 'a':
-            keys[oppositeUserType].a = false
+            keys[enemyType].a = false
             break
         case 'w':
-            keys[oppositeUserType].w = false
+            keys[enemyType].w = false
             break
         case 's':
-            keys[oppositeUserType].s = false
+            keys[enemyType].s = false
             break
     }
 });

@@ -363,7 +363,7 @@ function keydown(event) {
     }
 }
 
-socket.on('key-down-two', function(keyName) {
+socket.on('key-down', function(keyName) {
     if (!gameOver) {
         switch (keyName) {
             case 'd':
@@ -382,7 +382,7 @@ socket.on('key-down-two', function(keyName) {
     }
 });
 
-socket.on('key-up-two', function(keyName) {
+socket.on('key-up', function(keyName) {
     switch (keyName) {
         case 'd':
             keys[enemyType].d = false

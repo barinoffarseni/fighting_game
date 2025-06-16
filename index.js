@@ -44,10 +44,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('key-down', (keyName) => {
+    // console.log('message: ' + keyName);
+
+    socket.broadcast.emit('key-down-two', keyName);
+  });
+
+  socket.on('key-up', (keyName) => {
     console.log('message: ' + keyName);
 
-    // io.broadcast.emit('key-down-two', keyName);
-    socket.broadcast.emit('key-down-two', keyName);
+    socket.broadcast.emit('key-up-two', keyName);
   });
 });
 

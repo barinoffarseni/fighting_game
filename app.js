@@ -310,28 +310,36 @@ function keyup(event) {
     switch (event.key) {
         case 'd':
             keys.d = false
+            socket.emit('key-up', 'd');
             break
         case 'a':
             keys.a = false
+            socket.emit('key-up', 'a');
             break
         case 'w':
             keys.w = false
+            socket.emit('key-up', 'w');
             break
         case 's':
             keys.s = false
+            socket.emit('key-up', 's');
             break
 
         case 'ArrowRight':
             keys.right = false
+            socket.emit('key-up', 'ArrowRight');
             break
         case 'ArrowLeft':
             keys.left = false
+            socket.emit('key-up', 'ArrowLeft');
             break
         case 'ArrowUp':
             keys.up = false
+            socket.emit('key-up', 'ArrowUp');
             break
         case 'ArrowDown':
             keys.down = false
+            socket.emit('key-up', 'ArrowDown');
             break
     }
 }
@@ -407,6 +415,40 @@ socket.on('key-down-two', function(keyName) {
                 break
             case 'ArrowDown':
                 keys.down = true
+                break
+        }
+    }
+});
+
+socket.on('key-up-two', function(keyName) {
+    console.log(keyName)
+    if (!gameOver) {
+        switch (keyName) {
+            case 'd':
+                keys.d = false
+                break
+            case 'a':
+                keys.a = false
+                break
+            case 'w':
+                keys.w = false
+                break
+            case 's':
+                keys.s = false
+                break
+
+
+            case 'ArrowRight':
+                keys.right = false
+                break
+            case 'ArrowLeft':
+                keys.left = false
+                break
+            case 'ArrowUp':
+                keys.up = false
+                break
+            case 'ArrowDown':
+                keys.down = false
                 break
         }
     }

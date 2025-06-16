@@ -25,8 +25,8 @@ const keys = {
 }
 
 let user = false
-let playerType = ''
-let enemyType = ''
+let playerType
+let enemyType
 
 const gameObjects = [];
 

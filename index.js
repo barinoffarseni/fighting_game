@@ -44,14 +44,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('key-down', (keyName) => {
-    // console.log('message: ' + keyName);
-
     socket.broadcast.emit('key-down-two', keyName);
   });
 
   socket.on('key-up', (keyName) => {
-    console.log('message: ' + keyName);
-
     socket.broadcast.emit('key-up-two', keyName);
   });
 });
@@ -59,7 +55,3 @@ io.on('connection', (socket) => {
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
-
-// io.on('connection', (socket) => {
-//   socket.broadcast.emit('hi');
-// });

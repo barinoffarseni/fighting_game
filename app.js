@@ -22,7 +22,6 @@ const keys = {
         s: false,
         d: false
     }
-
 }
 
 let user = false
@@ -230,7 +229,6 @@ function waitingForPlayers() {
             }
         } else {
             if (user.type == 'player') {
-
                 gameObjects.push(enemy)
             }
         }

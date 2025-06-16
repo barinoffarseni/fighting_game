@@ -10,13 +10,13 @@ let gameOver = false
 let debug = false
 
 const keys = {
-    player: {
+    samurai: {
         w: false,
         a: false,
         s: false,
         d: false
     },
-    enemy: {
+    ninja: {
         w: false,
         a: false,
         s: false,
@@ -54,7 +54,7 @@ gameObjects.push(new SpriteAnimated({
 }))
 
 
-const player = new Fighter({
+const samurai = new Fighter({
     position: {
         x: 0,
         y: 0
@@ -113,7 +113,7 @@ const player = new Fighter({
 })
 
 
-const enemy = new Fighter({
+const ninja = new Fighter({
     position: {
         x: canvas.width / 2,
         y: 0
@@ -177,7 +177,7 @@ gameObjects.push(new HealthBar({
         y: 0
     },
     direction: 1,
-    entity: enemy
+    entity: ninja
 }))
 
 gameObjects.push(new HealthBar({
@@ -186,13 +186,13 @@ gameObjects.push(new HealthBar({
         y: 0
     },
     direction: -1,
-    entity: player
+    entity: samurai
 }))
 
 const timer = new Timer()
 gameObjects.push(timer)
 
-const winIndicator = new WinIndicator(player, enemy, timer)
+const winIndicator = new WinIndicator(samurai, ninja, timer)
 gameObjects.push(winIndicator)
 
 const restartButton = new Button()
@@ -213,23 +213,23 @@ function waitingForPlayers() {
         if (!user) {
             user = {type: type, id: id}
 
-            if (user.type == 'player') {
-                gameObjects.push(player)
+            if (user.type == 'samurai') {
+                gameObjects.push(samurai)
 
-                currentUserType = 'player'
-                oppositeUserType = 'enemy'
+                currentUserType = 'samurai'
+                oppositeUserType = 'ninja'
             }
 
-            if (user.type == 'enemy') {
-                gameObjects.push(enemy)
-                gameObjects.push(player)
+            if (user.type == 'ninja') {
+                gameObjects.push(ninja)
+                gameObjects.push(samurai)
 
-                currentUserType = 'enemy'
-                oppositeUserType = 'player'
+                currentUserType = 'ninja'
+                oppositeUserType = 'samurai'
             }
         } else {
-            if (user.type == 'player') {
-                gameObjects.push(enemy)
+            if (user.type == 'samurai') {
+                gameObjects.push(ninja)
             }
         }
     });
@@ -240,42 +240,42 @@ function waitingForPlayers() {
 waitingForPlayers()
 
 function control() {
-    player.velocity.x = 0
-    if (keys.player.w && player.canJump) {
-        player.velocity.y = -10
+    samurai.velocity.x = 0
+    if (keys.samurai.w && samurai.canJump) {
+        samurai.velocity.y = -10
     }
 
-    if (keys.player.d) {
-        player.velocity.x = 4
+    if (keys.samurai.d) {
+        samurai.velocity.x = 4
     }
 
-    if (keys.player.a) {
-        player.velocity.x = -4
+    if (keys.samurai.a) {
+        samurai.velocity.x = -4
     }
 
-    if (keys.player.s) {
-        player.attack = true
+    if (keys.samurai.s) {
+        samurai.attack = true
     } else {
-        player.attack = false
+        samurai.attack = false
     }
 
-    enemy.velocity.x = 0
-    if (keys.enemy.w && enemy.canJump) {
-        enemy.velocity.y = -10
+    ninja.velocity.x = 0
+    if (keys.ninja.w && ninja.canJump) {
+        ninja.velocity.y = -10
     }
 
-    if (keys.enemy.d) {
-        enemy.velocity.x = 4
+    if (keys.ninja.d) {
+        ninja.velocity.x = 4
     }
 
-    if (keys.enemy.a) {
-        enemy.velocity.x = -4
+    if (keys.ninja.a) {
+        ninja.velocity.x = -4
     }
 
-    if (keys.enemy.s) {
-        enemy.attack = true
+    if (keys.ninja.s) {
+        ninja.attack = true
     } else {
-        enemy.attack = false
+        ninja.attack = false
     }
 }
 
@@ -284,15 +284,15 @@ socket.on('id', function(msg) {
   });
 
 function update() {
-    player.direction = getFighterDirection(player.position.x, enemy.position.x)
-    enemy.direction = getFighterDirection(enemy.position.x, player.position.x)
+    samurai.direction = getFighterDirection(samurai.position.x, ninja.position.x)
+    ninja.direction = getFighterDirection(ninja.position.x, samurai.position.x)
 
-    if (checkAttackIsSuccess(player, enemy)) {
-        enemy.health -= 10
+    if (checkAttackIsSuccess(samurai, ninja)) {
+        ninja.health -= 10
     }
 
-    if (checkAttackIsSuccess(enemy, player)) {
-        player.health -= 10
+    if (checkAttackIsSuccess(ninja, samurai)) {
+        samurai.health -= 10
     }
 
     if (winIndicator.tie) {

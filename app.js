@@ -13,11 +13,7 @@ const keys = {
     w: false,
     a: false,
     s: false,
-    d: false,
-    up: false,
-    left: false,
-    down: false,
-    right: false
+    d: false
 }
 
 let user = false
@@ -248,19 +244,19 @@ function control() {
     }
     
     enemy.velocity.x = 0
-    if (keys.up && enemy.canJump) {
+    if (keys.w && enemy.canJump) {
         enemy.velocity.y = -10
     }
 
-    if (keys.right) {
+    if (keys.d) {
         enemy.velocity.x = 4
     }
 
-    if (keys.left) {
+    if (keys.a) {
         enemy.velocity.x = -4
     }
 
-    if (keys.down) {
+    if (keys.s) {
         enemy.attack = true
     } else {
         enemy.attack = false
@@ -324,23 +320,6 @@ function keyup(event) {
             keys.s = false
             socket.emit('key-up', 's');
             break
-
-        case 'ArrowRight':
-            keys.right = false
-            socket.emit('key-up', 'ArrowRight');
-            break
-        case 'ArrowLeft':
-            keys.left = false
-            socket.emit('key-up', 'ArrowLeft');
-            break
-        case 'ArrowUp':
-            keys.up = false
-            socket.emit('key-up', 'ArrowUp');
-            break
-        case 'ArrowDown':
-            keys.down = false
-            socket.emit('key-up', 'ArrowDown');
-            break
     }
 }
 
@@ -364,24 +343,6 @@ function keydown(event) {
                 socket.emit('key-down', 's');
                 keys.s = true
                 break
-
-
-            case 'ArrowRight':
-                socket.emit('key-down', 'ArrowRight');
-                keys.right = true
-                break
-            case 'ArrowLeft':
-                socket.emit('key-down', 'ArrowLeft');
-                keys.left = true
-                break
-            case 'ArrowUp':
-                socket.emit('key-down', 'ArrowUp');
-                keys.up = true
-                break
-            case 'ArrowDown':
-                socket.emit('key-down', 'ArrowDown');
-                keys.down = true
-                break
         }
     }
 }
@@ -402,20 +363,6 @@ socket.on('key-down-two', function(keyName) {
             case 's':
                 keys.s = true
                 break
-
-
-            case 'ArrowRight':
-                keys.right = true
-                break
-            case 'ArrowLeft':
-                keys.left = true
-                break
-            case 'ArrowUp':
-                keys.up = true
-                break
-            case 'ArrowDown':
-                keys.down = true
-                break
         }
     }
 });
@@ -435,20 +382,6 @@ socket.on('key-up-two', function(keyName) {
                 break
             case 's':
                 keys.s = false
-                break
-
-
-            case 'ArrowRight':
-                keys.right = false
-                break
-            case 'ArrowLeft':
-                keys.left = false
-                break
-            case 'ArrowUp':
-                keys.up = false
-                break
-            case 'ArrowDown':
-                keys.down = false
                 break
         }
     }

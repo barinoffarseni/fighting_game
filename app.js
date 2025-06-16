@@ -10,17 +10,23 @@ let gameOver = false
 let debug = false
 
 const keys = {
-    w: false,
-    a: false,
-    s: false,
-    d: false,
-    up: false,
-    left: false,
-    down: false,
-    right: false
+    samurai: {
+        w: false,
+        a: false,
+        s: false,
+        d: false
+    },
+    ninja: {
+        w: false,
+        a: false,
+        s: false,
+        d: false
+    }
 }
 
 let user = false
+let playerType
+let enemyType
 
 const gameObjects = [];
 
@@ -47,8 +53,7 @@ gameObjects.push(new SpriteAnimated({
     }
 }))
 
-
-const player = new Fighter({
+const samurai = new Fighter({
     position: {
         x: 0,
         y: 0
@@ -106,8 +111,7 @@ const player = new Fighter({
     attackFrame: 4
 })
 
-
-const enemy = new Fighter({
+const ninja = new Fighter({
     position: {
         x: canvas.width / 2,
         y: 0
@@ -171,7 +175,7 @@ gameObjects.push(new HealthBar({
         y: 0
     },
     direction: 1,
-    entity: enemy
+    entity: ninja
 }))
 
 gameObjects.push(new HealthBar({
@@ -180,13 +184,13 @@ gameObjects.push(new HealthBar({
         y: 0
     },
     direction: -1,
-    entity: player
+    entity: samurai
 }))
 
 const timer = new Timer()
 gameObjects.push(timer)
 
-const winIndicator = new WinIndicator(player, enemy, timer)
+const winIndicator = new WinIndicator(samurai, ninja, timer)
 gameObjects.push(winIndicator)
 
 const restartButton = new Button()
@@ -194,7 +198,6 @@ gameObjects.push(restartButton)
 
 
 function gameLoop() {
-
     control();
     update();
     render();
@@ -207,17 +210,23 @@ function waitingForPlayers() {
         if (!user) {
             user = {type: type, id: id}
 
-            if (user.type == 'player') {
-                gameObjects.push(player)
+            if (user.type == 'samurai') {
+                gameObjects.push(samurai)
+
+                playerType = 'samurai'
+                enemyType = 'ninja'
             }
 
-            if (user.type == 'enemy') {
-                gameObjects.push(enemy)
-                gameObjects.push(player)
+            if (user.type == 'ninja') {
+                gameObjects.push(ninja)
+                gameObjects.push(samurai)
+
+                playerType = 'ninja'
+                enemyType = 'samurai'
             }
         } else {
-            if (user.type == 'player') {
-                gameObjects.push(enemy)
+            if (user.type == 'samurai') {
+                gameObjects.push(ninja)
             }
         }
     });
@@ -228,59 +237,59 @@ function waitingForPlayers() {
 waitingForPlayers()
 
 function control() {
-    player.velocity.x = 0
-    if (keys.w && player.canJump) {
-        player.velocity.y = -10
+    samurai.velocity.x = 0
+    if (keys.samurai.w && samurai.canJump) {
+        samurai.velocity.y = -10
     }
 
-    if (keys.d) {
-        player.velocity.x = 4
+    if (keys.samurai.d) {
+        samurai.velocity.x = 4
     }
 
-    if (keys.a) {
-        player.velocity.x = -4
+    if (keys.samurai.a) {
+        samurai.velocity.x = -4
     }
 
-    if (keys.s) {
-        player.attack = true
+    if (keys.samurai.s) {
+        samurai.attack = true
     } else {
-        player.attack = false
-    }
-    
-    enemy.velocity.x = 0
-    if (keys.up && enemy.canJump) {
-        enemy.velocity.y = -10
+        samurai.attack = false
     }
 
-    if (keys.right) {
-        enemy.velocity.x = 4
+    ninja.velocity.x = 0
+    if (keys.ninja.w && ninja.canJump) {
+        ninja.velocity.y = -10
     }
 
-    if (keys.left) {
-        enemy.velocity.x = -4
+    if (keys.ninja.d) {
+        ninja.velocity.x = 4
     }
 
-    if (keys.down) {
-        enemy.attack = true
+    if (keys.ninja.a) {
+        ninja.velocity.x = -4
+    }
+
+    if (keys.ninja.s) {
+        ninja.attack = true
     } else {
-        enemy.attack = false
+        ninja.attack = false
     }
 }
 
 socket.on('id', function(msg) {
     id = msg
-  });
+});
 
 function update() {
-    player.direction = getFighterDirection(player.position.x, enemy.position.x)
-    enemy.direction = getFighterDirection(enemy.position.x, player.position.x)
+    samurai.direction = getFighterDirection(samurai.position.x, ninja.position.x)
+    ninja.direction = getFighterDirection(ninja.position.x, samurai.position.x)
 
-    if (checkAttackIsSuccess(player, enemy)) {
-        enemy.health -= 10
+    if (checkAttackIsSuccess(samurai, ninja)) {
+        ninja.health -= 10
     }
 
-    if (checkAttackIsSuccess(enemy, player)) {
-        player.health -= 10
+    if (checkAttackIsSuccess(ninja, samurai)) {
+        samurai.health -= 10
     }
 
     if (winIndicator.tie) {
@@ -309,29 +318,20 @@ window.addEventListener('keyup', keyup)
 function keyup(event) {
     switch (event.key) {
         case 'd':
-            keys.d = false
+            keys[playerType].d = false
+            socket.emit('key-up', 'd');
             break
         case 'a':
-            keys.a = false
+            keys[playerType].a = false
+            socket.emit('key-up', 'a');
             break
         case 'w':
-            keys.w = false
+            keys[playerType].w = false
+            socket.emit('key-up', 'w');
             break
         case 's':
-            keys.s = false
-            break
-
-        case 'ArrowRight':
-            keys.right = false
-            break
-        case 'ArrowLeft':
-            keys.left = false
-            break
-        case 'ArrowUp':
-            keys.up = false
-            break
-        case 'ArrowDown':
-            keys.down = false
+            keys[playerType].s = false
+            socket.emit('key-up', 's');
             break
     }
 }
@@ -341,42 +341,60 @@ function keydown(event) {
     if (!gameOver) {
         switch (event.key) {
             case 'd':
-                socket.emit('event-name', 'D');
-                keys.d = true
+                socket.emit('key-down', 'd');
+                keys[playerType].d = true
                 break
             case 'a':
-                socket.emit('event-name', 'a');
-                keys.a = true
+                socket.emit('key-down', 'a');
+                keys[playerType].a = true
                 break
             case 'w':
-                socket.emit('event-name', 'w');
-                keys.w = true
+                socket.emit('key-down', 'w');
+                keys[playerType].w = true
                 break
             case 's':
-                socket.emit('event-name', 's');
-                keys.s = true
-                break
-
-
-            case 'ArrowRight':
-                socket.emit('event-name', 'ArrowRight');
-                keys.right = true
-                break
-            case 'ArrowLeft':
-                socket.emit('event-name', 'ArrowLeft');
-                keys.left = true
-                break
-            case 'ArrowUp':
-                socket.emit('event-name', 'ArrowUp');
-                keys.up = true
-                break
-            case 'ArrowDown':
-                socket.emit('event-name', 'ArrowDown');
-                keys.down = true
+                socket.emit('key-down', 's');
+                keys[playerType].s = true
                 break
         }
     }
 }
+
+socket.on('key-down', function(keyName) {
+    if (!gameOver) {
+        switch (keyName) {
+            case 'd':
+                keys[enemyType].d = true
+                break
+            case 'a':
+                keys[enemyType].a = true
+                break
+            case 'w':
+                keys[enemyType].w = true
+                break
+            case 's':
+                keys[enemyType].s = true
+                break
+        }
+    }
+});
+
+socket.on('key-up', function(keyName) {
+    switch (keyName) {
+        case 'd':
+            keys[enemyType].d = false
+            break
+        case 'a':
+            keys[enemyType].a = false
+            break
+        case 'w':
+            keys[enemyType].w = false
+            break
+        case 's':
+            keys[enemyType].s = false
+            break
+    }
+});
 
 function getFighterDirection(x1, x2) {
     if (x1 >= x2) {

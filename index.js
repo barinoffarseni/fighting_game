@@ -7,7 +7,7 @@ const io = new Server(server);
 
 const users = []
 
-let type = 'player'
+let type = 'samurai'
 
 app.use(express.static('./'))
 
@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
   console.log(id + ' user connected');
 
   if (users.length > 0) {
-    type = 'enemy'
+    type = 'ninja'
   }
 
   users.push({type: type, id: id})
@@ -41,6 +41,14 @@ io.on('connection', (socket) => {
 
   socket.on('event-name', (msg) => {
     console.log('message: ' + msg);
+  });
+
+  socket.on('key-down', (keyName) => {
+    socket.broadcast.emit('key-down', keyName);
+  });
+
+  socket.on('key-up', (keyName) => {
+    socket.broadcast.emit('key-up', keyName);
   });
 });
 

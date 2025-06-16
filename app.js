@@ -53,7 +53,6 @@ gameObjects.push(new SpriteAnimated({
     }
 }))
 
-
 const samurai = new Fighter({
     position: {
         x: 0,
@@ -111,7 +110,6 @@ const samurai = new Fighter({
     },
     attackFrame: 4
 })
-
 
 const ninja = new Fighter({
     position: {
@@ -200,7 +198,6 @@ gameObjects.push(restartButton)
 
 
 function gameLoop() {
-
     control();
     update();
     render();
@@ -281,7 +278,7 @@ function control() {
 
 socket.on('id', function(msg) {
     id = msg
-  });
+});
 
 function update() {
     samurai.direction = getFighterDirection(samurai.position.x, ninja.position.x)

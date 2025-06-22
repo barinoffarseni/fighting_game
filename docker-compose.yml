@@ -7,4 +7,4 @@ services:
     volumes:
       - .:/app
     working_dir: /app
-    command: ash -c "npm install && node index.js"
+    command: ash -c "npm install && node server/app.js"

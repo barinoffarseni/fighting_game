@@ -85,7 +85,7 @@ server.listen(3000, () => {
 
 class Timer {
   constructor() {
-    this.timeRemaining = 30
+    this.timeRemaining = 20
     this.timeOut = false
     this.startTimer()
   }

@@ -11,7 +11,7 @@
       "address": "localhost",
       "port": 9229,
       "localRoot": "${workspaceFolder}",
-      "remoteRoot": "${workspaceFolder}",
+      "remoteRoot": "/app",
       "trace": true,
       "sourceMaps": true,
       "skipFiles": [

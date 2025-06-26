@@ -9,6 +9,19 @@ const io = new Server(server);
 
 const users = []
 const gameObjects = [];
+let gameTimer = null
+const sockets = []
+let tickTimer = setInterval(() => {
+  if (gameTimer !== null) {
+    sockets.forEach(socket => {
+      socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining, timeOut: gameTimer.timeOut });
+    })
+  }
+
+  gameObjects.forEach(gameObject => {
+    gameObject.update()
+  })
+}, 500)
 
 let type = 'samurai'
 
@@ -19,8 +32,10 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+  sockets.push(socket)
+
   const id = socket.handshake.issued
-  console.log(id + ' user connected');
+  // console.log(id + ' user connected');
 
   if (users.length > 0) { // если users.length = 1
     type = 'ninja'
@@ -31,7 +46,7 @@ io.on('connection', (socket) => {
   // }
 
   users.push({ type: type, id: id })
-  console.log(users);
+  // console.log(users);
 
   io.emit('set-data', { type: type, id: id }, users);
   // в этом IF мы начинаем игру
@@ -39,19 +54,7 @@ io.on('connection', (socket) => {
   if (users.length == 2) {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)
-
-    console.log('мЫ ТУТА')
-
-    const tickTimer = setInterval(() => {
-      socket.emit('timer', { timeRemaining: gameTimer.timeRemaining, timeOut: gameTimer.timeOut });
-
-      gameObjects.forEach(gameObject => {
-        gameObject.update()
-      })
-    }, 500)
   }
-  // })
-
 
 
   socket.on('disconnect', () => {
@@ -61,13 +64,13 @@ io.on('connection', (socket) => {
       users.splice(index, 1);
     }
 
-    console.log(id + ' user disconnected');
-    console.log(users);
+    // console.log(id + ' user disconnected');
+    // console.log(users);
   });
 
 
   socket.on('event-name', (msg) => {
-    console.log('message: ' + msg);
+    // console.log('message: ' + msg);
   });
 
 
@@ -82,7 +85,7 @@ io.on('connection', (socket) => {
 });
 
 server.listen(3000, () => {
-  console.log('listening on *:3000');
+  // console.log('listening on *:3000');
 });
 
 class Timer {

@@ -206,7 +206,7 @@ function gameLoop() {
 }
 
 function waitingForPlayers() {
-  socket.on('set-data', function ({ type: type, id: id }) {
+  socket.on('set-data', function ({ type: type, id: id }, users) {
     if (!user) {
       user = { type: type, id: id }
 
@@ -227,6 +227,8 @@ function waitingForPlayers() {
     } else {
       if (user.type == 'samurai') {
         gameObjects.push(ninja)
+
+        // console.log(users.length)
       }
     }
   });

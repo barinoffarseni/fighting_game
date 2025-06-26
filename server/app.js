@@ -26,14 +26,16 @@ io.on('connection', (socket) => {
     type = 'ninja'
   }
 
-  if (users.length > 2) {
-    return
-  }
+  // if (users.length > 2) {
+  //   return
+  // }
 
   users.push({ type: type, id: id })
   console.log(users);
 
+  io.emit('set-data', { type: type, id: id }, users);
   // в этом IF мы начинаем игру
+  // socket.on('timer-start', () => {
   if (users.length == 2) {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)
@@ -48,8 +50,8 @@ io.on('connection', (socket) => {
       })
     }, 500)
   }
+  // })
 
-  io.emit('set-data', { type: type, id: id });
 
 
   socket.on('disconnect', () => {

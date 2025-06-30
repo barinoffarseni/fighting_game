@@ -4,8 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-// как сюда добавть classes.js
-// const gameTimer = require('./timer.js');
+const Timer = require('./timer.js').Timer;
 
 const users = []
 const gameObjects = [];
@@ -41,9 +40,10 @@ io.on('connection', (socket) => {
     type = 'ninja'
   }
 
-  // if (users.length > 2) {
-  //   return
-  // }
+  // заходит 3й игрок - его шлем нахуй и не подключаем
+  if (users.length > 2) {
+    return
+  }
 
   users.push({ type: type, id: id })
   // console.log(users);
@@ -87,27 +87,3 @@ io.on('connection', (socket) => {
 server.listen(3000, () => {
   // console.log('listening on *:3000');
 });
-
-class Timer {
-  constructor() {
-    this.timeRemaining = 20
-    this.timeOut = false
-    this.startTimer()
-  }
-
-  update() {
-    if (this.timeRemaining <= 0) {
-      this.timeOut = true
-    }
-  }
-
-  startTimer() {
-    const intervalId = setInterval(() => {
-      if (this.timeOut) {
-        clearInterval(intervalId)
-      } else {
-        this.timeRemaining--
-      }
-    }, 1000)
-  }
-}

@@ -1,4 +1,4 @@
-class Timer {
+export class Timer {
   constructor() {
     this.timeRemaining = 30
     this.timeOut = false

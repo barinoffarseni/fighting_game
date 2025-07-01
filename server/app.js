@@ -1,16 +1,20 @@
 const express = require('express');
 const app = express();
 const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
+const httpServer = http.createServer(app);
+const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: "http://localhost",
+    methods: ["GET", "POST"]
+  }
+});
 const Timer = require('./timer.js').Timer;
 
 const users = []
 const gameObjects = [];
 let gameTimer = null
 const sockets = []
-let tickTimer = setInterval(() => {
+setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining, timeOut: gameTimer.timeOut });
@@ -22,13 +26,8 @@ let tickTimer = setInterval(() => {
   })
 }, 500)
 
-app.use(express.static('./'))
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
 io.on('connection', (socket) => {
+  console.log('New connection:', socket.id);
   let type = 'samurai'
   sockets.push(socket)
 
@@ -53,15 +52,12 @@ io.on('connection', (socket) => {
   }
 
   socket.on('disconnect', () => {
+    console.log('Disconnect:', socket.id);
     const index = users.findIndex(user => user.id == id);
 
     if (index > -1) {
       users.splice(index, 1);
     }
-  });
-
-  socket.on('event-name', (msg) => {
-    console.log('message: ' + msg);
   });
 
   socket.on('key-down', (keyName) => {
@@ -73,6 +69,6 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3000, () => {
+httpServer.listen(3000, () => {
   console.log('listening on *:3000');
 });

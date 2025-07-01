@@ -35,7 +35,6 @@ io.on('connection', (socket) => {
   sockets.push(socket)
 
   const id = socket.handshake.issued
-  // console.log(id + ' user connected');
 
   if (users.length > 0) {
     type = 'ninja'
@@ -71,7 +70,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('event-name', (msg) => {
-    // console.log('message: ' + msg);
+    console.log('message: ' + msg);
   });
 
   socket.on('key-down', (keyName) => {
@@ -84,5 +83,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(3000, () => {
-  // console.log('listening on *:3000');
+  console.log('listening on *:3000');
 });

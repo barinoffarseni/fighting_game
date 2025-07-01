@@ -53,11 +53,8 @@ io.on('connection', (socket) => {
   }
 
   users.push({ type: type, id: id })
-  // console.log(users);
 
-  io.emit('set-data', { type: type, id: id }, users);
-  // в этом IF мы начинаем игру
-  // socket.on('timer-start', () => {
+  io.emit('set-data', { type: type, id: id });
   if (users.length == 2) {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)

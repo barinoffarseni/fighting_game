@@ -206,7 +206,7 @@ function gameLoop() {
 }
 
 function waitingForPlayers() {
-  socket.on('set-data', function ({ type: type, id: id }, users) {
+  socket.on('set-data', function ({ type: type, id: id }) {
     if (!user) {
       user = { type: type, id: id }
 
@@ -227,8 +227,6 @@ function waitingForPlayers() {
     } else {
       if (user.type == 'samurai') {
         gameObjects.push(ninja)
-
-        // console.log(users.length)
       }
     }
   });
@@ -282,11 +280,6 @@ socket.on('id', function (msg) {
   id = msg
 });
 
-// в этом месте 2 раза в секунду приходят данные таймера
-// сколько времени осталось до конца игры
-// и закончился таймер или нет
-// из клиентского таймера убрать всю логику таймера и оставить только отрисовку
-// и в этом событий выставлять данные клиентсокму таймеру что бы синхронизировать его с сервером
 socket.on('timer', function (data) {
   console.log('timeRemaining ' + data.timeRemaining);
   console.log('timeOut ' + data.timeOut);

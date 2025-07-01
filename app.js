@@ -307,8 +307,8 @@ function update() {
   }
 
   if (winIndicator.tie) {
-    timer.timeRemaining += 10
-    timer.timeOut = false
+    // timer.timeRemaining += 10
+    // timer.timeOut = false
     winIndicator.tie = false
   }
 

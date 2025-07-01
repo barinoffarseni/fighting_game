@@ -16,6 +16,5 @@
 
 ## Команды
 
-* `docker-compose up -d` - запустить проект
 * `docker-compose restart` - перезапустить проект
 * `docker-compose exec node npx eslint` - проверить код на ошибки

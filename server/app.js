@@ -22,8 +22,7 @@ let tickTimer = setInterval(() => {
   })
 }, 500)
 
-let type
-let newType
+let type = 'samurai'
 
 app.use(express.static('./'))
 
@@ -37,14 +36,11 @@ io.on('connection', (socket) => {
   const id = socket.handshake.issued
 
   if (users.length > 0) {
-    type = 'ninja'
-  } else {
-    type = 'samurai'
-  }
-
-  if (newType) {
-    type = newType
-    newType = null
+    if ('ninja' == users[users.length - 1].type) {
+      type = 'samurai'
+    } else {
+      type = 'ninja'
+    }
   }
 
   if (users.length > 2) {
@@ -61,8 +57,6 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     const index = users.findIndex(user => user.id == id);
-
-    newType = users[index].type
 
     if (index > -1) {
       users.splice(index, 1);

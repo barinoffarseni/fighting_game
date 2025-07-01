@@ -22,8 +22,6 @@ let tickTimer = setInterval(() => {
   })
 }, 500)
 
-let type = 'samurai'
-
 app.use(express.static('./'))
 
 app.get('/', (req, res) => {
@@ -31,14 +29,13 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+  let type = 'samurai'
   sockets.push(socket)
 
   const id = socket.handshake.issued
 
   if (users.length > 0) {
-    if ('ninja' == users[users.length - 1].type) {
-      type = 'samurai'
-    } else {
+    if ('samurai' == users[users.length - 1].type) {
       type = 'ninja'
     }
   }

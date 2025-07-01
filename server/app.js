@@ -22,7 +22,8 @@ let tickTimer = setInterval(() => {
   })
 }, 500)
 
-let type = 'samurai'
+let type
+let newType
 
 app.use(express.static('./'))
 
@@ -36,11 +37,17 @@ io.on('connection', (socket) => {
   const id = socket.handshake.issued
   // console.log(id + ' user connected');
 
-  if (users.length > 0) { // если users.length = 1
+  if (users.length > 0) {
     type = 'ninja'
+  } else {
+    type = 'samurai'
   }
 
-  // заходит 3й игрок - его шлем нахуй и не подключаем
+  if (newType) {
+    type = newType
+    newType = null
+  }
+
   if (users.length > 2) {
     return
   }
@@ -59,6 +66,8 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     const index = users.findIndex(user => user.id == id);
+
+    newType = users[index].type
 
     if (index > -1) {
       users.splice(index, 1);

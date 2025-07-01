@@ -60,7 +60,6 @@ io.on('connection', (socket) => {
     gameObjects.push(gameTimer)
   }
 
-
   socket.on('disconnect', () => {
     const index = users.findIndex(user => user.id == id);
 
@@ -69,21 +68,15 @@ io.on('connection', (socket) => {
     if (index > -1) {
       users.splice(index, 1);
     }
-
-    // console.log(id + ' user disconnected');
-    // console.log(users);
   });
-
 
   socket.on('event-name', (msg) => {
     // console.log('message: ' + msg);
   });
 
-
   socket.on('key-down', (keyName) => {
     socket.broadcast.emit('key-down', keyName);
   });
-
 
   socket.on('key-up', (keyName) => {
     socket.broadcast.emit('key-up', keyName);

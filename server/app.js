@@ -9,7 +9,6 @@ const io = require("socket.io")(httpServer, {
   }
 });
 const Timer = require('./timer.js').Timer;
-// const HealthBar = require('./indicators.js').HealthBar;
 
 const users = []
 const gameObjects = [];
@@ -30,9 +29,8 @@ setInterval(() => {
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id);
   let type = 'samurai'
-  // let healthBar = null
-  let ninjaHelath = 100
-  let samuraiHelath = 100
+  let ninjaHelth = 100
+  let samuraiHelth = 100
   sockets.push(socket)
 
   const id = socket.handshake.issued
@@ -43,14 +41,14 @@ io.on('connection', (socket) => {
     }
   }
 
-  // socket.on('health_bar', (health) => {
-  //   if (healthBar === null) {
-  //     healthBar = new HealthBar(health)
-  //     gameObjects.push(healthBar)
-  //   }
-  //   healthBar.update()
-  //   socket.emit('health_bar', { healthValue: healthBar.healthValue });
-  // });
+  socket.on('take-hit', (data) => {
+    if (data == 'ninja') {
+      ninjaHelth -= 10
+    } else {
+      samuraiHelth -= 10
+    }
+    socket.emit('take-hit', { ninjaHelth, samuraiHelth });
+  });
 
   if (users.length > 2) {
     return
@@ -58,7 +56,7 @@ io.on('connection', (socket) => {
 
   users.push({ type: type, id: id })
 
-  io.emit('set-data', { type: type, id: id, ninjaHelath, samuraiHelath });
+  io.emit('set-data', { type: type, id: id, ninjaHelth: ninjaHelth, samuraiHelth: samuraiHelth });
   if (users.length == 2) {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)

@@ -420,6 +420,7 @@ class HealthBar extends Indicator {
 
   render() {
     ctx.fillStyle = this.color
+    console.log(this.healthValue)
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.direction * this.healthValue, this.height)
   }
 

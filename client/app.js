@@ -206,12 +206,14 @@ function gameLoop() {
 }
 
 function waitingForPlayers() {
-  socket.on('set-data', function ({ type: type, id: id }) {
+  socket.on('set-data', function ({ type: type, id: id, ninjaHelath, samuraiHelath }) {
     if (!user) {
       user = { type: type, id: id }
 
       if (user.type == 'samurai') {
         gameObjects.push(samurai)
+
+        samurai.health = samuraiHelath
 
         playerType = 'samurai'
         enemyType = 'ninja'
@@ -220,6 +222,8 @@ function waitingForPlayers() {
       if (user.type == 'ninja') {
         gameObjects.push(ninja)
         gameObjects.push(samurai)
+
+        ninja.health = ninjaHelath
 
         playerType = 'ninja'
         enemyType = 'samurai'
@@ -281,8 +285,6 @@ socket.on('id', function (msg) {
 });
 
 socket.on('timer', function (data) {
-  console.log('timeRemaining ' + data.timeRemaining);
-  console.log('timeOut ' + data.timeOut);
   timer.timeRemaining = data.timeRemaining
   timer.timeOut = data.timeOut
 });

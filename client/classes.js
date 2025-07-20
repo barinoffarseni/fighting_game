@@ -353,7 +353,6 @@ class WinIndicator extends Indicator {
   }
 }
 
-// это клиентский таймер
 class Timer extends Indicator {
   constructor() {
     super({

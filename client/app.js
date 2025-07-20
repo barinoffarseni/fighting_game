@@ -206,12 +206,14 @@ function gameLoop() {
 }
 
 function waitingForPlayers() {
-  socket.on('set-data', function ({ type: type, id: id }) {
+  socket.on('set-data', function ({ type: type, id: id, ninjaHealth: ninjaHealth, samuraiHealth: samuraiHealth }) {
     if (!user) {
       user = { type: type, id: id }
 
       if (user.type == 'samurai') {
         gameObjects.push(samurai)
+
+        samurai.health = samuraiHealth
 
         playerType = 'samurai'
         enemyType = 'ninja'
@@ -221,12 +223,17 @@ function waitingForPlayers() {
         gameObjects.push(ninja)
         gameObjects.push(samurai)
 
+        samurai.health = samuraiHealth
+        ninja.health = ninjaHealth
+
         playerType = 'ninja'
         enemyType = 'samurai'
       }
     } else {
       if (user.type == 'samurai') {
         gameObjects.push(ninja)
+
+        ninja.health = ninjaHealth
       }
     }
   });
@@ -281,8 +288,6 @@ socket.on('id', function (msg) {
 });
 
 socket.on('timer', function (data) {
-  console.log('timeRemaining ' + data.timeRemaining);
-  console.log('timeOut ' + data.timeOut);
   timer.timeRemaining = data.timeRemaining
   timer.timeOut = data.timeOut
 });
@@ -292,11 +297,11 @@ function update() {
   ninja.direction = getFighterDirection(ninja.position.x, samurai.position.x)
 
   if (checkAttackIsSuccess(samurai, ninja)) {
-    ninja.health -= 10
+    socket.emit('take-hit', 'ninja')
   }
 
   if (checkAttackIsSuccess(ninja, samurai)) {
-    samurai.health -= 10
+    socket.emit('take-hit', 'samurai')
   }
 
   if (winIndicator.tie) {
@@ -313,6 +318,11 @@ function update() {
     gameObject.update()
   })
 }
+
+socket.on('set-health', function ({ samuraiHealth, ninjaHealth }) {
+  samurai.health = samuraiHealth
+  ninja.health = ninjaHealth
+});
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)

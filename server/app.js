@@ -29,6 +29,8 @@ setInterval(() => {
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id);
   let type = 'samurai'
+  let ninjaHealth = 100
+  let samuraiHealth = 100
   sockets.push(socket)
 
   const id = socket.handshake.issued
@@ -39,13 +41,22 @@ io.on('connection', (socket) => {
     }
   }
 
+  socket.on('take-hit', (data) => {
+    if (data == 'ninja') {
+      ninjaHealth -= 10
+    } else {
+      samuraiHealth -= 10
+    }
+    socket.emit('set-health', { ninjaHealth, samuraiHealth });
+  });
+
   if (users.length > 2) {
     return
   }
 
   users.push({ type: type, id: id })
 
-  io.emit('set-data', { type: type, id: id });
+  io.emit('set-data', { type: type, id: id, ninjaHealth: ninjaHealth, samuraiHealth: samuraiHealth });
   if (users.length == 2) {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)

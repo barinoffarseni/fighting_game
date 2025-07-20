@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
     } else {
       samuraiHealth -= 10
     }
-    socket.emit('take-hit', { ninjaHealth, samuraiHealth });
+    socket.emit('set-health', { ninjaHealth, samuraiHealth });
   });
 
   if (users.length > 2) {

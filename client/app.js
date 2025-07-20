@@ -319,7 +319,7 @@ function update() {
   })
 }
 
-socket.on('take-hit', function ({ samuraiHealth, ninjaHealth }) {
+socket.on('set-health', function ({ samuraiHealth, ninjaHealth }) {
   samurai.health = samuraiHealth
   ninja.health = ninjaHealth
 });

@@ -297,12 +297,10 @@ function update() {
   ninja.direction = getFighterDirection(ninja.position.x, samurai.position.x)
 
   if (checkAttackIsSuccess(samurai, ninja)) {
-    // ninja.health -= 10
     socket.emit('take-hit', 'ninja')
   }
 
   if (checkAttackIsSuccess(ninja, samurai)) {
-    // samurai.health -= 10
     socket.emit('take-hit', 'samurai')
   }
 

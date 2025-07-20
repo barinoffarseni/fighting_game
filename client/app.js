@@ -324,6 +324,7 @@ socket.on('set-health', function ({ samuraiHealth, ninjaHealth }) {
   ninja.health = ninjaHealth
 });
 
+
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   gameObjects.forEach(gameObject => {

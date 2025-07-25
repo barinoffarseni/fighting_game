@@ -285,7 +285,7 @@ class Indicator {
 }
 
 class WinIndicator extends Indicator {
-  constructor(player1, player2, timer) {
+  constructor() {
     super({
       position: {
         x: canvas.width / 2,
@@ -309,35 +309,35 @@ class WinIndicator extends Indicator {
         y: -50
       }
     }
-    this.player1 = player1
-    this.player2 = player2
+    // this.player1 = player1
+    // this.player2 = player2
     this.winner = ''
-    this.tie = false
-    this.timer = timer
+    // this.tie = false
+    // this.timer = timer
   }
 
   update() {
-    if (this.player1.state == 'death') {
-      this.winner = 'Player 2'
-      gameOver = true
-    }
-    if (this.player2.state == 'death') {
-      this.winner = 'Player 1'
-      gameOver = true
-    }
-    if (this.timer.timeOut) {
-      if (this.player1.health > this.player2.health) {
-        this.winner = 'Player 1'
-        gameOver = true
-      }
-      if (this.player2.health > this.player1.health) {
-        this.winner = 'Player 2'
-        gameOver = true
-      }
-      if (this.player2.health == this.player1.health) {
-        this.tie = true
-      }
-    }
+    // if (this.player1.state == 'death') {
+    //   this.winner = 'Player 2'
+    //   gameOver = true
+    // }
+    // if (this.player2.state == 'death') {
+    //   this.winner = 'Player 1'
+    //   gameOver = true
+    // }
+    // if (this.timer.timeOut) {
+    //   if (this.player1.health > this.player2.health) {
+    //     this.winner = 'Player 1'
+    //     gameOver = true
+    //   }
+    //   if (this.player2.health > this.player1.health) {
+    //     this.winner = 'Player 2'
+    //     gameOver = true
+    //   }
+    //   if (this.player2.health == this.player1.health) {
+    //     this.tie = true
+    //   }
+    // }
   }
 
   render() {

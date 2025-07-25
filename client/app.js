@@ -292,6 +292,11 @@ socket.on('timer', function (data) {
   timer.timeOut = data.timeOut
 });
 
+socket.on('game-over', function (data) {
+  winIndicator.winner = data.winner
+  gameOver = data.gameOver
+});
+
 function update() {
   samurai.direction = getFighterDirection(samurai.position.x, ninja.position.x)
   ninja.direction = getFighterDirection(ninja.position.x, samurai.position.x)
@@ -302,12 +307,6 @@ function update() {
 
   if (checkAttackIsSuccess(ninja, samurai)) {
     socket.emit('take-hit', 'samurai')
-  }
-
-  if (winIndicator.tie) {
-    // timer.timeRemaining += 10
-    // timer.timeOut = false
-    winIndicator.tie = false
   }
 
   if (gameOver) {

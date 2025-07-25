@@ -9,10 +9,58 @@ const io = require("socket.io")(httpServer, {
   }
 });
 const Timer = require('./timer.js').Timer;
+// const WinIndicator = require('./winIndicator.js').WinIndicator;
+class WinIndicator {
+  constructor(health1, health2, timer) {
+    this.health1 = health1
+    this.health2 = health2
+    this.timer = timer
+    this.winner = 'jopa'
+    this.tie = false
+  }
+
+  update() {
+    if (this.health1 == 0) {
+      this.winner = 'Player 2'
+      gameOver = true
+
+      socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
+    }
+    if (this.health2 == 0) {
+      this.winner = 'Player 1'
+      gameOver = true
+
+      socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
+    }
+    if (this.timer.timeOut) {
+      if (this.health1 > this.health2) {
+        this.winner = 'Player 1'
+        gameOver = true
+
+        socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
+      }
+      if (this.health2 > this.health1) {
+        this.winner = 'Player 2'
+        gameOver = true
+
+        socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
+      }
+      if (this.health2 == this.health1) {
+        this.tie = true
+      }
+    }
+  }
+}
 
 const users = []
 const gameObjects = [];
+let gameOver = false
 let gameTimer = null
+let gameWinIndicator = null
+
+gameWinIndicator = new WinIndicator(samuraiHealth, ninjaHealth, gameTimer);
+gameObjects.push(gameWinIndicator)
+
 const sockets = []
 setInterval(() => {
   if (gameTimer !== null) {
@@ -60,6 +108,14 @@ io.on('connection', (socket) => {
   if (users.length == 2) {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)
+  }
+
+  // socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: gameWinIndicator.winner })
+  console.log(gameWinIndicator + "sdkksknvkmkdmkvmmksmkvkmmkmsmkskmkm")
+  if (gameWinIndicator.tie) {
+    gameTimer.timeRemaining += 10
+    gameTimer.timeOut = false
+    gameWinIndicator.tie = false
   }
 
   socket.on('disconnect', () => {

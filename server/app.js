@@ -16,7 +16,7 @@ class WinIndicator {
     this.health2 = health2
     this.timer = timer
     this.winner = 'jopa'
-    this.tie = false
+    // this.tie = false
   }
 
   update() {
@@ -46,7 +46,8 @@ class WinIndicator {
         socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
       }
       if (this.health2 == this.health1) {
-        this.tie = true
+        this.timer.timeRemaining += 10
+        this.timer.timeOut = false
       }
     }
   }
@@ -57,9 +58,6 @@ const gameObjects = [];
 let gameOver = false
 let gameTimer = null
 let gameWinIndicator = null
-
-gameWinIndicator = new WinIndicator(samuraiHealth, ninjaHealth, gameTimer);
-gameObjects.push(gameWinIndicator)
 
 const sockets = []
 setInterval(() => {
@@ -108,15 +106,13 @@ io.on('connection', (socket) => {
   if (users.length == 2) {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)
+
+    gameWinIndicator = new WinIndicator(samuraiHealth, ninjaHealth, gameTimer);
+    gameObjects.push(gameWinIndicator)
   }
 
   // socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: gameWinIndicator.winner })
   console.log(gameWinIndicator + "sdkksknvkmkdmkvmmksmkvkmmkmsmkskmkm")
-  if (gameWinIndicator.tie) {
-    gameTimer.timeRemaining += 10
-    gameTimer.timeOut = false
-    gameWinIndicator.tie = false
-  }
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', socket.id);

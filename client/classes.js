@@ -249,7 +249,7 @@ class Fighter extends SpriteAnimated {
       this.setState()
     }
 
-    if (winIndicator.gameOver) {
+    if (gameOver) {
       this.newState = 'idle';
     }
 

@@ -13,7 +13,7 @@ const Timer = require('./timer.js').Timer;
 const users = []
 const gameObjects = [];
 let gameOver = false
-let winner = false
+let winner = ''
 let gameTimer = null
 let ninjaHealth = 100
 let samuraiHealth = 100
@@ -73,7 +73,8 @@ io.on('connection', (socket) => {
 
       socket.emit('game-over', { gameOver: gameOver, winner: winner })
     }
-    if (samuraiHealth == 0) {
+
+    if (ninjaHealth == 0) {
       winner = 'Player 1'
       gameOver = true
 

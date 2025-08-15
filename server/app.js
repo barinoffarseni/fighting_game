@@ -10,53 +10,54 @@ const io = require("socket.io")(httpServer, {
 });
 const Timer = require('./timer.js').Timer;
 // const WinIndicator = require('./winIndicator.js').WinIndicator;
-class WinIndicator {
-  constructor(health1, health2, timer) {
-    this.health1 = health1
-    this.health2 = health2
-    this.timer = timer
-    this.winner = ''
-    // this.tie = false
-  }
+// class WinIndicator {
+//   constructor(health1, health2, timer) {
+//     this.health1 = health1
+//     this.health2 = health2
+//     this.timer = timer
+//     this.winner = ''
+//     // this.tie = false
+//   }
 
-  update() {
-    console.log(this.health2, this.health1)
-    if (this.health1 == 0) {
-      this.winner = 'Player 2'
-      gameOver = true
+//   update() {
+//     console.log(this.health2, this.health1)
+//     if (this.health1 == 0) {
+//       this.winner = 'Player 2'
+//       gameOver = true
 
-      socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
-    }
-    if (this.health2 == 0) {
-      this.winner = 'Player 1'
-      gameOver = true
+//       socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
+//     }
+//     if (this.health2 == 0) {
+//       this.winner = 'Player 1'
+//       gameOver = true
 
-      socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
-    }
-    if (this.timer.timeOut) {
-      if (this.health1 > this.health2) {
-        this.winner = 'Player 1'
-        gameOver = true
+//       socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
+//     }
+//     if (this.timer.timeOut) {
+//       if (this.health1 > this.health2) {
+//         this.winner = 'Player 1'
+//         gameOver = true
 
-        socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
-      }
-      if (this.health2 > this.health1) {
-        this.winner = 'Player 2'
-        gameOver = true
+//         socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
+//       }
+//       if (this.health2 > this.health1) {
+//         this.winner = 'Player 2'
+//         gameOver = true
 
-        socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
-      }
-      if (this.health2 == this.health1) {
-        this.timer.timeRemaining += 10
-        this.timer.timeOut = false
-      }
-    }
-  }
-}
+//         socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: this.winner })
+//       }
+//       // if (this.health2 == this.health1) {
+//       //   this.timer.timeRemaining += 10
+//       //   this.timer.timeOut = false
+//       // }
+//     }
+//   }
+// }
 
 const users = []
 const gameObjects = [];
 let gameOver = false
+let winner = false
 let gameTimer = null
 let gameWinIndicator = null
 let ninjaHealth = 100
@@ -71,7 +72,7 @@ setInterval(() => {
 
     if (gameTimer.timeOut) {
       if (ninjaHealth == samuraiHealth) {
-        gameTimer.timeRemaining += 10
+        gameTimer.timeRemaining += 11
         gameTimer.timeOut = false
       }
     }
@@ -118,8 +119,8 @@ io.on('connection', (socket) => {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)
 
-    gameWinIndicator = new WinIndicator(samuraiHealth, ninjaHealth, gameTimer);
-    gameObjects.push(gameWinIndicator)
+    // gameWinIndicator = new WinIndicator(samuraiHealth, ninjaHealth, gameTimer);
+    // gameObjects.push(gameWinIndicator)
   }
 
   // socket.emit('game-over', { gameOver: gameOver, gameWinIndicator: gameWinIndicator.winner })

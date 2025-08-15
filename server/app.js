@@ -80,7 +80,7 @@ io.on('connection', (socket) => {
 
       socket.emit('game-over', { gameOver: gameOver, winner: winner })
     }
-    //ооаоа
+
     socket.emit('set-health', { ninjaHealth, samuraiHealth });
   });
 

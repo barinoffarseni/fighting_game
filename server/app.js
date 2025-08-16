@@ -59,7 +59,6 @@ const gameObjects = [];
 let gameOver = false
 let winner = false
 let gameTimer = null
-let gameWinIndicator = null
 let ninjaHealth = 100
 let samuraiHealth = 100
 
@@ -68,9 +67,18 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining, timeOut: gameTimer.timeOut });
+      socket.emit('game-over', { gameOver: gameOver, winner: winner })
     })
 
     if (gameTimer.timeOut) {
+      if (ninjaHealth > samuraiHealth) {
+        winner = 'Player 1'
+        gameOver = true
+      }
+      if (samuraiHealth > ninjaHealth) {
+        winner = 'Player 2'
+        gameOver = true
+      }
       if (ninjaHealth == samuraiHealth) {
         gameTimer.timeRemaining += 11
         gameTimer.timeOut = false
@@ -102,8 +110,6 @@ io.on('connection', (socket) => {
     } else {
       samuraiHealth -= 10
     }
-
-
 
     socket.emit('set-health', { ninjaHealth, samuraiHealth });
   });

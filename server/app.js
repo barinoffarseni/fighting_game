@@ -111,6 +111,19 @@ io.on('connection', (socket) => {
       samuraiHealth -= 10
     }
 
+    if (samuraiHealth == 0) {
+      winner = 'Player 2'
+      gameOver = true
+
+      socket.emit('game-over', { gameOver: gameOver, winner: winner })
+    }
+    if (samuraiHealth == 0) {
+      winner = 'Player 1'
+      gameOver = true
+
+      socket.emit('game-over', { gameOver: gameOver, winner: winner })
+    }
+
     socket.emit('set-health', { ninjaHealth, samuraiHealth });
   });
 

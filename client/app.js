@@ -295,6 +295,8 @@ socket.on('timer', function (data) {
 socket.on('game-over', function (data) {
   winIndicator.winner = data.winner
   gameOver = data.gameOver
+
+  console.log('ddddddddddddddd')
 });
 
 function update() {

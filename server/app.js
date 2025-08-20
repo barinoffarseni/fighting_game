@@ -12,13 +12,36 @@ const Timer = require('./timer.js').Timer;
 
 const users = []
 const gameObjects = [];
+let gameOver = false
+let winner = ''
 let gameTimer = null
+let ninjaHealth = 100
+let samuraiHealth = 100
+
 const sockets = []
 setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
-      socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining, timeOut: gameTimer.timeOut });
+      socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut });
     })
+
+    if (gameTimer.timeRemaining == 1) {
+      if (ninjaHealth > samuraiHealth) {
+        winner = 'Player 2'
+        gameOver = true
+      }
+      if (samuraiHealth > ninjaHealth) {
+        winner = 'Player 1'
+        gameOver = true
+      }
+      if (ninjaHealth == samuraiHealth) {
+        gameTimer.timeRemaining += 9
+        gameTimer.timeOut = false
+      }
+      sockets.forEach(socket => {
+        socket.emit('game-over', { gameOver: gameOver, winner: winner });
+      })
+    }
   }
 
   gameObjects.forEach(gameObject => {
@@ -29,8 +52,6 @@ setInterval(() => {
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id);
   let type = 'samurai'
-  let ninjaHealth = 100
-  let samuraiHealth = 100
   sockets.push(socket)
 
   const id = socket.handshake.issued
@@ -47,6 +68,21 @@ io.on('connection', (socket) => {
     } else {
       samuraiHealth -= 10
     }
+
+    if (samuraiHealth == 0) {
+      winner = 'Player 2'
+      gameOver = true
+
+      socket.emit('game-over', { gameOver: gameOver, winner: winner })
+    }
+
+    if (ninjaHealth == 0) {
+      winner = 'Player 1'
+      gameOver = true
+
+      socket.emit('game-over', { gameOver: gameOver, winner: winner })
+    }
+
     socket.emit('set-health', { ninjaHealth, samuraiHealth });
   });
 

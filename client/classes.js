@@ -249,10 +249,6 @@ class Fighter extends SpriteAnimated {
       this.setState()
     }
 
-    if (gameOver) {
-      this.newState = 'idle';
-    }
-
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
 

@@ -11,8 +11,10 @@ const io = require("socket.io")(httpServer, {
 const Timer = require('./timer.js').Timer;
 
 class Fighter {
-  constructor() {
+  constructor({ position, velocity }) {
     this.health = 100
+    this.position = position
+    this.velocity = velocity
   }
 }
 
@@ -21,8 +23,18 @@ const gameObjects = [];
 let gameOver = false
 let winner = ''
 let gameTimer = null
-let ninja = new Fighter()
-let samurai = new Fighter()
+let samurai = new Fighter({
+  position: {
+    x: 0,
+    y: 0
+  }
+})
+let ninja = new Fighter({
+  position: {
+    x: 512,
+    y: 0
+  }
+})
 
 const sockets = []
 setInterval(() => {
@@ -61,6 +73,8 @@ io.on('connection', (socket) => {
   sockets.push(socket)
 
   const id = socket.handshake.issued
+
+  socket.emit('set-position', { samuraiPosition: samurai.position, ninjaPosition: ninja.position })
 
   if (users.length > 0) {
     if ('samurai' == users[users.length - 1].type) {

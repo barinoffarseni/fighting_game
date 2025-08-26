@@ -113,7 +113,7 @@ const samurai = new Fighter({
 
 const ninja = new Fighter({
   position: {
-    x: canvas.width / 2,
+    x: 20,
     y: 0
   },
   velocity: {
@@ -285,6 +285,11 @@ function control() {
 
 socket.on('id', function (msg) {
   id = msg
+});
+
+socket.on('set-position', function (data) {
+  samurai.position = data.samuraiPosition
+  ninja.position = data.ninjaPosition
 });
 
 socket.on('timer', function (data) {

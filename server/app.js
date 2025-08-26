@@ -10,13 +10,19 @@ const io = require("socket.io")(httpServer, {
 });
 const Timer = require('./timer.js').Timer;
 
+class Fighter {
+  constructor() {
+    this.health = 100
+  }
+}
+
 const users = []
 const gameObjects = [];
 let gameOver = false
 let winner = ''
 let gameTimer = null
-let ninjaHealth = 100
-let samuraiHealth = 100
+let ninja = new Fighter()
+let samurai = new Fighter()
 
 const sockets = []
 setInterval(() => {
@@ -26,15 +32,15 @@ setInterval(() => {
     })
 
     if (gameTimer.timeRemaining == 1) {
-      if (ninjaHealth > samuraiHealth) {
+      if (ninja.health > samurai.health) {
         winner = 'Player 2'
         gameOver = true
       }
-      if (samuraiHealth > ninjaHealth) {
+      if (samurai.health > ninja.health) {
         winner = 'Player 1'
         gameOver = true
       }
-      if (ninjaHealth == samuraiHealth) {
+      if (ninja.health == samurai.health) {
         gameTimer.timeRemaining += 9
         gameTimer.timeOut = false
       }
@@ -64,26 +70,26 @@ io.on('connection', (socket) => {
 
   socket.on('take-hit', (data) => {
     if (data == 'ninja') {
-      ninjaHealth -= 10
+      ninja.health -= 10
     } else {
-      samuraiHealth -= 10
+      samurai.health -= 10
     }
 
-    if (samuraiHealth == 0) {
+    if (samurai.health == 0) {
       winner = 'Player 2'
       gameOver = true
 
       socket.emit('game-over', { gameOver: gameOver, winner: winner })
     }
 
-    if (ninjaHealth == 0) {
+    if (ninja.health == 0) {
       winner = 'Player 1'
       gameOver = true
 
       socket.emit('game-over', { gameOver: gameOver, winner: winner })
     }
 
-    socket.emit('set-health', { ninjaHealth, samuraiHealth });
+    socket.emit('set-health', { ninjaHealth: ninja.health, samuraiHealth: samurai.health });
   });
 
   if (users.length > 2) {
@@ -92,7 +98,7 @@ io.on('connection', (socket) => {
 
   users.push({ type: type, id: id })
 
-  io.emit('set-data', { type: type, id: id, ninjaHealth: ninjaHealth, samuraiHealth: samuraiHealth });
+  io.emit('set-data', { type: type, id: id, ninjaHealth: ninja.health, samuraiHealth: samurai.health });
   if (users.length == 2) {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)
@@ -108,6 +114,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('key-down', (keyName) => {
+
     socket.broadcast.emit('key-down', keyName);
   });
 

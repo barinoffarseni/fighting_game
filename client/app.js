@@ -245,6 +245,7 @@ waitingForPlayers()
 
 function control() {
   samurai.velocity.x = 0
+  socket.emit('set-velocity', { playerType: 'samurai', x: 0, y: 0 })
   if (keys.samurai.w && samurai.canJump) {
     socket.emit('set-velocity', { playerType: 'samurai', x: 0, y: -10 })
   }
@@ -264,6 +265,7 @@ function control() {
   }
 
   ninja.velocity.x = 0
+  socket.emit('set-velocity', { playerType: 'ninja', x: 0, y: 0 })
   if (keys.ninja.w && ninja.canJump) {
     socket.emit('set-velocity', { playerType: 'ninja', x: 0, y: -10 })
   }

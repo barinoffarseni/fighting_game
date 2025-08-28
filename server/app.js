@@ -17,11 +17,6 @@ class Fighter {
     this.velocity = velocity
     this.canJump = true
   }
-
-  update() {
-    this.position.x += this.velocity.x
-    this.position.y += this.velocity.y
-  }
 }
 
 const users = []
@@ -93,12 +88,7 @@ io.on('connection', (socket) => {
   if (users.length > 0) {
     if ('samurai' == users[users.length - 1].type) {
       type = 'ninja'
-
-      gameObjects.push(samurai)
-      gameObjects.push(ninja)
     }
-
-    gameObjects.push(samurai)
   }
 
   socket.on('take-hit', (data) => {
@@ -155,11 +145,21 @@ io.on('connection', (socket) => {
   });
 
   socket.on('set-velocity', (data) => {
-    [data.playerType].velocity.x == data.[data.playerType].velocity.x
-    console.log(data.playerType, [data.playerType].velocity.x)
-    // this.position.y += this.velocity.y
+    if (data.playerType == 'samurai') {
+      samurai.velocity.x = data.x
+      samurai.velocity.y = data.y
+    } else {
+      ninja.velocity.x = data.x
+      ninja.velocity.y = data.y
+    }
 
-    // socket.broadcast.emit('key-down', keyName);
+    ninja.position.x += ninja.velocity.x
+    ninja.position.y += ninja.velocity.y
+
+    samurai.position.x += samurai.velocity.x
+    samurai.position.y += samurai.velocity.y
+    console.log(data.x)
+    socket.emit('set-position', { samuraiPosition: samurai.position, ninjaPosition: ninja.position });
   });
 });
 

@@ -246,15 +246,15 @@ waitingForPlayers()
 function control() {
   samurai.velocity.x = 0
   if (keys.samurai.w && samurai.canJump) {
-    samurai.velocity.y = -10
+    socket.emit('set-velocity', { playerType: 'samurai', x: 0, y: -10 })
   }
 
   if (keys.samurai.d) {
-    samurai.velocity.x = 4
+    socket.emit('set-velocity', { playerType: 'samurai', x: 4, y: 0 })
   }
 
   if (keys.samurai.a) {
-    samurai.velocity.x = -4
+    socket.emit('set-velocity', { playerType: 'samurai', x: -4, y: 0 })
   }
 
   if (keys.samurai.s) {
@@ -265,15 +265,15 @@ function control() {
 
   ninja.velocity.x = 0
   if (keys.ninja.w && ninja.canJump) {
-    ninja.velocity.y = -10
+    socket.emit('set-velocity', { playerType: 'ninja', x: 0, y: -10 })
   }
 
   if (keys.ninja.d) {
-    ninja.velocity.x = 4
+    socket.emit('set-velocity', { playerType: 'ninja', x: 4, y: 0 })
   }
 
   if (keys.ninja.a) {
-    ninja.velocity.x = -4
+    socket.emit('set-velocity', { playerType: 'ninja', x: -4, y: 0 })
   }
 
   if (keys.ninja.s) {

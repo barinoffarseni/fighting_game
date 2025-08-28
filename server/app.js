@@ -15,6 +15,12 @@ class Fighter {
     this.health = 100
     this.position = position
     this.velocity = velocity
+    this.canJump = true
+  }
+
+  update() {
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
   }
 }
 
@@ -27,11 +33,19 @@ let samurai = new Fighter({
   position: {
     x: 0,
     y: 0
+  },
+  velocity: {
+    x: 0,
+    y: 0
   }
 })
 let ninja = new Fighter({
   position: {
     x: 512,
+    y: 0
+  },
+  velocity: {
+    x: 0,
     y: 0
   }
 })
@@ -79,7 +93,12 @@ io.on('connection', (socket) => {
   if (users.length > 0) {
     if ('samurai' == users[users.length - 1].type) {
       type = 'ninja'
+
+      gameObjects.push(samurai)
+      gameObjects.push(ninja)
     }
+
+    gameObjects.push(samurai)
   }
 
   socket.on('take-hit', (data) => {
@@ -128,12 +147,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('key-down', (keyName) => {
-
     socket.broadcast.emit('key-down', keyName);
   });
 
   socket.on('key-up', (keyName) => {
     socket.broadcast.emit('key-up', keyName);
+  });
+
+  socket.on('set-velocity', (data) => {
+    [data.playerType].velocity.x == data.[data.playerType].velocity.x
+    console.log(data.playerType, [data.playerType].velocity.x)
+    // this.position.y += this.velocity.y
+
+    // socket.broadcast.emit('key-down', keyName);
   });
 });
 

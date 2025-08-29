@@ -17,6 +17,11 @@ class Fighter {
     this.velocity = velocity
     this.canJump = true
   }
+
+  update() {
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
+  }
 }
 
 const users = []
@@ -153,12 +158,9 @@ io.on('connection', (socket) => {
       ninja.velocity.y = data.y
     }
 
-    ninja.position.x += ninja.velocity.x
-    ninja.position.y += ninja.velocity.y
+    ninja.update()
+    samurai.update()
 
-    samurai.position.x += samurai.velocity.x
-    samurai.position.y += samurai.velocity.y
-    console.log(data.x)
     socket.emit('set-position', { samuraiPosition: samurai.position, ninjaPosition: ninja.position });
   });
 });

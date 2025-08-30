@@ -15,17 +15,27 @@ class Fighter {
     this.health = 100
     this.position = position
     this.velocity = velocity
-    this.canJump = true
+    this.canJump = false
   }
 
   update() {
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
+
+    if (this.position.y + this.height >= 576 - 96) {
+      this.velocity.y = 0
+      this.position.y = 576 - 96 - this.height
+      this.canJump = true
+    } else {
+      this.velocity.y += gravity
+      this.canJump = false
+    }
   }
 }
 
 const users = []
 const gameObjects = [];
+const gravity = 0.2
 let gameOver = false
 let winner = ''
 let gameTimer = null
@@ -79,7 +89,7 @@ setInterval(() => {
   gameObjects.forEach(gameObject => {
     gameObject.update()
   })
-}, 500)
+}, 50)
 
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id);
@@ -93,7 +103,9 @@ io.on('connection', (socket) => {
   if (users.length > 0) {
     if ('samurai' == users[users.length - 1].type) {
       type = 'ninja'
+      gameObjects.push(ninja)
     }
+    gameObjects.push(samurai)
   }
 
   socket.on('take-hit', (data) => {
@@ -158,8 +170,8 @@ io.on('connection', (socket) => {
       ninja.velocity.y = data.y
     }
 
-    ninja.update()
-    samurai.update()
+    // ninja.update()
+    // samurai.update()
 
     socket.emit('set-position', { samuraiPosition: samurai.position, ninjaPosition: ninja.position });
   });

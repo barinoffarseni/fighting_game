@@ -4,7 +4,6 @@ const ctx = canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576
 
-const gravity = 0.2
 let gameOver = false
 
 let debug = false
@@ -246,7 +245,7 @@ waitingForPlayers()
 function control() {
   samurai.velocity.x = 0
   socket.emit('set-velocity', { playerType: 'samurai', x: 0, y: 0 })
-  if (keys.samurai.w && samurai.canJump) {
+  if (keys.samurai.w) {
     socket.emit('set-velocity', { playerType: 'samurai', x: 0, y: -10 })
   }
 
@@ -266,7 +265,7 @@ function control() {
 
   ninja.velocity.x = 0
   socket.emit('set-velocity', { playerType: 'ninja', x: 0, y: 0 })
-  if (keys.ninja.w && ninja.canJump) {
+  if (keys.ninja.w) {
     socket.emit('set-velocity', { playerType: 'ninja', x: 0, y: -10 })
   }
 

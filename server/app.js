@@ -13,6 +13,8 @@ const Timer = require('./timer.js').Timer;
 class Fighter {
   constructor({ position, velocity }) {
     this.health = 100
+    this.width = 50
+    this.height = 150
     this.position = position
     this.velocity = velocity
     this.canJump = false
@@ -65,6 +67,7 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut });
+      socket.emit('set-position', { samuraiPosition: samurai.position, ninjaPosition: ninja.position });
     })
 
     if (gameTimer.timeRemaining == 1) {
@@ -169,11 +172,6 @@ io.on('connection', (socket) => {
       ninja.velocity.x = data.x
       ninja.velocity.y = data.y
     }
-
-    // ninja.update()
-    // samurai.update()
-
-    socket.emit('set-position', { samuraiPosition: samurai.position, ninjaPosition: ninja.position });
   });
 });
 

@@ -20,14 +20,19 @@ class Fighter {
     this.canJump = false
   }
 
+  // +y это вниз
+  // -y это вверх
+
   update() {
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
 
+    // если пользователь коснулся пола - возращаем возможность прыгать
     if (this.position.y + this.height >= 576 - 96) {
       this.velocity.y = 0
       this.position.y = 576 - 96 - this.height
       this.canJump = true
+      // если пользователь НЕ на полу, то прибавляем ускорение вниз и убираем возможность прыгать
     } else {
       this.velocity.y += gravity
       this.canJump = false
@@ -98,6 +103,7 @@ io.on('connection', (socket) => {
   console.log('New connection:', socket.id);
   let type = 'samurai'
   sockets.push(socket)
+  gameObjects.push(samurai)
 
   const id = socket.handshake.issued
 
@@ -106,9 +112,9 @@ io.on('connection', (socket) => {
   if (users.length > 0) {
     if ('samurai' == users[users.length - 1].type) {
       type = 'ninja'
+      gameObjects.push(samurai)
       gameObjects.push(ninja)
     }
-    gameObjects.push(samurai)
   }
 
   socket.on('take-hit', (data) => {
@@ -167,11 +173,17 @@ io.on('connection', (socket) => {
   socket.on('set-velocity', (data) => {
     if (data.playerType == 'samurai') {
       samurai.velocity.x = data.x
-      samurai.velocity.y = data.y
+      // если пользователь хочет прыгнуть, проверяется эта возможность
+      if (data.y < 0 && samurai.canJump) {
+        samurai.velocity.y = data.y
+      }
     } else {
       ninja.velocity.x = data.x
-      ninja.velocity.y = data.y
+      if (data.y < 0 && ninja.canJump) {
+        ninja.velocity.y = data.y
+      }
     }
+    // console.log(ninja.velocity.y, samurai.velocity.y)
   });
 });
 

@@ -341,19 +341,15 @@ function keyup(event) {
   switch (event.key) {
     case 'd':
       keys[playerType].d = false
-      socket.emit('key-up', 'd');
       break
     case 'a':
       keys[playerType].a = false
-      socket.emit('key-up', 'a');
       break
     case 'w':
       keys[playerType].w = false
-      socket.emit('key-up', 'w');
       break
     case 's':
       keys[playerType].s = false
-      socket.emit('key-up', 's');
       break
   }
 }
@@ -363,60 +359,21 @@ function keydown(event) {
   if (!gameOver) {
     switch (event.key) {
       case 'd':
-        socket.emit('key-down', 'd');
         keys[playerType].d = true
         break
       case 'a':
-        socket.emit('key-down', 'a');
         keys[playerType].a = true
         break
       case 'w':
-        socket.emit('key-down', 'w');
         keys[playerType].w = true
         break
       case 's':
-        socket.emit('key-down', 's');
         keys[playerType].s = true
         break
     }
   }
 }
 
-socket.on('key-down', function (keyName) {
-  if (!gameOver) {
-    switch (keyName) {
-      case 'd':
-        keys[enemyType].d = true
-        break
-      case 'a':
-        keys[enemyType].a = true
-        break
-      case 'w':
-        keys[enemyType].w = true
-        break
-      case 's':
-        keys[enemyType].s = true
-        break
-    }
-  }
-});
-
-socket.on('key-up', function (keyName) {
-  switch (keyName) {
-    case 'd':
-      keys[enemyType].d = false
-      break
-    case 'a':
-      keys[enemyType].a = false
-      break
-    case 'w':
-      keys[enemyType].w = false
-      break
-    case 's':
-      keys[enemyType].s = false
-      break
-  }
-});
 
 function getFighterDirection(x1, x2) {
   if (x1 >= x2) {

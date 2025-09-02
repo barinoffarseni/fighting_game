@@ -162,14 +162,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('key-down', (keyName) => {
-    socket.broadcast.emit('key-down', keyName);
-  });
-
-  socket.on('key-up', (keyName) => {
-    socket.broadcast.emit('key-up', keyName);
-  });
-
   socket.on('set-velocity', (data) => {
     if (data.playerType == 'samurai') {
       samurai.velocity.x = data.x

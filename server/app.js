@@ -72,7 +72,7 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut });
-      socket.emit('set-position', { samuraiPosition: samurai.position, ninjaPosition: ninja.position });
+      socket.emit('set-position', { ninjaPosition: ninja.position, samuraiPosition: samurai.position });
     })
 
     if (gameTimer.timeRemaining == 1) {
@@ -165,17 +165,17 @@ io.on('connection', (socket) => {
   socket.on('set-velocity', (data) => {
     if (data.playerType == 'samurai') {
       samurai.velocity.x = data.x
-      // если пользователь хочет прыгнуть, проверяется эта возможность
+      console.log(data.x, 'samurai')
       if (data.y < 0 && samurai.canJump) {
         samurai.velocity.y = data.y
       }
     } else {
       ninja.velocity.x = data.x
+      console.log(data.x, 'ninja')
       if (data.y < 0 && ninja.canJump) {
         ninja.velocity.y = data.y
       }
     }
-    // console.log(ninja.velocity.y, samurai.velocity.y)
   });
 });
 

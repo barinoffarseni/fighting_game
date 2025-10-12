@@ -243,7 +243,6 @@ function waitingForPlayers() {
 waitingForPlayers()
 
 function control() {
-  samurai.velocity.x = 0
   socket.emit('set-velocity', { playerType: 'samurai', x: 0, y: 0 })
   if (keys.samurai.w) {
     socket.emit('set-velocity', { playerType: 'samurai', x: 0, y: -10 })
@@ -263,7 +262,6 @@ function control() {
     samurai.attack = false
   }
 
-  ninja.velocity.x = 0
   socket.emit('set-velocity', { playerType: 'ninja', x: 0, y: 0 })
   if (keys.ninja.w) {
     socket.emit('set-velocity', { playerType: 'ninja', x: 0, y: -10 })

@@ -92,7 +92,8 @@ class Fighter extends SpriteAnimated {
         y: 0,
       },
     }
-      ((this.direction = 1), (this.isAttack = false))
+    this.direction = 1
+    this.isAttack = false
     this.attackFrame = attackFrame
     this.health = 100
     this.previousHealth = 100

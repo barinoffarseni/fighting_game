@@ -243,17 +243,17 @@ function waitingForPlayers() {
 waitingForPlayers()
 
 function control() {
-  socket.emit('set-velocity', { playerType: 'samurai', x: 0, y: 0 })
+  socket.emit('set-velocity', { playerType: 'samurai', direction: 'null' })
   if (keys.samurai.w) {
-    socket.emit('set-velocity', { playerType: 'samurai', x: 0, y: -10 })
+    socket.emit('set-velocity', { playerType: 'samurai', direction: 'up' })
   }
 
   if (keys.samurai.d) {
-    socket.emit('set-velocity', { playerType: 'samurai', x: 4, y: 0 })
+    socket.emit('set-velocity', { playerType: 'samurai', direction: 'right' })
   }
 
   if (keys.samurai.a) {
-    socket.emit('set-velocity', { playerType: 'samurai', x: -4, y: 0 })
+    socket.emit('set-velocity', { playerType: 'samurai', direction: 'left' })
   }
 
   if (keys.samurai.s) {
@@ -262,17 +262,17 @@ function control() {
     samurai.attack = false
   }
 
-  socket.emit('set-velocity', { playerType: 'ninja', x: 0, y: 0 })
+  socket.emit('set-velocity', { playerType: 'ninja', direction: 'null' })
   if (keys.ninja.w) {
-    socket.emit('set-velocity', { playerType: 'ninja', x: 0, y: -10 })
+    socket.emit('set-velocity', { playerType: 'ninja', direction: 'up' })
   }
 
   if (keys.ninja.d) {
-    socket.emit('set-velocity', { playerType: 'ninja', x: 4, y: 0 })
+    socket.emit('set-velocity', { playerType: 'ninja', direction: 'right' })
   }
 
   if (keys.ninja.a) {
-    socket.emit('set-velocity', { playerType: 'ninja', x: -4, y: 0 })
+    socket.emit('set-velocity', { playerType: 'ninja', direction: 'left' })
   }
 
   if (keys.ninja.s) {

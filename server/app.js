@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
   console.log('New connection:', socket.id);
   let type = 'samurai'
   sockets.push(socket)
-  gameObjects.push(samurai)
+  // gameObjects.push(samurai)
 
   const id = socket.handshake.issued
 
@@ -116,7 +116,7 @@ io.on('connection', (socket) => {
       gameObjects.push(ninja)
     }
   }
-
+  console.log(users)
   socket.on('take-hit', (data) => {
     if (data == 'ninja') {
       ninja.health -= 10
@@ -163,17 +163,17 @@ io.on('connection', (socket) => {
   });
 
   socket.on('set-velocity', (data) => {
-    if (data.playerType == 'samurai') {
-      samurai.velocity.x = data.x
-      if (data.y < 0 && samurai.canJump) {
-        samurai.velocity.y = data.y
-      }
-    } else {
-      ninja.velocity.x = data.x
-      if (data.y < 0 && ninja.canJump) {
-        ninja.velocity.y = data.y
-      }
-    }
+    // if (data.playerType == 'samurai') {
+    //   samurai.velocity.x = data.x
+    //   if (data.y < 0 && samurai.canJump) {
+    //     samurai.velocity.y = data.y
+    //   }
+    // } else {
+    //   ninja.velocity.x = data.x
+    //   if (data.y < 0 && ninja.canJump) {
+    //     ninja.velocity.y = data.y
+    //   }
+    // }
   });
 });
 

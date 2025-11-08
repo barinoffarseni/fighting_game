@@ -164,25 +164,28 @@ io.on('connection', (socket) => {
 
   socket.on('set-velocity', (data) => {
     if (data.playerType == 'samurai') {
+      if (data.direction == 'null') {
+        samurai.velocity.x = 0
+      }
       if (data.direction == 'right') {
-        samurai.velocity.x += 4
+        samurai.velocity.x = -4
       }
       if (data.direction == 'left') {
-        samurai.velocity.x -= 4
+        samurai.velocity.x = 4
       }
       if (data.direction == 'up' < 0 && samurai.canJump) {
-        samurai.velocity.y -= 10
+        samurai.velocity.y = 10
       }
     }
     else {
       if (data.direction == 'right') {
-        ninja.velocity.x += 4
+        ninja.velocity.x = 4
       }
       if (data.direction == 'left') {
-        ninja.velocity.x -= 4
+        ninja.velocity.x = -4
       }
       if (data.direction == 'up' < 0 && ninja.canJump) {
-        ninja.velocity.y -= 10
+        ninja.velocity.y = 10
       }
     }
   });

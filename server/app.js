@@ -163,21 +163,28 @@ io.on('connection', (socket) => {
   });
 
   socket.on('set-velocity', (data) => {
-    if (data.direction == 'right') {
-      samurai.velocity.x += 4
+    if (data.playerType == 'samurai') {
+      if (data.direction == 'right') {
+        samurai.velocity.x += 4
+      }
+      if (data.direction == 'left') {
+        samurai.velocity.x -= 4
+      }
+      if (data.direction == 'up' < 0 && samurai.canJump) {
+        samurai.velocity.y -= 10
+      }
     }
-    if (data.direction == 'left') {
-      samurai.velocity.x -= 4
+    else {
+      if (data.direction == 'right') {
+        ninja.velocity.x += 4
+      }
+      if (data.direction == 'left') {
+        ninja.velocity.x -= 4
+      }
+      if (data.direction == 'up' < 0 && ninja.canJump) {
+        ninja.velocity.y -= 10
+      }
     }
-    if (data.direction == 'up' < 0 && samurai.canJump) {
-      samurai.velocity.y -= 10
-    }
-    // } else {
-    //   ninja.velocity.x = data.x
-    //   if (data.y < 0 && ninja.canJump) {
-    //     ninja.velocity.y = data.y
-    //   }
-    // }
   });
 });
 

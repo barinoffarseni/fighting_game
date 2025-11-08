@@ -163,11 +163,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('set-velocity', (data) => {
-    // if (data.playerType == 'samurai') {
-    //   samurai.velocity.x = data.x
-    //   if (data.y < 0 && samurai.canJump) {
-    //     samurai.velocity.y = data.y
-    //   }
+    if (data.direction == 'right') {
+      samurai.velocity.x += 4
+    }
+    if (data.direction == 'left') {
+      samurai.velocity.x -= 4
+    }
+    if (data.direction == 'up' < 0 && samurai.canJump) {
+      samurai.velocity.y -= 10
+    }
     // } else {
     //   ninja.velocity.x = data.x
     //   if (data.y < 0 && ninja.canJump) {

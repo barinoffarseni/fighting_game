@@ -37,6 +37,7 @@ class Fighter {
       this.velocity.y += gravity
       this.canJump = false
     }
+    this.velocity.x = 0
   }
 }
 

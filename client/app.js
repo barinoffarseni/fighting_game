@@ -284,8 +284,8 @@ socket.on('id', function (msg) {
 });
 
 socket.on('set-position', function (data) {
-  samurai.position = data.samuraiPosition
-  ninja.position = data.ninjaPosition
+  samurai.position = data.samurai.position
+  ninja.position = data.ninja.position
 });
 
 socket.on('timer', function (data) {

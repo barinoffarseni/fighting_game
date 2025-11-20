@@ -73,7 +73,7 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut });
-      socket.emit('set-position', { ninjaPosition: ninja.position, samuraiPosition: samurai.position });
+      socket.emit('set-position', { ninja: { position: ninja.position }, samurai: { position: samurai.position } });
     })
 
     if (gameTimer.timeRemaining == 1) {

@@ -131,7 +131,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('set-velocity', (data) => {
+  socket.on('set-move-direction', (data) => {
     if (data.playerType == 'samurai') {
       if (data.direction == 'right') {
         samurai.velocity.x = 4

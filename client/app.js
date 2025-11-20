@@ -244,15 +244,16 @@ waitingForPlayers()
 
 function control() {
   if (keys.samurai.w) {
-    socket.emit('set-velocity', { playerType: 'samurai', direction: 'up' })
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'up' })
+    //Ваня разобраться что тут set-move-direction отправляется 60 раз в секунду
   }
 
   if (keys.samurai.d) {
-    socket.emit('set-velocity', { playerType: 'samurai', direction: 'right' })
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'right' })
   }
 
   if (keys.samurai.a) {
-    socket.emit('set-velocity', { playerType: 'samurai', direction: 'left' })
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'left' })
   }
 
   if (keys.samurai.s) {
@@ -261,15 +262,15 @@ function control() {
     samurai.attack = false
   }
   if (keys.ninja.w) {
-    socket.emit('set-velocity', { playerType: 'ninja', direction: 'up' })
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'up' })
   }
 
   if (keys.ninja.d) {
-    socket.emit('set-velocity', { playerType: 'ninja', direction: 'right' })
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'right' })
   }
 
   if (keys.ninja.a) {
-    socket.emit('set-velocity', { playerType: 'ninja', direction: 'left' })
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'left' })
   }
 
   if (keys.ninja.s) {

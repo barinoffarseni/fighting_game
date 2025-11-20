@@ -112,7 +112,7 @@ const samurai = new Fighter({
 
 const ninja = new Fighter({
   position: {
-    x: 20,
+    x: canvas.width / 2,
     y: 0
   },
   velocity: {

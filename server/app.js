@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
       gameObjects.push(ninja)
     }
   }
-  console.log(users)
+
   socket.on('take-hit', (data) => {
     if (data == 'ninja') {
       ninja.health -= 10
@@ -171,8 +171,8 @@ io.on('connection', (socket) => {
       if (data.direction == 'left') {
         samurai.velocity.x = -4
       }
-      if (data.direction == 'up' < 0 && samurai.canJump) {
-        samurai.velocity.y = 10
+      if (data.direction == 'up' && samurai.canJump) {
+        samurai.velocity.y = -10
       }
     }
     if (data.playerType == 'ninja') {
@@ -182,8 +182,8 @@ io.on('connection', (socket) => {
       if (data.direction == 'left') {
         ninja.velocity.x = -4
       }
-      if (data.direction == 'up' < 0 && ninja.canJump) {
-        ninja.velocity.y = 10
+      if (data.direction == 'up' && ninja.canJump) {
+        ninja.velocity.y = -10
       }
     }
   });

@@ -11,32 +11,6 @@ const io = require("socket.io")(httpServer, {
 const Timer = require('./timer.js').Timer;
 const Fighter = require('./fighter.js').Fighter;
 
-// class Fighter {
-//   constructor({ position, velocity }) {
-//     this.health = 100
-//     this.width = 50
-//     this.height = 150
-//     this.position = position
-//     this.velocity = velocity
-//     this.canJump = false
-//   }
-
-//   update() {
-//     this.position.x += this.velocity.x
-//     this.position.y += this.velocity.y
-
-//     if (this.position.y + this.height >= 576 - 96) {
-//       this.velocity.y = 0
-//       this.position.y = 576 - 96 - this.height
-//       this.canJump = true
-//     } else {
-//       this.velocity.y += gravity
-//       this.canJump = false
-//     }
-//     this.velocity.x = 0
-//   }
-// }
-
 const users = []
 const gameObjects = [];
 let gameOver = false
@@ -99,7 +73,6 @@ io.on('connection', (socket) => {
   console.log('New connection:', socket.id);
   let type = 'samurai'
   sockets.push(socket)
-  // gameObjects.push(samurai)
 
   const id = socket.handshake.issued
 

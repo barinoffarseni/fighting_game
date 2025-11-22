@@ -1,0 +1,18 @@
+name: Code check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: node:23-alpine3.20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install packages
+        run: npm install
+
+      - name: Eslint Check
+        run: npx eslint --fix

@@ -4,7 +4,6 @@ const ctx = canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576
 
-const gravity = 0.2
 let gameOver = false
 
 let debug = false
@@ -244,17 +243,17 @@ function waitingForPlayers() {
 waitingForPlayers()
 
 function control() {
-  samurai.velocity.x = 0
-  if (keys.samurai.w && samurai.canJump) {
-    samurai.velocity.y = -10
+  if (keys.samurai.w) {
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'up' })
+    //Ваня разобраться что тут set-move-direction отправляется 60 раз в секунду
   }
 
   if (keys.samurai.d) {
-    samurai.velocity.x = 4
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'right' })
   }
 
   if (keys.samurai.a) {
-    samurai.velocity.x = -4
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'left' })
   }
 
   if (keys.samurai.s) {
@@ -262,18 +261,16 @@ function control() {
   } else {
     samurai.attack = false
   }
-
-  ninja.velocity.x = 0
-  if (keys.ninja.w && ninja.canJump) {
-    ninja.velocity.y = -10
+  if (keys.ninja.w) {
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'up' })
   }
 
   if (keys.ninja.d) {
-    ninja.velocity.x = 4
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'right' })
   }
 
   if (keys.ninja.a) {
-    ninja.velocity.x = -4
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'left' })
   }
 
   if (keys.ninja.s) {
@@ -285,6 +282,11 @@ function control() {
 
 socket.on('id', function (msg) {
   id = msg
+});
+
+socket.on('set-position', function (data) {
+  samurai.position = data.samurai.position
+  ninja.position = data.ninja.position
 });
 
 socket.on('timer', function (data) {
@@ -335,19 +337,15 @@ function keyup(event) {
   switch (event.key) {
     case 'd':
       keys[playerType].d = false
-      socket.emit('key-up', 'd');
       break
     case 'a':
       keys[playerType].a = false
-      socket.emit('key-up', 'a');
       break
     case 'w':
       keys[playerType].w = false
-      socket.emit('key-up', 'w');
       break
     case 's':
       keys[playerType].s = false
-      socket.emit('key-up', 's');
       break
   }
 }
@@ -357,60 +355,21 @@ function keydown(event) {
   if (!gameOver) {
     switch (event.key) {
       case 'd':
-        socket.emit('key-down', 'd');
         keys[playerType].d = true
         break
       case 'a':
-        socket.emit('key-down', 'a');
         keys[playerType].a = true
         break
       case 'w':
-        socket.emit('key-down', 'w');
         keys[playerType].w = true
         break
       case 's':
-        socket.emit('key-down', 's');
         keys[playerType].s = true
         break
     }
   }
 }
 
-socket.on('key-down', function (keyName) {
-  if (!gameOver) {
-    switch (keyName) {
-      case 'd':
-        keys[enemyType].d = true
-        break
-      case 'a':
-        keys[enemyType].a = true
-        break
-      case 'w':
-        keys[enemyType].w = true
-        break
-      case 's':
-        keys[enemyType].s = true
-        break
-    }
-  }
-});
-
-socket.on('key-up', function (keyName) {
-  switch (keyName) {
-    case 'd':
-      keys[enemyType].d = false
-      break
-    case 'a':
-      keys[enemyType].a = false
-      break
-    case 'w':
-      keys[enemyType].w = false
-      break
-    case 's':
-      keys[enemyType].s = false
-      break
-  }
-});
 
 function getFighterDirection(x1, x2) {
   if (x1 >= x2) {

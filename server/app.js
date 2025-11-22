@@ -9,32 +9,52 @@ const io = require("socket.io")(httpServer, {
   }
 });
 const Timer = require('./timer.js').Timer;
+const Fighter = require('./fighter.js').Fighter;
 
 const users = []
 const gameObjects = [];
 let gameOver = false
 let winner = ''
 let gameTimer = null
-let ninjaHealth = 100
-let samuraiHealth = 100
+let samurai = new Fighter({
+  position: {
+    x: 0,
+    y: 0
+  },
+  velocity: {
+    x: 0,
+    y: 0
+  }
+})
+let ninja = new Fighter({
+  position: {
+    x: 512,
+    y: 0
+  },
+  velocity: {
+    x: 0,
+    y: 0
+  }
+})
 
 const sockets = []
 setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut });
+      socket.emit('set-position', { ninja: { position: ninja.position }, samurai: { position: samurai.position } });
     })
 
     if (gameTimer.timeRemaining == 1) {
-      if (ninjaHealth > samuraiHealth) {
+      if (ninja.health > samurai.health) {
         winner = 'Player 2'
         gameOver = true
       }
-      if (samuraiHealth > ninjaHealth) {
+      if (samurai.health > ninja.health) {
         winner = 'Player 1'
         gameOver = true
       }
-      if (ninjaHealth == samuraiHealth) {
+      if (ninja.health == samurai.health) {
         gameTimer.timeRemaining += 9
         gameTimer.timeOut = false
       }
@@ -47,7 +67,7 @@ setInterval(() => {
   gameObjects.forEach(gameObject => {
     gameObject.update()
   })
-}, 500)
+}, 50)
 
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id);
@@ -56,34 +76,38 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
+  socket.emit('set-position', { samuraiPosition: samurai.position, ninjaPosition: ninja.position })
+
   if (users.length > 0) {
     if ('samurai' == users[users.length - 1].type) {
       type = 'ninja'
+      gameObjects.push(samurai)
+      gameObjects.push(ninja)
     }
   }
 
   socket.on('take-hit', (data) => {
     if (data == 'ninja') {
-      ninjaHealth -= 10
+      ninja.health -= 10
     } else {
-      samuraiHealth -= 10
+      samurai.health -= 10
     }
 
-    if (samuraiHealth == 0) {
+    if (samurai.health == 0) {
       winner = 'Player 2'
       gameOver = true
 
       socket.emit('game-over', { gameOver: gameOver, winner: winner })
     }
 
-    if (ninjaHealth == 0) {
+    if (ninja.health == 0) {
       winner = 'Player 1'
       gameOver = true
 
       socket.emit('game-over', { gameOver: gameOver, winner: winner })
     }
 
-    socket.emit('set-health', { ninjaHealth, samuraiHealth });
+    socket.emit('set-health', { ninjaHealth: ninja.health, samuraiHealth: samurai.health });
   });
 
   if (users.length > 2) {
@@ -92,7 +116,7 @@ io.on('connection', (socket) => {
 
   users.push({ type: type, id: id })
 
-  io.emit('set-data', { type: type, id: id, ninjaHealth: ninjaHealth, samuraiHealth: samuraiHealth });
+  io.emit('set-data', { type: type, id: id, ninjaHealth: ninja.health, samuraiHealth: samurai.health });
   if (users.length == 2) {
     gameTimer = new Timer();
     gameObjects.push(gameTimer)
@@ -107,12 +131,29 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('key-down', (keyName) => {
-    socket.broadcast.emit('key-down', keyName);
-  });
-
-  socket.on('key-up', (keyName) => {
-    socket.broadcast.emit('key-up', keyName);
+  socket.on('set-move-direction', (data) => {
+    if (data.playerType == 'samurai') {
+      if (data.direction == 'right') {
+        samurai.velocity.x = 4
+      }
+      if (data.direction == 'left') {
+        samurai.velocity.x = -4
+      }
+      if (data.direction == 'up' && samurai.canJump) {
+        samurai.velocity.y = -10
+      }
+    }
+    if (data.playerType == 'ninja') {
+      if (data.direction == 'right') {
+        ninja.velocity.x = 4
+      }
+      if (data.direction == 'left') {
+        ninja.velocity.x = -4
+      }
+      if (data.direction == 'up' && ninja.canJump) {
+        ninja.velocity.y = -10
+      }
+    }
   });
 });
 

@@ -1,7 +1,7 @@
 const gravity = 0.2
 
 export class Fighter {
-  constructor({ position, velocity }) {
+  constructor ({ position, velocity }) {
     this.health = 100
     this.width = 50
     this.height = 150
@@ -10,7 +10,7 @@ export class Fighter {
     this.canJump = false
   }
 
-  update() {
+  update () {
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
 

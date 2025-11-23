@@ -2,6 +2,16 @@
   "name": "fighting-game-example",
   "version": "2.0.0",
   "description": "socket.io based fighting game app",
+  "source": "client/index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "staticFiles": {
+    "staticPath": [
+      "client/img"
+    ]
+  },
   "dependencies": {
     "express": "^4.21.1",
     "socket.io": "^4.8.0",
@@ -13,6 +23,7 @@
     "globals": "^16.3.0",
     "jest": "^29.7.0",
     "parcel": "^2.16.1",
+    "parcel-plugin-static-files-copy": "^2.6.0",
     "standard": "^17.1.2",
     "typescript": "^5.9.3"
   }

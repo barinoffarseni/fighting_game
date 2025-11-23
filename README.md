@@ -18,3 +18,5 @@
 
 * `docker-compose restart` - перезапустить проект
 * `docker-compose exec node npx eslint` - проверить код на ошибки
+* `docker-compose exec node npx standard --fix` - исправить стиль кода
+* `docker-compose exec node npx parcel client/index.html` - собрать код

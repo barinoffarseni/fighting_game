@@ -1,418 +1,418 @@
-const canvas = document.querySelector("canvas");
-const ctx = canvas.getContext("2d");
+const canvas = document.querySelector('canvas')
+const ctx = canvas.getContext('2d')
 
-canvas.width = 1024;
-canvas.height = 576;
+canvas.width = 1024
+canvas.height = 576
 
-const io = require("../node_modules/socket.io/client-dist/socket.io.js").io;
-const socket = io("localhost:3000");
+const io = require('../node_modules/socket.io/client-dist/socket.io.js').io
+const socket = io('localhost:3000')
 
-const SpriteStatic = require("./classes.js").SpriteStatic;
-const SpriteAnimated = require("./classes.js").SpriteAnimated;
-const Fighter = require("./classes.js").Fighter;
-const HealthBar = require("./classes.js").HealthBar;
-const Timer = require("./classes.js").Timer;
-const WinIndicator = require("./classes.js").WinIndicator;
-const Button = require("./classes.js").Button;
+const SpriteStatic = require('./classes.js').SpriteStatic
+const SpriteAnimated = require('./classes.js').SpriteAnimated
+const Fighter = require('./classes.js').Fighter
+const HealthBar = require('./classes.js').HealthBar
+const Timer = require('./classes.js').Timer
+const WinIndicator = require('./classes.js').WinIndicator
+const Button = require('./classes.js').Button
 
-let gameOver = false;
+let gameOver = false
 
 const keys = {
   samurai: {
     w: false,
     a: false,
     s: false,
-    d: false,
+    d: false
   },
   ninja: {
     w: false,
     a: false,
     s: false,
-    d: false,
-  },
-};
+    d: false
+  }
+}
 
-let user = false;
-let playerType;
+let user = false
+let playerType
 
-const gameObjects = [];
+const gameObjects = []
 
 gameObjects.push(
   new SpriteStatic({
     position: {
       x: 0,
-      y: 0,
+      y: 0
     },
-    imgSrc: "./img/background.png",
-  }),
-);
+    imgSrc: './img/background.png'
+  })
+)
 
 gameObjects.push(
   new SpriteAnimated({
     position: {
       x: 650,
-      y: 173,
+      y: 173
     },
-    imgSrc: "./img/shop.png",
+    imgSrc: './img/shop.png',
     scale: 2.4,
     framesHold: 10,
     imgFrames: 6,
     offset: {
       x: 0,
-      y: 0,
-    },
-  }),
-);
+      y: 0
+    }
+  })
+)
 
 const samurai = new Fighter({
   position: {
     x: 0,
-    y: 0,
+    y: 0
   },
   velocity: {
     x: 0,
-    y: 0,
+    y: 0
   },
   sprites: {
     idle: {
-      rightSrc: "./img/samuraiMack/Idle.png",
-      leftScr: "./img/samuraiMack/Idle inverted.png",
-      frames: 8,
+      rightSrc: './img/samuraiMack/Idle.png',
+      leftScr: './img/samuraiMack/Idle inverted.png',
+      frames: 8
     },
     run: {
-      rightSrc: "./img/samuraiMack/Run.png",
-      leftScr: "./img/samuraiMack/Run inverted.png",
-      frames: 8,
+      rightSrc: './img/samuraiMack/Run.png',
+      leftScr: './img/samuraiMack/Run inverted.png',
+      frames: 8
     },
     jump: {
-      rightSrc: "./img/samuraiMack/Jump.png",
-      leftScr: "./img/samuraiMack/Jump inverted.png",
-      frames: 2,
+      rightSrc: './img/samuraiMack/Jump.png',
+      leftScr: './img/samuraiMack/Jump inverted.png',
+      frames: 2
     },
     fall: {
-      rightSrc: "./img/samuraiMack/Fall.png",
-      leftScr: "./img/samuraiMack/Fall inverted.png",
-      frames: 2,
+      rightSrc: './img/samuraiMack/Fall.png',
+      leftScr: './img/samuraiMack/Fall inverted.png',
+      frames: 2
     },
     attack1: {
-      rightSrc: "./img/samuraiMack/Attack1.png",
-      leftScr: "./img/samuraiMack/Attack1 inverted.png",
-      frames: 6,
+      rightSrc: './img/samuraiMack/Attack1.png',
+      leftScr: './img/samuraiMack/Attack1 inverted.png',
+      frames: 6
     },
     attack2: {
-      rightSrc: "./img/samuraiMack/Attack2.png",
-      leftScr: "./img/samuraiMack/Attack2 inverted.png",
-      frames: 6,
+      rightSrc: './img/samuraiMack/Attack2.png',
+      leftScr: './img/samuraiMack/Attack2 inverted.png',
+      frames: 6
     },
     takeHit: {
-      rightSrc: "./img/samuraiMack/Take Hit.png",
-      leftScr: "./img/samuraiMack/Take Hit inverted.png",
-      frames: 4,
+      rightSrc: './img/samuraiMack/Take Hit.png',
+      leftScr: './img/samuraiMack/Take Hit inverted.png',
+      frames: 4
     },
     death: {
-      rightSrc: "./img/samuraiMack/Death.png",
-      leftScr: "./img/samuraiMack/Death inverted.png",
-      frames: 6,
-    },
+      rightSrc: './img/samuraiMack/Death.png',
+      leftScr: './img/samuraiMack/Death inverted.png',
+      frames: 6
+    }
   },
   offset: {
     x: -215,
-    y: -155,
+    y: -155
   },
-  attackFrame: 4,
-});
+  attackFrame: 4
+})
 
 const ninja = new Fighter({
   position: {
     x: canvas.width / 2,
-    y: 0,
+    y: 0
   },
   velocity: {
     x: 0,
-    y: 0,
+    y: 0
   },
   sprites: {
     idle: {
-      rightSrc: "./img/kenji/Idle inverted.png",
-      leftScr: "./img/kenji/Idle.png",
-      frames: 4,
+      rightSrc: './img/kenji/Idle inverted.png',
+      leftScr: './img/kenji/Idle.png',
+      frames: 4
     },
     run: {
-      rightSrc: "./img/kenji/Run inverted.png",
-      leftScr: "./img/kenji/Run.png",
-      frames: 8,
+      rightSrc: './img/kenji/Run inverted.png',
+      leftScr: './img/kenji/Run.png',
+      frames: 8
     },
     jump: {
-      rightSrc: "./img/kenji/Jump inverted.png",
-      leftScr: "./img/kenji/Jump.png",
-      frames: 2,
+      rightSrc: './img/kenji/Jump inverted.png',
+      leftScr: './img/kenji/Jump.png',
+      frames: 2
     },
     fall: {
-      rightSrc: "./img/kenji/Fall inverted.png",
-      leftScr: "./img/kenji/Fall.png",
-      frames: 2,
+      rightSrc: './img/kenji/Fall inverted.png',
+      leftScr: './img/kenji/Fall.png',
+      frames: 2
     },
     attack1: {
-      rightSrc: "./img/kenji/Attack1 inverted.png",
-      leftScr: "./img/kenji/Attack1.png",
-      frames: 4,
+      rightSrc: './img/kenji/Attack1 inverted.png',
+      leftScr: './img/kenji/Attack1.png',
+      frames: 4
     },
     attack2: {
-      rightSrc: "./img/kenji/Attack2 inverted.png",
-      leftScr: "./img/kenji/Attack2.png",
-      frames: 4,
+      rightSrc: './img/kenji/Attack2 inverted.png',
+      leftScr: './img/kenji/Attack2.png',
+      frames: 4
     },
     takeHit: {
-      rightSrc: "./img/kenji/Take Hit inverted.png",
-      leftScr: "./img/kenji/Take Hit.png",
-      frames: 3,
+      rightSrc: './img/kenji/Take Hit inverted.png',
+      leftScr: './img/kenji/Take Hit.png',
+      frames: 3
     },
     death: {
-      rightSrc: "./img/kenji/Death inverted.png",
-      leftScr: "./img/kenji/Death.png",
-      frames: 7,
-    },
+      rightSrc: './img/kenji/Death inverted.png',
+      leftScr: './img/kenji/Death.png',
+      frames: 7
+    }
   },
   offset: {
     x: -215,
-    y: -170,
+    y: -170
   },
-  attackFrame: 1,
-});
+  attackFrame: 1
+})
 
 gameObjects.push(
   new HealthBar({
     offset: {
       x: 50,
-      y: 0,
+      y: 0
     },
     direction: 1,
-    entity: ninja,
-  }),
-);
+    entity: ninja
+  })
+)
 
 gameObjects.push(
   new HealthBar({
     offset: {
       x: -50,
-      y: 0,
+      y: 0
     },
     direction: -1,
-    entity: samurai,
-  }),
-);
+    entity: samurai
+  })
+)
 
-const timer = new Timer();
-gameObjects.push(timer);
+const timer = new Timer()
+gameObjects.push(timer)
 
-const winIndicator = new WinIndicator(samurai, ninja, timer);
-gameObjects.push(winIndicator);
+const winIndicator = new WinIndicator(samurai, ninja, timer)
+gameObjects.push(winIndicator)
 
-const restartButton = new Button();
-gameObjects.push(restartButton);
+const restartButton = new Button()
+gameObjects.push(restartButton)
 
-function gameLoop() {
-  control();
-  update();
-  render();
+function gameLoop () {
+  control()
+  update()
+  render()
 
-  window.requestAnimationFrame(gameLoop);
+  window.requestAnimationFrame(gameLoop)
 }
 
-function waitingForPlayers() {
-  socket.on("set-data", function ({ type, ninjaHealth, samuraiHealth }) {
+function waitingForPlayers () {
+  socket.on('set-data', function ({ type, ninjaHealth, samuraiHealth }) {
     if (!user) {
-      user = { type };
+      user = { type }
 
-      if (user.type == "samurai") {
-        gameObjects.push(samurai);
+      if (user.type == 'samurai') {
+        gameObjects.push(samurai)
 
-        samurai.health = samuraiHealth;
+        samurai.health = samuraiHealth
 
-        playerType = "samurai";
+        playerType = 'samurai'
       }
 
-      if (user.type == "ninja") {
-        gameObjects.push(ninja);
-        gameObjects.push(samurai);
+      if (user.type == 'ninja') {
+        gameObjects.push(ninja)
+        gameObjects.push(samurai)
 
-        samurai.health = samuraiHealth;
-        ninja.health = ninjaHealth;
+        samurai.health = samuraiHealth
+        ninja.health = ninjaHealth
 
-        playerType = "ninja";
+        playerType = 'ninja'
       }
     } else {
-      if (user.type == "samurai") {
-        gameObjects.push(ninja);
+      if (user.type == 'samurai') {
+        gameObjects.push(ninja)
 
-        ninja.health = ninjaHealth;
+        ninja.health = ninjaHealth
       }
     }
-  });
+  })
 
-  gameLoop();
+  gameLoop()
 }
 
-waitingForPlayers();
+waitingForPlayers()
 
-function control() {
+function control () {
   if (keys.samurai.w) {
-    socket.emit("set-move-direction", { playerType: "samurai", direction: "up" });
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'up' })
     // Ваня разобраться что тут set-move-direction отправляется 60 раз в секунду
   }
 
   if (keys.samurai.d) {
-    socket.emit("set-move-direction", { playerType: "samurai", direction: "right" });
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'right' })
   }
 
   if (keys.samurai.a) {
-    socket.emit("set-move-direction", { playerType: "samurai", direction: "left" });
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'left' })
   }
 
   if (keys.samurai.s) {
-    samurai.attack = true;
+    samurai.attack = true
   } else {
-    samurai.attack = false;
+    samurai.attack = false
   }
   if (keys.ninja.w) {
-    socket.emit("set-move-direction", { playerType: "ninja", direction: "up" });
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'up' })
   }
 
   if (keys.ninja.d) {
-    socket.emit("set-move-direction", { playerType: "ninja", direction: "right" });
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'right' })
   }
 
   if (keys.ninja.a) {
-    socket.emit("set-move-direction", { playerType: "ninja", direction: "left" });
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'left' })
   }
 
   if (keys.ninja.s) {
-    ninja.attack = true;
+    ninja.attack = true
   } else {
-    ninja.attack = false;
+    ninja.attack = false
   }
 }
 
-socket.on("set-position", function (data) {
-  samurai.position = data.samurai.position;
-  ninja.position = data.ninja.position;
-});
+socket.on('set-position', function (data) {
+  samurai.position = data.samurai.position
+  ninja.position = data.ninja.position
+})
 
-socket.on("timer", function (data) {
-  timer.timeRemaining = data.timeRemaining;
-  timer.timeOut = data.timeOut;
-});
+socket.on('timer', function (data) {
+  timer.timeRemaining = data.timeRemaining
+  timer.timeOut = data.timeOut
+})
 
-socket.on("game-over", function (data) {
-  winIndicator.winner = data.winner;
-  gameOver = data.gameOver;
-});
+socket.on('game-over', function (data) {
+  winIndicator.winner = data.winner
+  gameOver = data.gameOver
+})
 
-function update() {
-  samurai.direction = getFighterDirection(samurai.position.x, ninja.position.x);
-  ninja.direction = getFighterDirection(ninja.position.x, samurai.position.x);
+function update () {
+  samurai.direction = getFighterDirection(samurai.position.x, ninja.position.x)
+  ninja.direction = getFighterDirection(ninja.position.x, samurai.position.x)
 
   if (checkAttackIsSuccess(samurai, ninja)) {
-    socket.emit("take-hit", "ninja");
+    socket.emit('take-hit', 'ninja')
   }
 
   if (checkAttackIsSuccess(ninja, samurai)) {
-    socket.emit("take-hit", "samurai");
+    socket.emit('take-hit', 'samurai')
   }
 
   if (gameOver) {
-    timer.timeOut = true;
+    timer.timeOut = true
   }
 
   gameObjects.forEach((gameObject) => {
-    gameObject.update();
-  });
+    gameObject.update()
+  })
 }
 
-socket.on("set-health", function ({ samuraiHealth, ninjaHealth }) {
-  samurai.health = samuraiHealth;
-  ninja.health = ninjaHealth;
-});
+socket.on('set-health', function ({ samuraiHealth, ninjaHealth }) {
+  samurai.health = samuraiHealth
+  ninja.health = ninjaHealth
+})
 
-function render() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function render () {
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
   gameObjects.forEach((gameObject) => {
-    gameObject.render();
-  });
+    gameObject.render()
+  })
 }
 
-window.addEventListener("keyup", keyup);
-function keyup(event) {
+window.addEventListener('keyup', keyup)
+function keyup (event) {
   switch (event.key) {
-    case "d":
-      keys[playerType].d = false;
-      break;
-    case "a":
-      keys[playerType].a = false;
-      break;
-    case "w":
-      keys[playerType].w = false;
-      break;
-    case "s":
-      keys[playerType].s = false;
-      break;
+    case 'd':
+      keys[playerType].d = false
+      break
+    case 'a':
+      keys[playerType].a = false
+      break
+    case 'w':
+      keys[playerType].w = false
+      break
+    case 's':
+      keys[playerType].s = false
+      break
   }
 }
 
-window.addEventListener("keydown", keydown);
-function keydown(event) {
+window.addEventListener('keydown', keydown)
+function keydown (event) {
   if (!gameOver) {
     switch (event.key) {
-      case "d":
-        keys[playerType].d = true;
-        break;
-      case "a":
-        keys[playerType].a = true;
-        break;
-      case "w":
-        keys[playerType].w = true;
-        break;
-      case "s":
-        keys[playerType].s = true;
-        break;
+      case 'd':
+        keys[playerType].d = true
+        break
+      case 'a':
+        keys[playerType].a = true
+        break
+      case 'w':
+        keys[playerType].w = true
+        break
+      case 's':
+        keys[playerType].s = true
+        break
     }
   }
 }
 
-function getFighterDirection(x1, x2) {
+function getFighterDirection (x1, x2) {
   if (x1 >= x2) {
-    return -1;
+    return -1
   } else {
-    return 1;
+    return 1
   }
 }
 
-function checkAttackIsSuccess(attacker, victim) {
-  if (attacker.state != "attack1" && attacker.state != "attack2") {
-    return false;
+function checkAttackIsSuccess (attacker, victim) {
+  if (attacker.state != 'attack1' && attacker.state != 'attack2') {
+    return false
   }
 
   if (attacker.currentFrame != attacker.attackFrame) {
-    return false;
+    return false
   }
 
   if (attacker.framesElapsed % attacker.framesHold === 0) {
-    attacker.setAttackBoxMinMaxPosition();
+    attacker.setAttackBoxMinMaxPosition()
 
-    let xMin = victim.position.x;
-    let xMax = victim.position.x + victim.width;
+    const xMin = victim.position.x
+    const xMax = victim.position.x + victim.width
 
     if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
       if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
-        return true;
+        return true
       }
 
       if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
-        return true;
+        return true
       }
 
       if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
-        return true;
+        return true
       }
     }
   }

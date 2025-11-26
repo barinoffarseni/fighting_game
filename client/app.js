@@ -289,6 +289,12 @@ socket.on('set-position', function (data) {
   ninja.position = data.ninja.position
 });
 
+socket.on('set-vector', function (data) {
+  console.log(data.samurai.vector)
+  // samurai.vector = data.samurai.vector
+  // ninja.vector = data.ninja.vector
+});
+
 socket.on('timer', function (data) {
   timer.timeRemaining = data.timeRemaining
   timer.timeOut = data.timeOut

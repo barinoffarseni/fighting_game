@@ -8,6 +8,7 @@ export class Fighter {
     this.position = position
     this.velocity = velocity
     this.canJump = false
+    this.vector = 'fixedly'
   }
 
   update() {

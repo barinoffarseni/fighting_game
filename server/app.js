@@ -142,6 +142,7 @@ io.on('connection', (socket) => {
       if (data.direction == 'up' && samurai.canJump) {
         samurai.velocity.y = -10
       }
+      samurai.vector = data.direction
     }
     if (data.playerType == 'ninja') {
       if (data.direction == 'right') {
@@ -153,6 +154,7 @@ io.on('connection', (socket) => {
       if (data.direction == 'up' && ninja.canJump) {
         ninja.velocity.y = -10
       }
+      samurai.vector = data.direction
     }
   });
 });

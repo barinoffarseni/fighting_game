@@ -9,7 +9,7 @@ class SpriteStatic {
     ctx.drawImage(this.img, this.position.x, this.position.y);
   }
 
-  update() {}
+  update() { }
 }
 
 class SpriteAnimated extends SpriteStatic {
@@ -104,6 +104,7 @@ class Fighter extends SpriteAnimated {
     this.stateCanBeChanged = true;
     this.canJump = false;
     this.restartState = false;
+    this.vector = 'fixedly'
   }
 
   getPosition() {
@@ -214,11 +215,11 @@ class Fighter extends SpriteAnimated {
     if (this.state != "death") {
       this.newState = "idle";
 
-      if (this.velocity.x != 0) {
+      if (this.vector == 'left' || this.vector == 'right') {
         this.newState = "run";
       }
 
-      if (this.velocity.y < 0) {
+      if (this.vector == 'up') {
         this.newState = "jump";
       }
 
@@ -293,7 +294,7 @@ class WinIndicator extends Indicator {
     this.winner = "";
   }
 
-  update() {}
+  update() { }
 
   render() {
     if (gameOver) {
@@ -340,7 +341,7 @@ class Timer extends Indicator {
     this.timeOut = false;
   }
 
-  update() {}
+  update() { }
 
   render() {
     ctx.fillStyle = this.color;

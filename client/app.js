@@ -288,7 +288,8 @@ socket.on('set-position-and-vector', function (data) {
   samurai.position = data.samurai.position
   ninja.position = data.ninja.position
 
-  console.log(data.samurai.vector)
+  samurai.vector = data.samurai.vector
+  ninja.vector = data.ninja.vector
 });
 
 socket.on('timer', function (data) {

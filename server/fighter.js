@@ -24,5 +24,7 @@ export class Fighter {
       this.canJump = false
     }
     this.velocity.x = 0
+
+    this.vector = 'fixedly'
   }
 }

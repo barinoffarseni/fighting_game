@@ -173,7 +173,7 @@ gameObjects.push(new HealthBar({
     x: 50,
     y: 0
   },
-  direction: 1,
+  vector: 1,
   entity: ninja
 }))
 
@@ -182,7 +182,7 @@ gameObjects.push(new HealthBar({
     x: -50,
     y: 0
   },
-  direction: -1,
+  vector: -1,
   entity: samurai
 }))
 
@@ -284,12 +284,12 @@ socket.on('id', function (msg) {
   id = msg
 });
 
-socket.on('set-position-and-vector', function (data) {
+socket.on('set-position-and-direction', function (data) {
   samurai.position = data.samurai.position
   ninja.position = data.ninja.position
 
-  samurai.vector = data.samurai.vector
-  ninja.vector = data.ninja.vector
+  samurai.direction = data.samurai.direction
+  ninja.direction = data.ninja.direction
 });
 
 socket.on('timer', function (data) {
@@ -303,8 +303,8 @@ socket.on('game-over', function (data) {
 });
 
 function update() {
-  samurai.direction = getFighterDirection(samurai.position.x, ninja.position.x)
-  ninja.direction = getFighterDirection(ninja.position.x, samurai.position.x)
+  samurai.vector = getFighterVector(samurai.position.x, ninja.position.x)
+  ninja.vector = getFighterVector(ninja.position.x, samurai.position.x)
 
   if (checkAttackIsSuccess(samurai, ninja)) {
     socket.emit('take-hit', 'ninja')
@@ -374,7 +374,7 @@ function keydown(event) {
 }
 
 
-function getFighterDirection(x1, x2) {
+function getFighterVector(x1, x2) {
   if (x1 >= x2) {
     return -1
   } else {

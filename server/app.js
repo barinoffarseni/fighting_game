@@ -42,7 +42,7 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut });
-      socket.emit('set-position-and-vector', { ninja: { position: ninja.position, vector: ninja.vector }, samurai: { position: samurai.position, vector: samurai.vector } });
+      socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } });
     })
 
     if (gameTimer.timeRemaining == 1) {
@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
-  socket.emit('set-position-and-vector', { ninja: { position: ninja.position, vector: ninja.vector }, samurai: { position: samurai.position, vector: samurai.vector } });
+  socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } });
 
   if (users.length > 0) {
     if ('samurai' == users[users.length - 1].type) {
@@ -136,13 +136,13 @@ io.on('connection', (socket) => {
       if (data.direction == 'right') {
         samurai.velocity.x = 4
         if (samurai.canJump) {
-          samurai.vector = data.direction
+          samurai.direction = data.direction
         }
       }
       if (data.direction == 'left') {
         samurai.velocity.x = -4
         if (samurai.canJump) {
-          samurai.vector = data.direction
+          samurai.direction = data.direction
         }
       }
       if (data.direction == 'up' && samurai.canJump) {
@@ -153,13 +153,13 @@ io.on('connection', (socket) => {
       if (data.direction == 'right') {
         ninja.velocity.x = 4
         if (ninja.canJump) {
-          ninja.vector = data.direction
+          ninja.direction = data.direction
         }
       }
       if (data.direction == 'left') {
         ninja.velocity.x = -4
         if (ninja.canJump) {
-          ninja.vector = data.direction
+          ninja.direction = data.direction
         }
       }
       if (data.direction == 'up' && ninja.canJump) {

@@ -20,17 +20,20 @@ export class Fighter {
       this.velocity.y = 0
       this.position.y = 576 - 96 - this.height
       this.canJump = true
+
       this.vector = 'fixedly'
     } else {
       this.velocity.y += gravity
       this.canJump = false
+
+      if (this.velocity.y > 0) {
+        this.vector = 'down'
+      }
+      if (this.velocity.y < 0) {
+        this.vector = 'up'
+      }
     }
-    if (this.velocity.y > 0) {
-      this.vector = 'down'
-    }
-    if (this.velocity.y < 0) {
-      this.vector = 'up'
-    }
+
     this.velocity.x = 0
   }
 }

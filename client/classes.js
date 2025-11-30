@@ -223,7 +223,7 @@ class Fighter extends SpriteAnimated {
         this.newState = "jump";
       }
 
-      if (this.velocity.y > 0) {
+      if (this.vector == 'down') {
         this.newState = "fall";
       }
 

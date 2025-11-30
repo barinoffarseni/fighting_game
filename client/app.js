@@ -290,6 +290,10 @@ socket.on('set-position-and-vector', function (data) {
 
   samurai.vector = data.samurai.vector
   ninja.vector = data.ninja.vector
+
+  if (samurai.vector == 'down') {
+    console.log(samurai.vector)
+  }
 });
 
 socket.on('timer', function (data) {

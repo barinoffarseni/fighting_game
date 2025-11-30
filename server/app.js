@@ -135,26 +135,36 @@ io.on('connection', (socket) => {
     if (data.playerType == 'samurai') {
       if (data.direction == 'right') {
         samurai.velocity.x = 4
+        if (samurai.canJump) {
+          samurai.vector = data.direction
+        }
       }
       if (data.direction == 'left') {
         samurai.velocity.x = -4
+        if (samurai.canJump) {
+          samurai.vector = data.direction
+        }
       }
       if (data.direction == 'up' && samurai.canJump) {
         samurai.velocity.y = -10
       }
-      samurai.vector = data.direction
     }
     if (data.playerType == 'ninja') {
       if (data.direction == 'right') {
         ninja.velocity.x = 4
+        if (ninja.canJump) {
+          ninja.vector = data.direction
+        }
       }
       if (data.direction == 'left') {
         ninja.velocity.x = -4
+        if (ninja.canJump) {
+          ninja.vector = data.direction
+        }
       }
       if (data.direction == 'up' && ninja.canJump) {
         ninja.velocity.y = -10
       }
-      ninja.vector = data.direction
     }
   });
 });

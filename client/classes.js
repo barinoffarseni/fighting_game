@@ -9,7 +9,7 @@ class SpriteStatic {
     ctx.drawImage(this.img, this.position.x, this.position.y);
   }
 
-  update() {}
+  update() { }
 }
 
 class SpriteAnimated extends SpriteStatic {
@@ -92,7 +92,7 @@ class Fighter extends SpriteAnimated {
         y: 0,
       },
     };
-    this.direction = 1;
+    this.vector = 1;
     this.isAttack = false;
     this.attackFrame = attackFrame;
     this.health = 100;
@@ -104,6 +104,7 @@ class Fighter extends SpriteAnimated {
     this.stateCanBeChanged = true;
     this.canJump = false;
     this.restartState = false;
+    this.direction = 'fixedly'
   }
 
   getPosition() {
@@ -111,7 +112,7 @@ class Fighter extends SpriteAnimated {
   }
 
   getAttackBoxPosition() {
-    if (this.direction > 0) {
+    if (this.vector > 0) {
       return {
         x: this.position.x + this.atackBox.offset.x,
         y: this.position.y + this.atackBox.offset.y,
@@ -136,7 +137,7 @@ class Fighter extends SpriteAnimated {
         ctx.fillStyle = "yellow";
       }
 
-      ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.direction, this.atackBox.height);
+      ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.vector, this.atackBox.height);
     }
   }
 
@@ -164,7 +165,7 @@ class Fighter extends SpriteAnimated {
     if ((this.state != this.newState && this.stateCanBeChanged) || this.restartState) {
       this.state = this.newState;
 
-      if (this.direction < 0) {
+      if (this.vector < 0) {
         this.img.src = this.sprites[this.state].leftScr;
         this.imgFrames = this.sprites[this.state].frames;
       } else {
@@ -194,11 +195,11 @@ class Fighter extends SpriteAnimated {
   }
 
   setAttackBoxMinMaxPosition() {
-    if (this.direction > 0) {
+    if (this.vector > 0) {
       this.attackBoxXMin = this.getAttackBoxPosition().x;
-      this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.direction;
+      this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.vector;
     } else {
-      this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.direction;
+      this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.vector;
       this.attackBoxXMax = this.getAttackBoxPosition().x;
     }
   }
@@ -214,15 +215,15 @@ class Fighter extends SpriteAnimated {
     if (this.state != "death") {
       this.newState = "idle";
 
-      if (this.velocity.x != 0) {
+      if (this.direction == 'left' || this.direction == 'right') {
         this.newState = "run";
       }
 
-      if (this.velocity.y < 0) {
+      if (this.direction == 'up') {
         this.newState = "jump";
       }
 
-      if (this.velocity.y > 0) {
+      if (this.direction == 'down') {
         this.newState = "fall";
       }
 
@@ -293,7 +294,7 @@ class WinIndicator extends Indicator {
     this.winner = "";
   }
 
-  update() {}
+  update() { }
 
   render() {
     if (gameOver) {
@@ -340,7 +341,7 @@ class Timer extends Indicator {
     this.timeOut = false;
   }
 
-  update() {}
+  update() { }
 
   render() {
     ctx.fillStyle = this.color;
@@ -353,7 +354,7 @@ class Timer extends Indicator {
 }
 
 class HealthBar extends Indicator {
-  constructor({ offset, direction, entity }) {
+  constructor({ offset, vector, entity }) {
     super({
       position: {
         x: canvas.width / 2,
@@ -365,14 +366,14 @@ class HealthBar extends Indicator {
       offset: offset,
     });
     this.maxWidth = 417;
-    this.direction = direction;
+    this.vector = vector;
     this.healthValue = 1;
     this.entity = entity;
   }
 
   render() {
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.direction * this.healthValue, this.height);
+    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.vector * this.healthValue, this.height);
   }
 
   update() {

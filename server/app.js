@@ -42,7 +42,7 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut });
-      socket.emit('set-position', { ninja: { position: ninja.position }, samurai: { position: samurai.position } });
+      socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } });
     })
 
     if (gameTimer.timeRemaining == 1) {
@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
-  socket.emit('set-position', { samuraiPosition: samurai.position, ninjaPosition: ninja.position })
+  socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } });
 
   if (users.length > 0) {
     if ('samurai' == users[users.length - 1].type) {
@@ -135,9 +135,15 @@ io.on('connection', (socket) => {
     if (data.playerType == 'samurai') {
       if (data.direction == 'right') {
         samurai.velocity.x = 4
+        if (samurai.canJump) {
+          samurai.direction = data.direction
+        }
       }
       if (data.direction == 'left') {
         samurai.velocity.x = -4
+        if (samurai.canJump) {
+          samurai.direction = data.direction
+        }
       }
       if (data.direction == 'up' && samurai.canJump) {
         samurai.velocity.y = -10
@@ -146,9 +152,15 @@ io.on('connection', (socket) => {
     if (data.playerType == 'ninja') {
       if (data.direction == 'right') {
         ninja.velocity.x = 4
+        if (ninja.canJump) {
+          ninja.direction = data.direction
+        }
       }
       if (data.direction == 'left') {
         ninja.velocity.x = -4
+        if (ninja.canJump) {
+          ninja.direction = data.direction
+        }
       }
       if (data.direction == 'up' && ninja.canJump) {
         ninja.velocity.y = -10

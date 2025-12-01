@@ -2,6 +2,11 @@
   "name": "fighting-game-example",
   "version": "2.0.0",
   "description": "socket.io based fighting game app",
+  "standard": {
+    "ignore": [
+      "/client/socket.io.js"
+    ]
+  },
   "dependencies": {
     "express": "^4.21.1",
     "socket.io": "^4.8.0",

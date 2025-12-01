@@ -208,7 +208,7 @@ function waitingForPlayers () {
     if (!user) {
       user = { type, id }
 
-      if (user.type == 'samurai') {
+      if (user.type === 'samurai') {
         gameObjects.push(samurai)
 
         samurai.health = samuraiHealth
@@ -217,7 +217,7 @@ function waitingForPlayers () {
         enemyType = 'ninja'
       }
 
-      if (user.type == 'ninja') {
+      if (user.type === 'ninja') {
         gameObjects.push(ninja)
         gameObjects.push(samurai)
 
@@ -228,7 +228,7 @@ function waitingForPlayers () {
         enemyType = 'samurai'
       }
     } else {
-      if (user.type == 'samurai') {
+      if (user.type === 'samurai') {
         gameObjects.push(ninja)
 
         ninja.health = ninjaHealth

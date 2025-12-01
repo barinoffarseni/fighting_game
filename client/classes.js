@@ -53,7 +53,7 @@ class SpriteAnimated extends SpriteStatic {
       if (this.framesElapsed % this.framesHold === 0) {
         this.currentFrame++
 
-        if (this.currentFrame == this.imgFrames) {
+        if (this.currentFrame === this.imgFrames) {
           this.currentFrame = 0
           this.animateIsComplete = true
 
@@ -133,7 +133,7 @@ class Fighter extends SpriteAnimated {
       ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
 
       ctx.fillStyle = 'gray'
-      if (this.state == 'attack1' || (this.state == 'attack2' && this.currentFrame == this.attackFrame)) {
+      if (this.state === 'attack1' || (this.state === 'attack2' && this.currentFrame === this.attackFrame)) {
         ctx.fillStyle = 'yellow'
       }
 
@@ -142,23 +142,23 @@ class Fighter extends SpriteAnimated {
   }
 
   setState () {
-    if (this.state == 'attack1' && this.animateIsComplete) {
+    if (this.state === 'attack1' && this.animateIsComplete) {
       this.stateCanBeChanged = true
     }
 
-    if (this.state == 'attack2' && this.animateIsComplete) {
+    if (this.state === 'attack2' && this.animateIsComplete) {
       this.stateCanBeChanged = true
     }
 
-    if (this.state == 'takeHit' && this.animateIsComplete) {
+    if (this.state === 'takeHit' && this.animateIsComplete) {
       this.stateCanBeChanged = true
     }
 
-    if (this.state == 'takeHit' && this.newState == 'attack1') {
+    if (this.state === 'takeHit' && this.newState === 'attack1') {
       this.stateCanBeChanged = true
     }
 
-    if (this.state == 'takeHit' && this.newState == 'takeHit') {
+    if (this.state === 'takeHit' && this.newState === 'takeHit') {
       this.restartState = true
     }
 
@@ -175,20 +175,20 @@ class Fighter extends SpriteAnimated {
       this.currentFrame = 0
       this.framesElapsed = 0
 
-      if (this.state == 'attack1') {
+      if (this.state === 'attack1') {
         this.stateCanBeChanged = false
       }
 
-      if (this.state == 'attack2') {
+      if (this.state === 'attack2') {
         this.stateCanBeChanged = false
       }
 
-      if (this.state == 'takeHit') {
+      if (this.state === 'takeHit') {
         this.stateCanBeChanged = false
         this.restartState = false
       }
 
-      if (this.state == 'death') {
+      if (this.state === 'death') {
         this.compliteAnimationAndStop = true
       }
     }
@@ -215,15 +215,15 @@ class Fighter extends SpriteAnimated {
     if (this.state != 'death') {
       this.newState = 'idle'
 
-      if (this.direction == 'left' || this.direction == 'right') {
+      if (this.direction === 'left' || this.direction === 'right') {
         this.newState = 'run'
       }
 
-      if (this.direction == 'up') {
+      if (this.direction === 'up') {
         this.newState = 'jump'
       }
 
-      if (this.direction == 'down') {
+      if (this.direction === 'down') {
         this.newState = 'fall'
       }
 
@@ -236,7 +236,7 @@ class Fighter extends SpriteAnimated {
         this.newState = 'attack1'
       }
 
-      if (this.state == 'attack1' && this.attack) {
+      if (this.state === 'attack1' && this.attack) {
         this.newState = 'attack2'
       }
 

@@ -45,7 +45,7 @@ setInterval(() => {
       socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } })
     })
 
-    if (gameTimer.timeRemaining == 1) {
+    if (gameTimer.timeRemaining === 1) {
       if (ninja.health > samurai.health) {
         winner = 'Player 2'
         gameOver = true
@@ -54,7 +54,7 @@ setInterval(() => {
         winner = 'Player 1'
         gameOver = true
       }
-      if (ninja.health == samurai.health) {
+      if (ninja.health === samurai.health) {
         gameTimer.timeRemaining += 9
         gameTimer.timeOut = false
       }
@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
   socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } })
 
   if (users.length > 0) {
-    if (users[users.length - 1].type == 'samurai') {
+    if (users[users.length - 1].type === 'samurai') {
       type = 'ninja'
       gameObjects.push(samurai)
       gameObjects.push(ninja)
@@ -87,20 +87,20 @@ io.on('connection', (socket) => {
   }
 
   socket.on('take-hit', (data) => {
-    if (data == 'ninja') {
+    if (data === 'ninja') {
       ninja.health -= 10
     } else {
       samurai.health -= 10
     }
 
-    if (samurai.health == 0) {
+    if (samurai.health === 0) {
       winner = 'Player 2'
       gameOver = true
 
       socket.emit('game-over', { gameOver, winner })
     }
 
-    if (ninja.health == 0) {
+    if (ninja.health === 0) {
       winner = 'Player 1'
       gameOver = true
 
@@ -117,14 +117,14 @@ io.on('connection', (socket) => {
   users.push({ type, id })
 
   io.emit('set-data', { type, id, ninjaHealth: ninja.health, samuraiHealth: samurai.health })
-  if (users.length == 2) {
+  if (users.length === 2) {
     gameTimer = new Timer()
     gameObjects.push(gameTimer)
   }
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', socket.id)
-    const index = users.findIndex(user => user.id == id)
+    const index = users.findIndex(user => user.id === id)
 
     if (index > -1) {
       users.splice(index, 1)
@@ -132,37 +132,37 @@ io.on('connection', (socket) => {
   })
 
   socket.on('set-move-direction', (data) => {
-    if (data.playerType == 'samurai') {
-      if (data.direction == 'right') {
+    if (data.playerType === 'samurai') {
+      if (data.direction === 'right') {
         samurai.velocity.x = 4
         if (samurai.canJump) {
           samurai.direction = data.direction
         }
       }
-      if (data.direction == 'left') {
+      if (data.direction === 'left') {
         samurai.velocity.x = -4
         if (samurai.canJump) {
           samurai.direction = data.direction
         }
       }
-      if (data.direction == 'up' && samurai.canJump) {
+      if (data.direction === 'up' && samurai.canJump) {
         samurai.velocity.y = -10
       }
     }
-    if (data.playerType == 'ninja') {
-      if (data.direction == 'right') {
+    if (data.playerType === 'ninja') {
+      if (data.direction === 'right') {
         ninja.velocity.x = 4
         if (ninja.canJump) {
           ninja.direction = data.direction
         }
       }
-      if (data.direction == 'left') {
+      if (data.direction === 'left') {
         ninja.velocity.x = -4
         if (ninja.canJump) {
           ninja.direction = data.direction
         }
       }
-      if (data.direction == 'up' && ninja.canJump) {
+      if (data.direction === 'up' && ninja.canJump) {
         ninja.velocity.y = -10
       }
     }

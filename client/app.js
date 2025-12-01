@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-let debug = false
+const debug = false
 
 const keys = {
   samurai: {
@@ -27,7 +27,7 @@ let user = false
 let playerType
 let enemyType
 
-const gameObjects = [];
+const gameObjects = []
 
 gameObjects.push(new SpriteStatic({
   position: {
@@ -195,19 +195,18 @@ gameObjects.push(winIndicator)
 const restartButton = new Button()
 gameObjects.push(restartButton)
 
+function gameLoop () {
+  control()
+  update()
+  render()
 
-function gameLoop() {
-  control();
-  update();
-  render();
-
-  window.requestAnimationFrame(gameLoop);
+  window.requestAnimationFrame(gameLoop)
 }
 
-function waitingForPlayers() {
-  socket.on('set-data', function ({ type: type, id: id, ninjaHealth: ninjaHealth, samuraiHealth: samuraiHealth }) {
+function waitingForPlayers () {
+  socket.on('set-data', function ({ type, id, ninjaHealth, samuraiHealth }) {
     if (!user) {
-      user = { type: type, id: id }
+      user = { type, id }
 
       if (user.type == 'samurai') {
         gameObjects.push(samurai)
@@ -235,17 +234,17 @@ function waitingForPlayers() {
         ninja.health = ninjaHealth
       }
     }
-  });
+  })
 
   gameLoop()
 }
 
 waitingForPlayers()
 
-function control() {
+function control () {
   if (keys.samurai.w) {
     socket.emit('set-move-direction', { playerType: 'samurai', direction: 'up' })
-    //Ваня разобраться что тут set-move-direction отправляется 60 раз в секунду
+    // Ваня разобраться что тут set-move-direction отправляется 60 раз в секунду
   }
 
   if (keys.samurai.d) {
@@ -282,7 +281,7 @@ function control() {
 
 socket.on('id', function (msg) {
   id = msg
-});
+})
 
 socket.on('set-position-and-direction', function (data) {
   samurai.position = data.samurai.position
@@ -290,19 +289,19 @@ socket.on('set-position-and-direction', function (data) {
 
   samurai.direction = data.samurai.direction
   ninja.direction = data.ninja.direction
-});
+})
 
 socket.on('timer', function (data) {
   timer.timeRemaining = data.timeRemaining
   timer.timeOut = data.timeOut
-});
+})
 
 socket.on('game-over', function (data) {
   winIndicator.winner = data.winner
   gameOver = data.gameOver
-});
+})
 
-function update() {
+function update () {
   samurai.vector = getFighterVector(samurai.position.x, ninja.position.x)
   ninja.vector = getFighterVector(ninja.position.x, samurai.position.x)
 
@@ -326,9 +325,9 @@ function update() {
 socket.on('set-health', function ({ samuraiHealth, ninjaHealth }) {
   samurai.health = samuraiHealth
   ninja.health = ninjaHealth
-});
+})
 
-function render() {
+function render () {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   gameObjects.forEach(gameObject => {
     gameObject.render()
@@ -336,7 +335,7 @@ function render() {
 }
 
 window.addEventListener('keyup', keyup)
-function keyup(event) {
+function keyup (event) {
   switch (event.key) {
     case 'd':
       keys[playerType].d = false
@@ -354,7 +353,7 @@ function keyup(event) {
 }
 
 window.addEventListener('keydown', keydown)
-function keydown(event) {
+function keydown (event) {
   if (!gameOver) {
     switch (event.key) {
       case 'd':
@@ -373,8 +372,7 @@ function keydown(event) {
   }
 }
 
-
-function getFighterVector(x1, x2) {
+function getFighterVector (x1, x2) {
   if (x1 >= x2) {
     return -1
   } else {
@@ -382,7 +380,7 @@ function getFighterVector(x1, x2) {
   }
 }
 
-function checkAttackIsSuccess(attacker, victim) {
+function checkAttackIsSuccess (attacker, victim) {
   if (attacker.state != 'attack1' && attacker.state != 'attack2') {
     return false
   }

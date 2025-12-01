@@ -1,22 +1,22 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const httpServer = http.createServer(app);
-const io = require("socket.io")(httpServer, {
+const express = require('express')
+const app = express()
+const http = require('http')
+const httpServer = http.createServer(app)
+const io = require('socket.io')(httpServer, {
   cors: {
-    origin: "http://localhost",
-    methods: ["GET", "POST"]
+    origin: 'http://localhost',
+    methods: ['GET', 'POST']
   }
-});
-const Timer = require('./timer.js').Timer;
-const Fighter = require('./fighter.js').Fighter;
+})
+const Timer = require('./timer.js').Timer
+const Fighter = require('./fighter.js').Fighter
 
 const users = []
-const gameObjects = [];
+const gameObjects = []
 let gameOver = false
 let winner = ''
 let gameTimer = null
-let samurai = new Fighter({
+const samurai = new Fighter({
   position: {
     x: 0,
     y: 0
@@ -26,7 +26,7 @@ let samurai = new Fighter({
     y: 0
   }
 })
-let ninja = new Fighter({
+const ninja = new Fighter({
   position: {
     x: 512,
     y: 0
@@ -41,8 +41,8 @@ const sockets = []
 setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
-      socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut });
-      socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } });
+      socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
+      socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } })
     })
 
     if (gameTimer.timeRemaining == 1) {
@@ -59,7 +59,7 @@ setInterval(() => {
         gameTimer.timeOut = false
       }
       sockets.forEach(socket => {
-        socket.emit('game-over', { gameOver: gameOver, winner: winner });
+        socket.emit('game-over', { gameOver, winner })
       })
     }
   }
@@ -70,16 +70,16 @@ setInterval(() => {
 }, 50)
 
 io.on('connection', (socket) => {
-  console.log('New connection:', socket.id);
+  console.log('New connection:', socket.id)
   let type = 'samurai'
   sockets.push(socket)
 
   const id = socket.handshake.issued
 
-  socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } });
+  socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } })
 
   if (users.length > 0) {
-    if ('samurai' == users[users.length - 1].type) {
+    if (users[users.length - 1].type == 'samurai') {
       type = 'ninja'
       gameObjects.push(samurai)
       gameObjects.push(ninja)
@@ -97,39 +97,39 @@ io.on('connection', (socket) => {
       winner = 'Player 2'
       gameOver = true
 
-      socket.emit('game-over', { gameOver: gameOver, winner: winner })
+      socket.emit('game-over', { gameOver, winner })
     }
 
     if (ninja.health == 0) {
       winner = 'Player 1'
       gameOver = true
 
-      socket.emit('game-over', { gameOver: gameOver, winner: winner })
+      socket.emit('game-over', { gameOver, winner })
     }
 
-    socket.emit('set-health', { ninjaHealth: ninja.health, samuraiHealth: samurai.health });
-  });
+    socket.emit('set-health', { ninjaHealth: ninja.health, samuraiHealth: samurai.health })
+  })
 
   if (users.length > 2) {
     return
   }
 
-  users.push({ type: type, id: id })
+  users.push({ type, id })
 
-  io.emit('set-data', { type: type, id: id, ninjaHealth: ninja.health, samuraiHealth: samurai.health });
+  io.emit('set-data', { type, id, ninjaHealth: ninja.health, samuraiHealth: samurai.health })
   if (users.length == 2) {
-    gameTimer = new Timer();
+    gameTimer = new Timer()
     gameObjects.push(gameTimer)
   }
 
   socket.on('disconnect', () => {
-    console.log('Disconnect:', socket.id);
-    const index = users.findIndex(user => user.id == id);
+    console.log('Disconnect:', socket.id)
+    const index = users.findIndex(user => user.id == id)
 
     if (index > -1) {
-      users.splice(index, 1);
+      users.splice(index, 1)
     }
-  });
+  })
 
   socket.on('set-move-direction', (data) => {
     if (data.playerType == 'samurai') {
@@ -166,9 +166,9 @@ io.on('connection', (socket) => {
         ninja.velocity.y = -10
       }
     }
-  });
-});
+  })
+})
 
 httpServer.listen(3000, () => {
-  console.log('listening on *:3000');
-});
+  console.log('listening on *:3000')
+})

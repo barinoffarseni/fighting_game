@@ -24,7 +24,7 @@ const samurai = new Fighter({
   velocity: {
     x: 0,
     y: 0
-  }
+  },
 })
 const ninja = new Fighter({
   position: {
@@ -34,7 +34,8 @@ const ninja = new Fighter({
   velocity: {
     x: 0,
     y: 0
-  }
+  },
+  attackFrame: 1
 })
 
 const sockets = []
@@ -173,6 +174,10 @@ io.on('connection', (socket) => {
       }
     }
   })
+  socket.on('set-attack-box-position', (data) => {
+    console.log('sasasasasas')
+  })
+
 })
 
 httpServer.listen(3000, () => {

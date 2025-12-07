@@ -1,19 +1,19 @@
 class SpriteStatic {
-  constructor ({ position, imgSrc }) {
+  constructor({ position, imgSrc }) {
     this.position = position
     this.img = new Image()
     this.img.src = imgSrc
   }
 
-  render () {
+  render() {
     ctx.drawImage(this.img, this.position.x, this.position.y)
   }
 
-  update () { }
+  update() { }
 }
 
 class SpriteAnimated extends SpriteStatic {
-  constructor ({ position, imgSrc, scale, framesHold, imgFrames, offset }) {
+  constructor({ position, imgSrc, scale, framesHold, imgFrames, offset }) {
     super({ position, imgSrc })
 
     this.dx = 0
@@ -31,7 +31,7 @@ class SpriteAnimated extends SpriteStatic {
     this.stop = false
   }
 
-  render () {
+  render() {
     ctx.drawImage(
       this.img,
       this.dx,
@@ -45,7 +45,7 @@ class SpriteAnimated extends SpriteStatic {
     )
   }
 
-  update () {
+  update() {
     if (!this.stop) {
       this.framesElapsed++
       this.animateIsComplete = false
@@ -70,7 +70,7 @@ class SpriteAnimated extends SpriteStatic {
 }
 
 class Fighter extends SpriteAnimated {
-  constructor ({ position, velocity, sprites, offset, attackFrame }) {
+  constructor({ position, velocity, sprites, offset, attackFrame }) {
     super({
       position,
       imgSrc: './img/samuraiMack/Idle.png',
@@ -107,25 +107,11 @@ class Fighter extends SpriteAnimated {
     this.command = 'idle'
   }
 
-  getPosition () {
+  getPosition() {
     return this.position
   }
 
-  getAttackBoxPosition () {
-    if (this.textureMirroring > 0) {
-      return {
-        x: this.position.x + this.atackBox.offset.x,
-        y: this.position.y + this.atackBox.offset.y
-      }
-    } else {
-      return {
-        x: this.position.x + this.width - this.atackBox.offset.x,
-        y: this.position.y + this.atackBox.offset.y
-      }
-    }
-  }
-
-  render () {
+  render() {
     super.render()
 
     if (debug) {
@@ -137,11 +123,11 @@ class Fighter extends SpriteAnimated {
         ctx.fillStyle = 'yellow'
       }
 
-      ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.textureMirroring, this.atackBox.height)
+      // ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.textureMirroring, this.atackBox.height)
     }
   }
 
-  setState () {
+  setState() {
     if (this.state === 'attack1' && this.animateIsComplete) {
       this.stateCanBeChanged = true
     }
@@ -194,24 +180,14 @@ class Fighter extends SpriteAnimated {
     }
   }
 
-  setAttackBoxMinMaxPosition () {
-    if (this.textureMirroring > 0) {
-      this.attackBoxXMin = this.getAttackBoxPosition().x
-      this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.textureMirroring
-    } else {
-      this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.textureMirroring
-      this.attackBoxXMax = this.getAttackBoxPosition().x
-    }
-  }
-
-  freez () {
+  freez() {
     this.velocity.x = 0
     if (this.velocity.y < 0) {
       this.velocity.y = 0
     }
   }
 
-  update () {
+  update() {
     if (this.state != 'death') {
       this.newState = 'idle'
 
@@ -252,7 +228,7 @@ class Fighter extends SpriteAnimated {
 }
 
 class Indicator {
-  constructor ({ position, color, width, height, offset }) {
+  constructor({ position, color, width, height, offset }) {
     this.position = position
     this.color = color
     this.width = width
@@ -260,14 +236,14 @@ class Indicator {
     this.offset = offset
   }
 
-  render () {
+  render() {
     ctx.fillStyle = this.color
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
   }
 }
 
 class WinIndicator extends Indicator {
-  constructor () {
+  constructor() {
     super({
       position: {
         x: canvas.width / 2,
@@ -294,9 +270,9 @@ class WinIndicator extends Indicator {
     this.winner = ''
   }
 
-  update () { }
+  update() { }
 
-  render () {
+  render() {
     if (gameOver) {
       ctx.fillStyle = this.color
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
@@ -310,7 +286,7 @@ class WinIndicator extends Indicator {
 }
 
 class Timer extends Indicator {
-  constructor () {
+  constructor() {
     super({
       position: {
         x: canvas.width / 2,
@@ -341,9 +317,9 @@ class Timer extends Indicator {
     this.timeOut = false
   }
 
-  update () { }
+  update() { }
 
-  render () {
+  render() {
     ctx.fillStyle = this.color
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
@@ -371,18 +347,18 @@ class HealthBar extends Indicator {
     this.entity = entity
   }
 
-  render () {
+  render() {
     ctx.fillStyle = this.color
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.textureMirroring * this.healthValue, this.height)
   }
 
-  update () {
+  update() {
     this.healthValue = (this.entity.health * 100) / 10000
   }
 }
 
 class Button {
-  constructor (mouse) {
+  constructor(mouse) {
     this.position = {
       x: canvas.width / 2,
       y: canvas.height / 1.6
@@ -410,7 +386,7 @@ class Button {
     this.maxY = this.position.y + this.offset.y + this.width
   }
 
-  update () {
+  update() {
     // исправиьь на добавление 1 эвент листенера
     if (gameOver) {
       canvas.addEventListener('click', function (event) {
@@ -425,7 +401,7 @@ class Button {
     }
   }
 
-  render () {
+  render() {
     if (gameOver) {
       ctx.fillStyle = this.color
       ctx.strokeStyle = 'black'

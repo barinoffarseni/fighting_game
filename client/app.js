@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-const debug = false
+const debug = true
 
 const keys = {
   samurai: {
@@ -106,8 +106,7 @@ const samurai = new Fighter({
   offset: {
     x: -215,
     y: -155
-  },
-  attackFrame: 4
+  }
 })
 
 const ninja = new Fighter({
@@ -164,8 +163,7 @@ const ninja = new Fighter({
   offset: {
     x: -215,
     y: -170
-  },
-  attackFrame: 1
+  }
 })
 
 gameObjects.push(new HealthBar({
@@ -195,7 +193,7 @@ gameObjects.push(winIndicator)
 const restartButton = new Button()
 gameObjects.push(restartButton)
 
-function gameLoop () {
+function gameLoop() {
   control()
   update()
   render()
@@ -203,7 +201,7 @@ function gameLoop () {
   window.requestAnimationFrame(gameLoop)
 }
 
-function waitingForPlayers () {
+function waitingForPlayers() {
   socket.on('set-data', function ({ type, id, ninjaHealth, samuraiHealth }) {
     if (!user) {
       user = { type, id }
@@ -241,7 +239,7 @@ function waitingForPlayers () {
 
 waitingForPlayers()
 
-function control () {
+function control() {
   if (keys.samurai.w) {
     socket.emit('set-move-command', { playerType: 'samurai', command: 'up' })
     // Ваня разобраться что тут set-move-command отправляется 60 раз в секунду
@@ -327,7 +325,7 @@ socket.on('set-health', function ({ samuraiHealth, ninjaHealth }) {
   ninja.health = ninjaHealth
 })
 
-function render () {
+function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   gameObjects.forEach(gameObject => {
     gameObject.render()
@@ -335,7 +333,7 @@ function render () {
 }
 
 window.addEventListener('keyup', keyup)
-function keyup (event) {
+function keyup(event) {
   switch (event.key) {
     case 'd':
       keys[playerType].d = false
@@ -353,7 +351,7 @@ function keyup (event) {
 }
 
 window.addEventListener('keydown', keydown)
-function keydown (event) {
+function keydown(event) {
   if (!gameOver) {
     switch (event.key) {
       case 'd':
@@ -380,7 +378,7 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
-function checkAttackIsSuccess (attacker, victim) {
+function checkAttackIsSuccess(attacker, victim) {
   if (attacker.state != 'attack1' && attacker.state != 'attack2') {
     return false
   }
@@ -390,7 +388,7 @@ function checkAttackIsSuccess (attacker, victim) {
   }
 
   if (attacker.framesElapsed % attacker.framesHold === 0) {
-    attacker.setAttackBoxMinMaxPosition()
+    socket.emit('set-attack-box-position', {})
 
     xMin = victim.position.x
     xMax = victim.position.x + victim.width

@@ -98,13 +98,13 @@ class Fighter extends SpriteAnimated {
     this.health = 100
     this.previousHealth = 100
     this.sprites = sprites
-    this.attack = false
     this.state = 'idle'
     this.newState = 'idle'
     this.stateCanBeChanged = true
     this.canJump = false
     this.restartState = false
     this.command = 'idle'
+    this.attackFrame = attackFrame
   }
 
   getPosition() {
@@ -208,11 +208,11 @@ class Fighter extends SpriteAnimated {
         this.previousHealth = this.health
       }
 
-      if (this.attack) {
+      if (this.direction === 'attack') {
         this.newState = 'attack1'
       }
 
-      if (this.state === 'attack1' && this.attack) {
+      if (this.state === 'attack1' && this.direction === 'attack') {
         this.newState = 'attack2'
       }
 

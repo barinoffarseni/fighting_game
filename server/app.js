@@ -24,7 +24,7 @@ const samurai = new Fighter({
   velocity: {
     x: 0,
     y: 0
-  },
+  }
 })
 const ninja = new Fighter({
   position: {
@@ -34,8 +34,7 @@ const ninja = new Fighter({
   velocity: {
     x: 0,
     y: 0
-  },
-  attackFrame: 1
+  }
 })
 
 const sockets = []
@@ -155,6 +154,9 @@ io.on('connection', (socket) => {
       if (data.command === 'up' && samurai.canJump) {
         samurai.velocity.y = -10
       }
+      if (data.direction === 'attack') {
+        samurai.direction = data.direction
+      }
     }
     if (data.playerType === 'ninja') {
       if (data.command === 'right') {
@@ -172,10 +174,30 @@ io.on('connection', (socket) => {
       if (data.command === 'up' && ninja.canJump) {
         ninja.velocity.y = -10
       }
+      if (data.direction === 'attack') {
+        ninja.direction = data.direction
+      }
     }
   })
+
   socket.on('set-attack-box-position', (data) => {
-    console.log('sasasasasas')
+    console.log(data)
+    // xMin = victim.position.x
+    // xMax = victim.position.x + victim.width
+
+    // if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
+    //   if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
+    //     return true
+    //   }
+
+    //   if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
+    //     return true
+    //   }
+
+    //   if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
+    //     return true
+    //   }
+    // }
   })
 
 })

@@ -106,7 +106,8 @@ const samurai = new Fighter({
   offset: {
     x: -215,
     y: -155
-  }
+  },
+  attackFrame: 4
 })
 
 const ninja = new Fighter({
@@ -163,7 +164,8 @@ const ninja = new Fighter({
   offset: {
     x: -215,
     y: -170
-  }
+  },
+  attackFrame: 1
 })
 
 gameObjects.push(new HealthBar({
@@ -254,10 +256,9 @@ function control() {
   }
 
   if (keys.samurai.s) {
-    samurai.attack = true
-  } else {
-    samurai.attack = false
+    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'attack' })
   }
+
   if (keys.ninja.w) {
     socket.emit('set-move-command', { playerType: 'ninja', command: 'up' })
   }
@@ -271,9 +272,7 @@ function control() {
   }
 
   if (keys.ninja.s) {
-    ninja.attack = true
-  } else {
-    ninja.attack = false
+    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'attack' })
   }
 }
 
@@ -388,23 +387,6 @@ function checkAttackIsSuccess(attacker, victim) {
   }
 
   if (attacker.framesElapsed % attacker.framesHold === 0) {
-    socket.emit('set-attack-box-position', {})
-
-    xMin = victim.position.x
-    xMax = victim.position.x + victim.width
-
-    if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
-      if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
-        return true
-      }
-
-      if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
-        return true
-      }
-
-      if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
-        return true
-      }
-    }
+    socket.emit('set-attack-box-position', { attacker: attacker, victim: victim })
   }
 }

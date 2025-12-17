@@ -92,30 +92,6 @@ io.on('connection', (socket) => {
     }
   }
 
-  socket.on('take-hit', (data) => {
-    if (data === 'ninja') {
-      ninja.health -= 10
-    } else {
-      samurai.health -= 10
-    }
-
-    if (samurai.health === 0) {
-      winner = 'Player 2'
-      gameOver = true
-
-      socket.emit('game-over', { gameOver, winner })
-    }
-
-    if (ninja.health === 0) {
-      winner = 'Player 1'
-      gameOver = true
-
-      socket.emit('game-over', { gameOver, winner })
-    }
-
-    socket.emit('set-health', { ninjaHealth: ninja.health, samuraiHealth: samurai.health })
-  })
-
   if (users.length > 2) {
     return
   }
@@ -180,28 +156,55 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('set-attack-box-position', (data) => {
-    console.log(data)
-    // xMin = victim.position.x
-    // xMax = victim.position.x + victim.width
+  socket.on('check-attack-is-success', (data) => {
+    if (data.attacker == 'samurai') {
+      checkAttackIsSuccess(samurai, ninja)
+    }
+    if (data.attacker == 'ninja') {
+      checkAttackIsSuccess(ninja, samurai)
+    }
 
-    // if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
-    //   if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
-    //     return true
-    //   }
+    if (samurai.health === 0) {
+      winner = 'Player 2'
+      gameOver = true
 
-    //   if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
-    //     return true
-    //   }
+      socket.emit('game-over', { gameOver, winner })
+    }
+    if (ninja.health === 0) {
+      winner = 'Player 1'
+      gameOver = true
 
-    //   if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
-    //     return true
-    //   }
-    // }
+      socket.emit('game-over', { gameOver, winner })
+    }
+
+    socket.emit('set-health', { ninjaHealth: ninja.health, samuraiHealth: samurai.health })
   })
-
 })
 
 httpServer.listen(3000, () => {
   console.log('listening on *:3000')
 })
+
+function checkAttackIsSuccess(attacker, victim) {
+  attacker.setAttackBoxMinMaxPosition()
+
+  xMin = victim.position.x
+  xMax = victim.position.x + victim.width
+  if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
+    console.log(xMin, xMax, attacker.attackBoxXMin)
+    if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
+      console.log('sdsdsdssd')
+      victim.health -= 10
+    }
+
+    if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
+      console.log('sdsdsdssd')
+      victim.health -= 10
+    }
+
+    if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
+      console.log('sdsdsdssd')
+      victim.health -= 10
+    }
+  }
+}

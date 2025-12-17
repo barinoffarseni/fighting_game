@@ -302,13 +302,8 @@ function update () {
   samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
   ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 
-  if (checkAttackIsSuccess(samurai, ninja)) {
-    socket.emit('take-hit', 'ninja')
-  }
-
-  if (checkAttackIsSuccess(ninja, samurai)) {
-    socket.emit('take-hit', 'samurai')
-  }
+  checkAttackIsSuccess(samurai, ninja)
+  checkAttackIsSuccess(ninja, samurai)
 
   if (gameOver) {
     timer.timeOut = true
@@ -377,7 +372,7 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
-function checkAttackIsSuccess(attacker, victim) {
+function checkAttackIsSuccess(attacker) {
   if (attacker.state != 'attack1' && attacker.state != 'attack2') {
     return false
   }
@@ -387,6 +382,6 @@ function checkAttackIsSuccess(attacker, victim) {
   }
 
   if (attacker.framesElapsed % attacker.framesHold === 0) {
-    socket.emit('set-attack-box-position', { attacker: attacker, victim: victim })
+    socket.emit('check-attack-is-success', { attacker: playerType })
   }
 }

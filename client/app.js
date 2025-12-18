@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-const debug = true
+const debug = false
 
 const keys = {
   samurai: {
@@ -281,6 +281,9 @@ socket.on('id', function (msg) {
 })
 
 socket.on('set-fighters-data', function (data) {
+  samurai.health = data.samurai.health
+  ninja.health = data.ninja.health
+
   samurai.position = data.samurai.position
   ninja.position = data.ninja.position
 
@@ -313,11 +316,6 @@ function update () {
     gameObject.update()
   })
 }
-
-socket.on('set-health', function ({ samuraiHealth, ninjaHealth }) {
-  samurai.health = samuraiHealth
-  ninja.health = ninjaHealth
-})
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)

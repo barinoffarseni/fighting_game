@@ -46,8 +46,8 @@ setInterval(() => {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
       socket.emit('set-fighters-data', {
-        ninja: { position: ninja.position, command: ninja.command },
-        samurai: { position: samurai.position, command: samurai.command }
+        ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
+        samurai: { position: samurai.position, command: samurai.command, health: ninja.health }
       })
     })
 
@@ -83,8 +83,8 @@ io.on('connection', (socket) => {
   const id = socket.handshake.issued
 
   socket.emit('set-fighters-data', {
-    ninja: { position: ninja.position, command: ninja.command },
-    samurai: { position: samurai.position, command: samurai.command }
+    ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
+    samurai: { position: samurai.position, command: samurai.command, health: ninja.health }
   })
 
   if (users.length > 0) {
@@ -179,8 +179,6 @@ io.on('connection', (socket) => {
 
       socket.emit('game-over', { gameOver, winner })
     }
-
-    socket.emit('set-health', { ninjaHealth: ninja.health, samuraiHealth: samurai.health })
   })
 })
 
@@ -194,19 +192,15 @@ function checkAttackIsSuccess(attacker, victim) {
   xMin = victim.position.x
   xMax = victim.position.x + victim.width
   if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
-    console.log(xMin, xMax, attacker.attackBoxXMin)
     if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
-      console.log('sdsdsdssd')
       victim.health -= 10
     }
 
     if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
-      console.log('sdsdsdssd')
       victim.health -= 10
     }
 
     if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
-      console.log('sdsdsdssd')
       victim.health -= 10
     }
   }

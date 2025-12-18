@@ -2,6 +2,7 @@ const gravity = 0.2
 
 export class Fighter {
   constructor({ position, velocity, attackFrame }) {
+    this.vector = 1
     this.health = 100
     this.width = 50
     this.height = 150

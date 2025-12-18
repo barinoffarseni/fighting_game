@@ -39,6 +39,9 @@ const ninja = new Fighter({
 
 const sockets = []
 setInterval(() => {
+  samurai.vector = getFighterVector(samurai.position.x, ninja.position.x)
+  ninja.vector = getFighterVector(ninja.position.x, samurai.position.x)
+
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
@@ -206,5 +209,13 @@ function checkAttackIsSuccess(attacker, victim) {
       console.log('sdsdsdssd')
       victim.health -= 10
     }
+  }
+}
+
+function getFighterVector(x1, x2) {
+  if (x1 >= x2) {
+    return -1
+  } else {
+    return 1
   }
 }

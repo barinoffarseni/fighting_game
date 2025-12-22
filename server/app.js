@@ -186,7 +186,7 @@ httpServer.listen(3000, () => {
   console.log('listening on *:3000')
 })
 
-function checkAttackIsSuccess(attacker, victim) {
+function checkAttackIsSuccess (attacker, victim) {
   attacker.setAttackBoxMinMaxPosition()
 
   xMin = victim.position.x
@@ -206,7 +206,7 @@ function checkAttackIsSuccess(attacker, victim) {
   }
 }
 
-function getFighterVector(x1, x2) {
+function getFighterVector (x1, x2) {
   if (x1 >= x2) {
     return -1
   } else {

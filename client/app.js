@@ -195,7 +195,7 @@ gameObjects.push(winIndicator)
 const restartButton = new Button()
 gameObjects.push(restartButton)
 
-function gameLoop() {
+function gameLoop () {
   control()
   update()
   render()
@@ -203,7 +203,7 @@ function gameLoop() {
   window.requestAnimationFrame(gameLoop)
 }
 
-function waitingForPlayers() {
+function waitingForPlayers () {
   socket.on('set-data', function ({ type, id, ninjaHealth, samuraiHealth }) {
     if (!user) {
       user = { type, id }
@@ -241,7 +241,7 @@ function waitingForPlayers() {
 
 waitingForPlayers()
 
-function control() {
+function control () {
   if (keys.samurai.w) {
     socket.emit('set-move-command', { playerType: 'samurai', command: 'up' })
     // Ваня разобраться что тут set-move-command отправляется 60 раз в секунду
@@ -305,8 +305,12 @@ function update () {
   samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
   ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 
-  checkAttackIsSuccess(samurai, ninja)
-  checkAttackIsSuccess(ninja, samurai)
+  if (playerType == 'samurai') {
+    checkAttackIsSuccess(samurai)
+  }
+  if (playerType == 'ninja') {
+    checkAttackIsSuccess(ninja)
+  }
 
   if (gameOver) {
     timer.timeOut = true
@@ -317,7 +321,7 @@ function update () {
   })
 }
 
-function render() {
+function render () {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   gameObjects.forEach(gameObject => {
     gameObject.render()
@@ -325,7 +329,7 @@ function render() {
 }
 
 window.addEventListener('keyup', keyup)
-function keyup(event) {
+function keyup (event) {
   switch (event.key) {
     case 'd':
       keys[playerType].d = false
@@ -343,7 +347,7 @@ function keyup(event) {
 }
 
 window.addEventListener('keydown', keydown)
-function keydown(event) {
+function keydown (event) {
   if (!gameOver) {
     switch (event.key) {
       case 'd':

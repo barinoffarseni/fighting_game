@@ -1,7 +1,7 @@
 const gravity = 0.2
 
 export class Fighter {
-  constructor({ position, velocity, attackFrame }) {
+  constructor ({ position, velocity, attackFrame }) {
     this.vector = 1
     this.health = 100
     this.width = 50
@@ -22,7 +22,7 @@ export class Fighter {
     }
   }
 
-  update() {
+  update () {
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
 
@@ -47,7 +47,7 @@ export class Fighter {
     this.velocity.x = 0
   }
 
-  getAttackBoxPosition() {
+  getAttackBoxPosition () {
     if (this.vector > 0) {
       return {
         x: this.position.x + this.atackBox.offset.x,
@@ -61,7 +61,7 @@ export class Fighter {
     }
   }
 
-  setAttackBoxMinMaxPosition() {
+  setAttackBoxMinMaxPosition () {
     if (this.vector > 0) {
       this.attackBoxXMin = this.getAttackBoxPosition().x
       this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.vector

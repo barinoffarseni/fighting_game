@@ -86,6 +86,7 @@ setInterval(() => {
 
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id)
+  socket.emit('set-debug', { debug: debug})
   let type = 'samurai'
   sockets.push(socket)
 

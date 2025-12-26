@@ -105,14 +105,14 @@ class Fighter extends SpriteAnimated {
     this.restartState = false
     this.command = 'idle'
     this.attackFrame = attackFrame
-      this.attackBox = {
-        position: {
-          x: 0,
-          y: 0
-        },
-        width: 160,
-        height: 90
-      }
+    this.attackBox = {
+      position: {
+        x: 0,
+        y: 0
+      },
+      width: 160,
+      height: 90
+    }
   }
 
   getPosition () {

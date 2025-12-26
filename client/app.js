@@ -280,7 +280,7 @@ socket.on('set-debug', function (data) {
   debug = data.debug
 })
 
-socket.on('set-attack-boxes',function (data) {
+socket.on('set-attack-boxes', function (data) {
   if (debug) {
     samurai.attackBox.position = data.samurai.attackBox.position
     ninja.attackBox.position = data.ninja.attackBox.position

@@ -170,15 +170,15 @@ io.on('connection', (socket) => {
     if (samurai.health === 0) {
       winner = 'Player 2'
       gameOver = true
-
-      socket.emit('game-over', { gameOver, winner })
     }
     if (ninja.health === 0) {
       winner = 'Player 1'
       gameOver = true
-
-      socket.emit('game-over', { gameOver, winner })
     }
+
+    sockets.forEach(socket => {
+      socket.emit('game-over', { gameOver, winner })
+    })
   })
 })
 

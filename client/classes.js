@@ -105,8 +105,11 @@ class Fighter extends SpriteAnimated {
     this.restartState = false
     this.command = 'idle'
     this.attackFrame = attackFrame
-      this.atackBox = {
-        position: this.position,
+      this.attackBox = {
+        position: {
+          x: 0,
+          y: 0
+        },
         width: 160,
         height: 90,
         offset: {
@@ -132,7 +135,7 @@ class Fighter extends SpriteAnimated {
         ctx.fillStyle = 'yellow'
       }
 
-      // ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.textureMirroring, this.atackBox.height)
+      ctx.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width * this.vector, this.attackBox.height)
     }
   }
 

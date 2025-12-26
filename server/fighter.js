@@ -50,13 +50,13 @@ export class Fighter {
   getAttackBoxPosition () {
     if (this.vector > 0) {
       return {
-        x: this.position.x + this.atackBox.offset.x,
-        y: this.position.y + this.atackBox.offset.y
+        x: this.position.x + this.attackBox.offset.x,
+        y: this.position.y + this.attackBox.offset.y
       }
     } else {
       return {
-        x: this.position.x + this.width - this.atackBox.offset.x,
-        y: this.position.y + this.atackBox.offset.y
+        x: this.position.x + this.width - this.attackBox.offset.x,
+        y: this.position.y + this.attackBox.offset.y
       }
     }
   }
@@ -64,9 +64,9 @@ export class Fighter {
   setAttackBoxMinMaxPosition () {
     if (this.vector > 0) {
       this.attackBoxXMin = this.getAttackBoxPosition().x
-      this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.vector
+      this.attackBoxXMax = this.getAttackBoxPosition().x + this.attackBox.width * this.vector
     } else {
-      this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.vector
+      this.attackBoxXMin = this.getAttackBoxPosition().x + this.attackBox.width * this.vector
       this.attackBoxXMax = this.getAttackBoxPosition().x
     }
   }

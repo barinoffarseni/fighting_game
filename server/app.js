@@ -53,7 +53,7 @@ setInterval(() => {
       })
 
       if (debug) {
-        socket.emit('set-attack-boxes', { ninja: { attackBox: ninja.atackBox }, samurai: { attackBox: samurai.atackBox }})
+        socket.emit('set-attack-boxes', { ninja: { attackBox: ninja.attackBox }, samurai: { attackBox: samurai.attackBox }})
       }
     })
 
@@ -197,7 +197,7 @@ function checkAttackIsSuccess (attacker, victim) {
 
   xMin = victim.position.x
   xMax = victim.position.x + victim.width
-  if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
+  if (attacker.getAttackBoxPosition().y + attacker.attackBox.height >= victim.position.y) {
     if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
       victim.health -= 10
     }

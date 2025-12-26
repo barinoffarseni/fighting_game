@@ -278,9 +278,9 @@ function control () {
 
 if (debug) {
   socket.on('set-attack-boxes',function (data) {
-    console.log(data)
-    samurai.atackBox = data.samurai.health
-    ninja.atackBox = data.ninja.health
+    samurai.attackBox = data.samurai.attackBox
+    ninja.attackBox = data.ninja.attackBox
+    console.log(data.samurai.attackBox)
   })
 }
 

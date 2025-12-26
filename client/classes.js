@@ -395,7 +395,6 @@ class Button {
   }
 
   update () {
-    // исправиьь на добавление 1 эвент листенера
     if (gameOver) {
       canvas.addEventListener('click', function (event) {
         const rect = canvas.getBoundingClientRect()

@@ -53,7 +53,10 @@ setInterval(() => {
       })
 
       if (debug) {
-        socket.emit('set-attack-boxes', { ninja: { attackBox: ninja.attackBox }, samurai: { attackBox: samurai.attackBox }})
+        socket.emit('set-attack-boxes', {
+          ninja: { attackBox: {position: {x: ninja.getAttackBoxPosition ().x, y: ninja.getAttackBoxPosition ().y}}},
+          samurai: { attackBox: {position: {x: samurai.getAttackBoxPosition ().x, y: samurai.getAttackBoxPosition ().y}}}
+        })
       }
     })
 

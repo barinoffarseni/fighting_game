@@ -111,12 +111,8 @@ class Fighter extends SpriteAnimated {
           y: 0
         },
         width: 160,
-        height: 90,
-        offset: {
-          x: 80,
-          y: 0
+        height: 90
       }
-    }
   }
 
   getPosition () {

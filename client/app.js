@@ -278,9 +278,8 @@ function control () {
 
 if (debug) {
   socket.on('set-attack-boxes',function (data) {
-    samurai.attackBox = data.samurai.attackBox
-    ninja.attackBox = data.ninja.attackBox
-    console.log(data.samurai.attackBox)
+    samurai.attackBox.position = data.samurai.attackBox.position
+    ninja.attackBox.position = data.ninja.attackBox.position
   })
 }
 

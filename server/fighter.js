@@ -11,7 +11,7 @@ export class Fighter {
     this.canJump = false
     this.command = 'idle'
     this.attackFrame = attackFrame
-    this.atackBox = {
+    this.attackBox = {
       position: this.position,
       width: 160,
       height: 90,

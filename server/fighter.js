@@ -2,7 +2,7 @@ const gravity = 0.2
 
 export class Fighter {
   constructor ({ position, velocity, attackFrame }) {
-    this.vector = 1
+    this.texture_mirroring = 1
     this.health = 100
     this.width = 50
     this.height = 150
@@ -48,7 +48,7 @@ export class Fighter {
   }
 
   getAttackBoxPosition () {
-    if (this.vector > 0) {
+    if (this.texture_mirroring > 0) {
       return {
         x: this.position.x + this.attackBox.offset.x,
         y: this.position.y + this.attackBox.offset.y
@@ -62,11 +62,11 @@ export class Fighter {
   }
 
   setAttackBoxMinMaxPosition () {
-    if (this.vector > 0) {
+    if (this.texture_mirroring > 0) {
       this.attackBoxXMin = this.getAttackBoxPosition().x
-      this.attackBoxXMax = this.getAttackBoxPosition().x + this.attackBox.width * this.vector
+      this.attackBoxXMax = this.getAttackBoxPosition().x + this.attackBox.width * this.texture_mirroring
     } else {
-      this.attackBoxXMin = this.getAttackBoxPosition().x + this.attackBox.width * this.vector
+      this.attackBoxXMin = this.getAttackBoxPosition().x + this.attackBox.width * this.texture_mirroring
       this.attackBoxXMax = this.getAttackBoxPosition().x
     }
   }

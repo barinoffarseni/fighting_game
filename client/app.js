@@ -256,7 +256,7 @@ function control () {
   }
 
   if (keys.samurai.s) {
-    socket.emit('set-move-comand', { playerType: 'samurai', comand: 'attack' })
+    socket.emit('set-move-command', { playerType: 'samurai', command: 'attack' })
   }
 
   if (keys.ninja.w) {
@@ -272,7 +272,7 @@ function control () {
   }
 
   if (keys.ninja.s) {
-    socket.emit('set-move-comand', { playerType: 'ninja', comand: 'attack' })
+    socket.emit('set-move-command', { playerType: 'ninja', command: 'attack' })
   }
 }
 

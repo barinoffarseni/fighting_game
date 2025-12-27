@@ -143,8 +143,8 @@ io.on('connection', (socket) => {
       if (data.command === 'up' && samurai.canJump) {
         samurai.velocity.y = -10
       }
-      if (data.comand === 'attack') {
-        samurai.comand = data.comand
+      if (data.command === 'attack') {
+        samurai.command = data.command
       }
     }
     if (data.playerType === 'ninja') {
@@ -163,8 +163,8 @@ io.on('connection', (socket) => {
       if (data.command === 'up' && ninja.canJump) {
         ninja.velocity.y = -10
       }
-      if (data.comand === 'attack') {
-        ninja.comand = data.comand
+      if (data.command === 'attack') {
+        ninja.command = data.command
       }
     }
   })

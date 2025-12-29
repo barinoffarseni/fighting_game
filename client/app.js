@@ -283,7 +283,6 @@ if (debug) {
   })
 }
 
-
 socket.on('id', function (msg) {
   id = msg
 })

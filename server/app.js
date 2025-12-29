@@ -11,7 +11,7 @@ const io = require('socket.io')(httpServer, {
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
-const debug = false
+const debug = true
 
 const users = []
 const gameObjects = []
@@ -86,7 +86,6 @@ setInterval(() => {
 
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id)
-  socket.emit('set-debug', { debug })
   let type = 'samurai'
   sockets.push(socket)
 

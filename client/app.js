@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-let debug
+const debug = true
 
 const keys = {
   samurai: {
@@ -275,10 +275,6 @@ function control () {
     socket.emit('set-move-command', { playerType: 'ninja', command: 'attack' })
   }
 }
-
-socket.on('set-debug', function (data) {
-  debug = data.debug
-})
 
 socket.on('set-attack-boxes', function (data) {
   if (debug) {

@@ -398,3 +398,11 @@ function checkAttackIsSuccess(attacker) {
     socket.emit('check-attack-is-success', { attacker: playerType })
   }
 }
+
+function getFighterTextureMirroring (x1, x2) {
+  if (x1 >= x2) {
+    return -1
+  } else {
+    return 1
+  }
+}

@@ -131,7 +131,7 @@ class Fighter extends SpriteAnimated {
         ctx.fillStyle = 'yellow'
       }
 
-      ctx.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width * this.texture_mirroring, this.attackBox.height)
+      ctx.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width * this.textureMirroring, this.attackBox.height)
     }
   }
 

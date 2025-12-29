@@ -41,8 +41,8 @@ const ninja = new Fighter({
 
 const sockets = []
 setInterval(() => {
-  samurai.texture_mirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
-  ninja.texture_mirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
+  samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
+  ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
 
   if (gameTimer !== null) {
     sockets.forEach(socket => {
@@ -216,7 +216,7 @@ function checkAttackIsSuccess (attacker, victim) {
   }
 }
 
-function getFighterTextureMirroring (x1, x2) {
+function getFighterAttackBoxPositionMirroring (x1, x2) {
   if (x1 >= x2) {
     return -1
   } else {

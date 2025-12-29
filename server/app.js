@@ -11,7 +11,7 @@ const io = require('socket.io')(httpServer, {
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
-const debug = true
+const debug = false
 
 const users = []
 const gameObjects = []
@@ -54,8 +54,8 @@ setInterval(() => {
 
       if (debug) {
         socket.emit('set-attack-boxes', {
-          ninja: { attackBox: { position: { x: ninja.getAttackBoxPosition().x, y: ninja.getAttackBoxPosition().y } } },
-          samurai: { attackBox: { position: { x: samurai.getAttackBoxPosition().x, y: samurai.getAttackBoxPosition().y } } }
+          ninja: { attackBox: { position: ninja.attackBox.position } },
+          samurai: { attackBox: { position: samurai.attackBox.position } }
         })
       }
     })

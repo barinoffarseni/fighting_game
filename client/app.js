@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-const debug = true
+const debug = false
 
 const keys = {
   samurai: {
@@ -276,12 +276,13 @@ function control () {
   }
 }
 
-socket.on('set-attack-boxes', function (data) {
-  if (debug) {
+if (debug) {
+  socket.on('set-attack-boxes', function (data) {
     samurai.attackBox.position = data.samurai.attackBox.position
     ninja.attackBox.position = data.ninja.attackBox.position
-  }
-})
+  })
+}
+
 
 socket.on('id', function (msg) {
   id = msg

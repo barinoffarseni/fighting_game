@@ -45,6 +45,8 @@ export class Fighter {
     }
 
     this.velocity.x = 0
+
+    this.attackBox.position = this.getAttackBoxPosition()
   }
 
   getAttackBoxPosition () {
@@ -63,11 +65,11 @@ export class Fighter {
 
   setAttackBoxMinMaxPosition () {
     if (this.attackBoxPositionMirroring > 0) {
-      this.attackBoxXMin = this.getAttackBoxPosition().x
-      this.attackBoxXMax = this.getAttackBoxPosition().x + this.attackBox.width * this.attackBoxPositionMirroring
+      this.attackBoxXMin = this.attackBox.position.x
+      this.attackBoxXMax = this.attackBox.position.x + this.attackBox.width * this.attackBoxPositionMirroring
     } else {
-      this.attackBoxXMin = this.getAttackBoxPosition().x + this.attackBox.width * this.attackBoxPositionMirroring
-      this.attackBoxXMax = this.getAttackBoxPosition().x
+      this.attackBoxXMin = this.attackBox.position.x + this.attackBox.width * this.attackBoxPositionMirroring
+      this.attackBoxXMax = this.attackBox.position.x
     }
   }
 }

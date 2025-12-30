@@ -8,7 +8,7 @@ export class Fighter {
     this.position = position
     this.velocity = velocity
     this.canJump = false
-    this.direction = 'fixedly'
+    this.command = 'fixedly'
   }
 
   update () {
@@ -20,16 +20,16 @@ export class Fighter {
       this.position.y = 576 - 96 - this.height
       this.canJump = true
 
-      this.direction = 'fixedly'
+      this.command = 'fixedly'
     } else {
       this.velocity.y += gravity
       this.canJump = false
 
       if (this.velocity.y > 0) {
-        this.direction = 'down'
+        this.command = 'down'
       }
       if (this.velocity.y < 0) {
-        this.direction = 'up'
+        this.command = 'up'
       }
     }
 

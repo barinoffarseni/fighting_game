@@ -104,7 +104,7 @@ class Fighter extends SpriteAnimated {
     this.stateCanBeChanged = true
     this.canJump = false
     this.restartState = false
-    this.direction = 'fixedly'
+    this.command = 'fixedly'
   }
 
   getPosition () {
@@ -215,15 +215,15 @@ class Fighter extends SpriteAnimated {
     if (this.state != 'death') {
       this.newState = 'idle'
 
-      if (this.direction === 'left' || this.direction === 'right') {
+      if (this.command === 'left' || this.command === 'right') {
         this.newState = 'run'
       }
 
-      if (this.direction === 'up') {
+      if (this.command === 'up') {
         this.newState = 'jump'
       }
 
-      if (this.direction === 'down') {
+      if (this.command === 'down') {
         this.newState = 'fall'
       }
 

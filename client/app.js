@@ -276,13 +276,6 @@ function control () {
   }
 }
 
-if (debug) {
-  socket.on('set-attack-boxes', function (data) {
-    samurai.attackBox.position = data.samurai.attackBox.position
-    ninja.attackBox.position = data.ninja.attackBox.position
-  })
-}
-
 socket.on('id', function (msg) {
   id = msg
 })
@@ -296,6 +289,11 @@ socket.on('set-fighters-data', function (data) {
 
   samurai.command = data.samurai.command
   ninja.command = data.ninja.command
+
+  if (debug && data.samurai.attackBox &&  data.ninja.attackBox) {
+    samurai.attackBox.position = data.samurai.attackBox.position
+    ninja.attackBox.position = data.ninja.attackBox.position
+  }
 })
 
 socket.on('timer', function (data) {

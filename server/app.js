@@ -53,10 +53,15 @@ setInterval(() => {
       })
 
       if (debug) {
-        socket.emit('set-attack-boxes', {
-          ninja: { attackBox: { position: ninja.attackBox.position } },
-          samurai: { attackBox: { position: samurai.attackBox.position } }
+        socket.emit('set-fighters-data', {
+          ninja: { position: ninja.position, command: ninja.command, health: ninja.health, attackBox: { position: ninja.attackBox.position } },
+          samurai: { position: samurai.position, command: samurai.command, health: samurai.health, attackBox: { position: samurai.attackBox.position } }
         })
+      } else {
+        socket.emit('set-fighters-data', {
+          ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
+          samurai: { position: samurai.position, command: samurai.command, health: samurai.health }
+      })
       }
     })
 

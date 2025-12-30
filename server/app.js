@@ -42,7 +42,10 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
-      socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } })
+      socket.emit('set-fighters-data', {
+        ninja: { position: ninja.position, command: ninja.command },
+        samurai: { position: samurai.position, command: samurai.command }
+      })
     })
 
     if (gameTimer.timeRemaining === 1) {
@@ -76,7 +79,10 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
-  socket.emit('set-position-and-direction', { ninja: { position: ninja.position, direction: ninja.direction }, samurai: { position: samurai.position, direction: samurai.direction } })
+  socket.emit('set-fighters-data', {
+    ninja: { position: ninja.position, command: ninja.command },
+    samurai: { position: samurai.position, command: samurai.command }
+  })
 
   if (users.length > 0) {
     if (users[users.length - 1].type === 'samurai') {
@@ -131,38 +137,38 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('set-move-direction', (data) => {
+  socket.on('set-move-command', (data) => {
     if (data.playerType === 'samurai') {
-      if (data.direction === 'right') {
+      if (data.command === 'right') {
         samurai.velocity.x = 4
         if (samurai.canJump) {
-          samurai.direction = data.direction
+          samurai.command = data.command
         }
       }
-      if (data.direction === 'left') {
+      if (data.command === 'left') {
         samurai.velocity.x = -4
         if (samurai.canJump) {
-          samurai.direction = data.direction
+          samurai.command = data.command
         }
       }
-      if (data.direction === 'up' && samurai.canJump) {
+      if (data.command === 'up' && samurai.canJump) {
         samurai.velocity.y = -10
       }
     }
     if (data.playerType === 'ninja') {
-      if (data.direction === 'right') {
+      if (data.command === 'right') {
         ninja.velocity.x = 4
         if (ninja.canJump) {
-          ninja.direction = data.direction
+          ninja.command = data.command
         }
       }
-      if (data.direction === 'left') {
+      if (data.command === 'left') {
         ninja.velocity.x = -4
         if (ninja.canJump) {
-          ninja.direction = data.direction
+          ninja.command = data.command
         }
       }
-      if (data.direction === 'up' && ninja.canJump) {
+      if (data.command === 'up' && ninja.canJump) {
         ninja.velocity.y = -10
       }
     }

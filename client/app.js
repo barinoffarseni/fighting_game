@@ -173,7 +173,7 @@ gameObjects.push(new HealthBar({
     x: 50,
     y: 0
   },
-  vector: 1,
+  textureMirroring: 1,
   entity: ninja
 }))
 
@@ -182,7 +182,7 @@ gameObjects.push(new HealthBar({
     x: -50,
     y: 0
   },
-  vector: -1,
+  textureMirroring: -1,
   entity: samurai
 }))
 
@@ -243,16 +243,16 @@ waitingForPlayers()
 
 function control () {
   if (keys.samurai.w) {
-    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'up' })
-    // Ваня разобраться что тут set-move-direction отправляется 60 раз в секунду
+    socket.emit('set-move-command', { playerType: 'samurai', command: 'up' })
+    // Ваня разобраться что тут set-move-command отправляется 60 раз в секунду
   }
 
   if (keys.samurai.d) {
-    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'right' })
+    socket.emit('set-move-command', { playerType: 'samurai', command: 'right' })
   }
 
   if (keys.samurai.a) {
-    socket.emit('set-move-direction', { playerType: 'samurai', direction: 'left' })
+    socket.emit('set-move-command', { playerType: 'samurai', command: 'left' })
   }
 
   if (keys.samurai.s) {
@@ -261,15 +261,15 @@ function control () {
     samurai.attack = false
   }
   if (keys.ninja.w) {
-    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'up' })
+    socket.emit('set-move-command', { playerType: 'ninja', command: 'up' })
   }
 
   if (keys.ninja.d) {
-    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'right' })
+    socket.emit('set-move-command', { playerType: 'ninja', command: 'right' })
   }
 
   if (keys.ninja.a) {
-    socket.emit('set-move-direction', { playerType: 'ninja', direction: 'left' })
+    socket.emit('set-move-command', { playerType: 'ninja', command: 'left' })
   }
 
   if (keys.ninja.s) {
@@ -283,12 +283,12 @@ socket.on('id', function (msg) {
   id = msg
 })
 
-socket.on('set-position-and-direction', function (data) {
+socket.on('set-fighters-data', function (data) {
   samurai.position = data.samurai.position
   ninja.position = data.ninja.position
 
-  samurai.direction = data.samurai.direction
-  ninja.direction = data.ninja.direction
+  samurai.command = data.samurai.command
+  ninja.command = data.ninja.command
 })
 
 socket.on('timer', function (data) {
@@ -302,8 +302,8 @@ socket.on('game-over', function (data) {
 })
 
 function update () {
-  samurai.vector = getFighterVector(samurai.position.x, ninja.position.x)
-  ninja.vector = getFighterVector(ninja.position.x, samurai.position.x)
+  samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
+  ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 
   if (checkAttackIsSuccess(samurai, ninja)) {
     socket.emit('take-hit', 'ninja')
@@ -372,7 +372,7 @@ function keydown (event) {
   }
 }
 
-function getFighterVector (x1, x2) {
+function getFighterTextureMirroring (x1, x2) {
   if (x1 >= x2) {
     return -1
   } else {

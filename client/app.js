@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-const debug = true
+const debug = false
 
 const keys = {
   samurai: {
@@ -290,7 +290,7 @@ socket.on('set-fighters-data', function (data) {
   samurai.command = data.samurai.command
   ninja.command = data.ninja.command
 
-  if (debug && data.samurai.attackBox &&  data.ninja.attackBox) {
+  if (debug && data.samurai.attackBox && data.ninja.attackBox) {
     samurai.attackBox.position = data.samurai.attackBox.position
     ninja.attackBox.position = data.ninja.attackBox.position
   }

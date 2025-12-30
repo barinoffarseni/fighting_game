@@ -11,7 +11,7 @@ const io = require('socket.io')(httpServer, {
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
-const debug = true
+const debug = false
 
 const users = []
 const gameObjects = []
@@ -61,7 +61,7 @@ setInterval(() => {
         socket.emit('set-fighters-data', {
           ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
           samurai: { position: samurai.position, command: samurai.command, health: samurai.health }
-      })
+        })
       }
     })
 
@@ -184,15 +184,19 @@ io.on('connection', (socket) => {
     if (samurai.health === 0) {
       winner = 'Player 2'
       gameOver = true
+
+      sockets.forEach(socket => {
+        socket.emit('game-over', { gameOver, winner })
+      })
     }
     if (ninja.health === 0) {
       winner = 'Player 1'
       gameOver = true
-    }
 
-    sockets.forEach(socket => {
-      socket.emit('game-over', { gameOver, winner })
-    })
+      sockets.forEach(socket => {
+        socket.emit('game-over', { gameOver, winner })
+      })
+    }
   })
 })
 

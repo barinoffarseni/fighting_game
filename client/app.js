@@ -173,7 +173,7 @@ gameObjects.push(new HealthBar({
     x: 50,
     y: 0
   },
-  vector: 1,
+  textureMirroring: 1,
   entity: ninja
 }))
 
@@ -182,7 +182,7 @@ gameObjects.push(new HealthBar({
     x: -50,
     y: 0
   },
-  vector: -1,
+  textureMirroring: -1,
   entity: samurai
 }))
 
@@ -302,8 +302,8 @@ socket.on('game-over', function (data) {
 })
 
 function update () {
-  samurai.vector = getFighterVector(samurai.position.x, ninja.position.x)
-  ninja.vector = getFighterVector(ninja.position.x, samurai.position.x)
+  samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
+  ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 
   if (checkAttackIsSuccess(samurai, ninja)) {
     socket.emit('take-hit', 'ninja')
@@ -372,7 +372,7 @@ function keydown (event) {
   }
 }
 
-function getFighterVector (x1, x2) {
+function getFighterTextureMirroring (x1, x2) {
   if (x1 >= x2) {
     return -1
   } else {

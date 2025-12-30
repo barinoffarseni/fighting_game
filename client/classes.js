@@ -92,7 +92,7 @@ class Fighter extends SpriteAnimated {
         y: 0
       }
     }
-    this.vector = 1
+    this.textureMirroring = 1
     this.isAttack = false
     this.attackFrame = attackFrame
     this.health = 100
@@ -112,7 +112,7 @@ class Fighter extends SpriteAnimated {
   }
 
   getAttackBoxPosition () {
-    if (this.vector > 0) {
+    if (this.textureMirroring > 0) {
       return {
         x: this.position.x + this.atackBox.offset.x,
         y: this.position.y + this.atackBox.offset.y
@@ -137,7 +137,7 @@ class Fighter extends SpriteAnimated {
         ctx.fillStyle = 'yellow'
       }
 
-      ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.vector, this.atackBox.height)
+      ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.textureMirroring, this.atackBox.height)
     }
   }
 
@@ -165,7 +165,7 @@ class Fighter extends SpriteAnimated {
     if ((this.state != this.newState && this.stateCanBeChanged) || this.restartState) {
       this.state = this.newState
 
-      if (this.vector < 0) {
+      if (this.textureMirroring < 0) {
         this.img.src = this.sprites[this.state].leftScr
         this.imgFrames = this.sprites[this.state].frames
       } else {
@@ -195,11 +195,11 @@ class Fighter extends SpriteAnimated {
   }
 
   setAttackBoxMinMaxPosition () {
-    if (this.vector > 0) {
+    if (this.textureMirroring > 0) {
       this.attackBoxXMin = this.getAttackBoxPosition().x
-      this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.vector
+      this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.textureMirroring
     } else {
-      this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.vector
+      this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.textureMirroring
       this.attackBoxXMax = this.getAttackBoxPosition().x
     }
   }
@@ -354,7 +354,7 @@ class Timer extends Indicator {
 }
 
 class HealthBar extends Indicator {
-  constructor ({ offset, vector, entity }) {
+  constructor ({ offset, textureMirroring, entity }) {
     super({
       position: {
         x: canvas.width / 2,
@@ -366,14 +366,14 @@ class HealthBar extends Indicator {
       offset
     })
     this.maxWidth = 417
-    this.vector = vector
+    this.textureMirroring = textureMirroring
     this.healthValue = 1
     this.entity = entity
   }
 
   render () {
     ctx.fillStyle = this.color
-    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.vector * this.healthValue, this.height)
+    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.textureMirroring * this.healthValue, this.height)
   }
 
   update () {

@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-const debug = false
+const debug = true
 
 const keys = {
   samurai: {

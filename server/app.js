@@ -11,7 +11,7 @@ const io = require('socket.io')(httpServer, {
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
-const debug = false
+const debug = true
 
 const users = []
 const gameObjects = []

@@ -283,7 +283,7 @@ socket.on('id', function (msg) {
   id = msg
 })
 
-socket.on('set-position-and-command', function (data) {
+socket.on('set-fighters-data', function (data) {
   samurai.position = data.samurai.position
   ninja.position = data.ninja.position
 

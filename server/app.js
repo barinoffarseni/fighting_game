@@ -42,7 +42,10 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
-      socket.emit('set-position-and-command', { ninja: { position: ninja.position, command: ninja.command }, samurai: { position: samurai.position, command: samurai.command } })
+      socket.emit('set-fighters-data', {
+        ninja: { position: ninja.position, command: ninja.command },
+        samurai: { position: samurai.position, command: samurai.command }
+      })
     })
 
     if (gameTimer.timeRemaining === 1) {
@@ -76,7 +79,10 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
-  socket.emit('set-position-and-command', { ninja: { position: ninja.position, command: ninja.command }, samurai: { position: samurai.position, command: samurai.command } })
+  socket.emit('set-fighters-data', {
+    ninja: { position: ninja.position, command: ninja.command },
+    samurai: { position: samurai.position, command: samurai.command }
+  })
 
   if (users.length > 0) {
     if (users[users.length - 1].type === 'samurai') {

@@ -11,13 +11,14 @@ const io = require('socket.io')(httpServer, {
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
-const debug = false
+const debug = true
 
 const users = []
 const gameObjects = []
 let gameOver = false
 let winner = ''
 let gameTimer = null
+let fightersData = []
 const samurai = new Fighter({
   position: {
     x: 0,
@@ -40,6 +41,19 @@ const ninja = new Fighter({
 })
 
 const sockets = []
+
+fightersData.push({
+  ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
+  samurai: { position: samurai.position, command: samurai.command, health: ninja.health }
+})
+
+if (debug) {
+  fightersData.push({
+    ninja: { attackBox: { position: ninja.attackBox.position } },
+    samurai: { attackBox: { position: samurai.attackBox.position } }
+  })
+}
+
 setInterval(() => {
   samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
   ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
@@ -47,22 +61,7 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
-      socket.emit('set-fighters-data', {
-        ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
-        samurai: { position: samurai.position, command: samurai.command, health: ninja.health }
-      })
-
-      if (debug) {
-        socket.emit('set-fighters-data', {
-          ninja: { position: ninja.position, command: ninja.command, health: ninja.health, attackBox: { position: ninja.attackBox.position } },
-          samurai: { position: samurai.position, command: samurai.command, health: samurai.health, attackBox: { position: samurai.attackBox.position } }
-        })
-      } else {
-        socket.emit('set-fighters-data', {
-          ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
-          samurai: { position: samurai.position, command: samurai.command, health: samurai.health }
-        })
-      }
+      socket.emit('set-fighters-data', { fightersData })
     })
 
     if (gameTimer.timeRemaining === 1) {

@@ -39,7 +39,7 @@ const ninja = new Fighter({
   }
 })
 
-let fightersData = []
+const fightersData = []
 const sockets = []
 setInterval(() => {
   samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
@@ -60,7 +60,7 @@ setInterval(() => {
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
-      socket.emit('set-fighters-data', fightersData )
+      socket.emit('set-fighters-data', fightersData)
     })
 
     if (gameTimer.timeRemaining === 1) {

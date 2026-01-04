@@ -83,15 +83,7 @@ class Fighter extends SpriteAnimated {
     this.velocity = velocity
     this.width = 50
     this.height = 150
-    this.attackBox = {
-      position: this.position,
-      width: 160,
-      height: 90,
-      offset: {
-        x: 80,
-        y: 0
-      }
-    }
+    this.attackBox
     this.textureMirroring = 1
     this.isAttack = false
     this.attackFrame = attackFrame
@@ -123,7 +115,7 @@ class Fighter extends SpriteAnimated {
         ctx.fillStyle = 'yellow'
       }
 
-      if (this.attackBox.position.x && this.attackBox.position.x) {
+      if (this.attackBox && this.attackBox) {
         ctx.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width * this.textureMirroring, this.attackBox.height)
       }
     }

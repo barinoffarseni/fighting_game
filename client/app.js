@@ -281,7 +281,6 @@ socket.on('id', function (msg) {
 })
 
 socket.on('set-fighters-data', function (data) {
-  console.log(data)
   samurai.health = data[0].samurai.health
   ninja.health = data[0].ninja.health
 
@@ -292,8 +291,8 @@ socket.on('set-fighters-data', function (data) {
   ninja.command = data[0].ninja.command
 
   if (debug && data[1].samurai.attackBox && data[1].ninja.attackBox) {
-    samurai.attackBox.position = data[1].samurai.attackBox.position
-    ninja.attackBox.position = data[1].ninja.attackBox.position
+    samurai.attackBox = data[1].samurai.attackBox
+    ninja.attackBox = data[1].ninja.attackBox
   }
 })
 

@@ -45,17 +45,15 @@ setInterval(() => {
   samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
   ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
 
-  fightersData.splice(0)
-
   fightersData.push({
     ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
-    samurai: { position: samurai.position, command: samurai.command, health: ninja.health }
+    samurai: { position: samurai.position, command: samurai.command, health: samurai.health }
   })
 
   if (debug) {
     fightersData.push({
-      ninja: { attackBox: { position: ninja.attackBox.position } },
-      samurai: { attackBox: { position: samurai.attackBox.position } }
+      ninja: { attackBox: ninja.attackBox },
+      samurai: { attackBox: samurai.attackBox }
     })
   }
 
@@ -83,6 +81,8 @@ setInterval(() => {
       })
     }
   }
+
+  fightersData.splice(0)
 
   gameObjects.forEach(gameObject => {
     gameObject.update()

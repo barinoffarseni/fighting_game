@@ -281,6 +281,7 @@ socket.on('id', function (msg) {
 })
 
 socket.on('set-fighters-data', function (data) {
+  console.log(data)
   samurai.health = data[0].samurai.health
   ninja.health = data[0].ninja.health
 

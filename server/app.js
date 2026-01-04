@@ -40,22 +40,24 @@ const ninja = new Fighter({
 })
 
 let fightersData = []
-fightersData.push({
-  ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
-  samurai: { position: samurai.position, command: samurai.command, health: ninja.health }
-})
-
-if (debug) {
-  fightersData.push({
-    ninja: { attackBox: { position: ninja.attackBox.position } },
-    samurai: { attackBox: { position: samurai.attackBox.position } }
-  })
-}
-
 const sockets = []
 setInterval(() => {
   samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
   ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
+
+  fightersData.splice(0)
+
+  fightersData.push({
+    ninja: { position: ninja.position, command: ninja.command, health: ninja.health },
+    samurai: { position: samurai.position, command: samurai.command, health: ninja.health }
+  })
+
+  if (debug) {
+    fightersData.push({
+      ninja: { attackBox: { position: ninja.attackBox.position } },
+      samurai: { attackBox: { position: samurai.attackBox.position } }
+    })
+  }
 
   if (gameTimer !== null) {
     sockets.forEach(socket => {
@@ -94,7 +96,7 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
-  socket.emit('set-fighters-data', { fightersData })
+  // socket.emit('set-fighters-data', fightersData )
 
   if (users.length > 0) {
     if (users[users.length - 1].type === 'samurai') {

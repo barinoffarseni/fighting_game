@@ -282,18 +282,18 @@ socket.on('id', function (msg) {
 
 socket.on('set-fighters-data', function (data) {
   console.log(data)
-  samurai.health = data[0].samurai.health
-  ninja.health = data[0].ninja.health
+  samurai.health = data.samurai.health
+  ninja.health = data.ninja.health
 
-  samurai.position = data[0].samurai.position
-  ninja.position = data[0].ninja.position
+  samurai.position = data.samurai.position
+  ninja.position = data.ninja.position
 
-  samurai.command = data[0].samurai.command
-  ninja.command = data[0].ninja.command
+  samurai.command = data.samurai.command
+  ninja.command = data.ninja.command
 
-  if (debug && data[1].samurai.attackBox && data[1].ninja.attackBox) {
-    samurai.attackBox = data[1].samurai.attackBox
-    ninja.attackBox = data[1].ninja.attackBox
+  if (debug && data.samurai.attackBox && data.ninja.attackBox) {
+    samurai.attackBox = data.samurai.attackBox
+    ninja.attackBox = data.ninja.attackBox
   }
 })
 

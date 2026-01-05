@@ -78,8 +78,6 @@ setInterval(() => {
     }
   }
 
-  // fightersData.splice(0)
-
   gameObjects.forEach(gameObject => {
     gameObject.update()
   })

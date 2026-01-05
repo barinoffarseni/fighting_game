@@ -11,6 +11,8 @@ const io = require('socket.io')(httpServer, {
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
+const debug = true
+
 const users = []
 const gameObjects = []
 let gameOver = false
@@ -37,15 +39,24 @@ const ninja = new Fighter({
   }
 })
 
+const fightersData = {}
 const sockets = []
 setInterval(() => {
+  samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
+  ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
+
+  fightersData.ninja = { position: ninja.position, command: ninja.command, health: ninja.health }
+  fightersData.samurai = { position: samurai.position, command: samurai.command, health: samurai.health }
+
+  if (debug) {
+    fightersData.ninja.attackBox = ninja.attackBox
+    fightersData.samurai.attackBox = samurai.attackBox
+  }
+
   if (gameTimer !== null) {
     sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
-      socket.emit('set-fighters-data', {
-        ninja: { position: ninja.position, command: ninja.command },
-        samurai: { position: samurai.position, command: samurai.command }
-      })
+      socket.emit('set-fighters-data', fightersData)
     })
 
     if (gameTimer.timeRemaining === 1) {
@@ -79,10 +90,7 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
-  socket.emit('set-fighters-data', {
-    ninja: { position: ninja.position, command: ninja.command },
-    samurai: { position: samurai.position, command: samurai.command }
-  })
+  socket.emit('set-fighters-data', fightersData)
 
   if (users.length > 0) {
     if (users[users.length - 1].type === 'samurai') {
@@ -91,30 +99,6 @@ io.on('connection', (socket) => {
       gameObjects.push(ninja)
     }
   }
-
-  socket.on('take-hit', (data) => {
-    if (data === 'ninja') {
-      ninja.health -= 10
-    } else {
-      samurai.health -= 10
-    }
-
-    if (samurai.health === 0) {
-      winner = 'Player 2'
-      gameOver = true
-
-      socket.emit('game-over', { gameOver, winner })
-    }
-
-    if (ninja.health === 0) {
-      winner = 'Player 1'
-      gameOver = true
-
-      socket.emit('game-over', { gameOver, winner })
-    }
-
-    socket.emit('set-health', { ninjaHealth: ninja.health, samuraiHealth: samurai.health })
-  })
 
   if (users.length > 2) {
     return
@@ -154,6 +138,9 @@ io.on('connection', (socket) => {
       if (data.command === 'up' && samurai.canJump) {
         samurai.velocity.y = -10
       }
+      if (data.command === 'attack') {
+        samurai.command = data.command
+      }
     }
     if (data.playerType === 'ninja') {
       if (data.command === 'right') {
@@ -171,6 +158,31 @@ io.on('connection', (socket) => {
       if (data.command === 'up' && ninja.canJump) {
         ninja.velocity.y = -10
       }
+      if (data.command === 'attack') {
+        ninja.command = data.command
+      }
+    }
+  })
+
+  socket.on('check-attack-is-success', (data) => {
+    if (data.attacker == 'samurai') {
+      checkAttackIsSuccess(samurai, ninja)
+    }
+    if (data.attacker == 'ninja') {
+      checkAttackIsSuccess(ninja, samurai)
+    }
+
+    if (samurai.health === 0) {
+      winner = 'Player 2'
+      gameOver = true
+
+      sendingTheWinnerToClients(gameOver, winner)
+    }
+    if (ninja.health === 0) {
+      winner = 'Player 1'
+      gameOver = true
+
+      sendingTheWinnerToClients(gameOver, winner)
     }
   })
 })
@@ -178,3 +190,37 @@ io.on('connection', (socket) => {
 httpServer.listen(3000, () => {
   console.log('listening on *:3000')
 })
+
+function checkAttackIsSuccess (attacker, victim) {
+  attacker.setAttackBoxMinMaxPosition()
+
+  xMin = victim.position.x
+  xMax = victim.position.x + victim.width
+  if (attacker.getAttackBoxPosition().y + attacker.attackBox.height >= victim.position.y) {
+    if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
+      victim.health -= 10
+    }
+
+    if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
+      victim.health -= 10
+    }
+
+    if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
+      victim.health -= 10
+    }
+  }
+}
+
+function getFighterAttackBoxPositionMirroring (x1, x2) {
+  if (x1 >= x2) {
+    return -1
+  } else {
+    return 1
+  }
+}
+
+function sendingTheWinnerToClients (gameOver, winner) {
+  sockets.forEach(socket => {
+    socket.emit('game-over', { gameOver, winner })
+  })
+}

@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-const debug = false
+const debug = true
 
 const keys = {
   samurai: {
@@ -256,10 +256,9 @@ function control () {
   }
 
   if (keys.samurai.s) {
-    samurai.attack = true
-  } else {
-    samurai.attack = false
+    socket.emit('set-move-command', { playerType: 'samurai', command: 'attack' })
   }
+
   if (keys.ninja.w) {
     socket.emit('set-move-command', { playerType: 'ninja', command: 'up' })
   }
@@ -273,9 +272,7 @@ function control () {
   }
 
   if (keys.ninja.s) {
-    ninja.attack = true
-  } else {
-    ninja.attack = false
+    socket.emit('set-move-command', { playerType: 'ninja', command: 'attack' })
   }
 }
 
@@ -284,11 +281,19 @@ socket.on('id', function (msg) {
 })
 
 socket.on('set-fighters-data', function (data) {
+  samurai.health = data.samurai.health
+  ninja.health = data.ninja.health
+
   samurai.position = data.samurai.position
   ninja.position = data.ninja.position
 
   samurai.command = data.samurai.command
   ninja.command = data.ninja.command
+
+  if (debug && data.samurai.attackBox && data.ninja.attackBox) {
+    samurai.attackBox = data.samurai.attackBox
+    ninja.attackBox = data.ninja.attackBox
+  }
 })
 
 socket.on('timer', function (data) {
@@ -305,12 +310,11 @@ function update () {
   samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
   ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 
-  if (checkAttackIsSuccess(samurai, ninja)) {
-    socket.emit('take-hit', 'ninja')
+  if (playerType == 'samurai') {
+    checkAttackIsSuccess(samurai)
   }
-
-  if (checkAttackIsSuccess(ninja, samurai)) {
-    socket.emit('take-hit', 'samurai')
+  if (playerType == 'ninja') {
+    checkAttackIsSuccess(ninja)
   }
 
   if (gameOver) {
@@ -321,11 +325,6 @@ function update () {
     gameObject.update()
   })
 }
-
-socket.on('set-health', function ({ samuraiHealth, ninjaHealth }) {
-  samurai.health = samuraiHealth
-  ninja.health = ninjaHealth
-})
 
 function render () {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -380,7 +379,7 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
-function checkAttackIsSuccess (attacker, victim) {
+function checkAttackIsSuccess(attacker) {
   if (attacker.state != 'attack1' && attacker.state != 'attack2') {
     return false
   }
@@ -390,23 +389,14 @@ function checkAttackIsSuccess (attacker, victim) {
   }
 
   if (attacker.framesElapsed % attacker.framesHold === 0) {
-    attacker.setAttackBoxMinMaxPosition()
+    socket.emit('check-attack-is-success', { attacker: playerType })
+  }
+}
 
-    xMin = victim.position.x
-    xMax = victim.position.x + victim.width
-
-    if (attacker.getAttackBoxPosition().y + attacker.atackBox.height >= victim.position.y) {
-      if (xMin < attacker.attackBoxXMin && xMax > attacker.attackBoxXMin) {
-        return true
-      }
-
-      if (xMin > attacker.attackBoxXMin && xMax < attacker.attackBoxXMax) {
-        return true
-      }
-
-      if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
-        return true
-      }
-    }
+function getFighterTextureMirroring (x1, x2) {
+  if (x1 >= x2) {
+    return -1
+  } else {
+    return 1
   }
 }

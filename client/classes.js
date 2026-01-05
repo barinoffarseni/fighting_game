@@ -83,46 +83,23 @@ class Fighter extends SpriteAnimated {
     this.velocity = velocity
     this.width = 50
     this.height = 150
-    this.atackBox = {
-      position: this.position,
-      width: 160,
-      height: 90,
-      offset: {
-        x: 80,
-        y: 0
-      }
-    }
     this.textureMirroring = 1
     this.isAttack = false
     this.attackFrame = attackFrame
     this.health = 100
     this.previousHealth = 100
     this.sprites = sprites
-    this.attack = false
     this.state = 'idle'
     this.newState = 'idle'
     this.stateCanBeChanged = true
     this.canJump = false
     this.restartState = false
     this.command = 'idle'
+    this.attackFrame = attackFrame
   }
 
   getPosition () {
     return this.position
-  }
-
-  getAttackBoxPosition () {
-    if (this.textureMirroring > 0) {
-      return {
-        x: this.position.x + this.atackBox.offset.x,
-        y: this.position.y + this.atackBox.offset.y
-      }
-    } else {
-      return {
-        x: this.position.x + this.width - this.atackBox.offset.x,
-        y: this.position.y + this.atackBox.offset.y
-      }
-    }
   }
 
   render () {
@@ -137,7 +114,9 @@ class Fighter extends SpriteAnimated {
         ctx.fillStyle = 'yellow'
       }
 
-      ctx.fillRect(this.getAttackBoxPosition().x, this.getAttackBoxPosition().y, this.atackBox.width * this.textureMirroring, this.atackBox.height)
+      if (this.attackBox && this.attackBox) {
+        ctx.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width * this.textureMirroring, this.attackBox.height)
+      }
     }
   }
 
@@ -194,16 +173,6 @@ class Fighter extends SpriteAnimated {
     }
   }
 
-  setAttackBoxMinMaxPosition () {
-    if (this.textureMirroring > 0) {
-      this.attackBoxXMin = this.getAttackBoxPosition().x
-      this.attackBoxXMax = this.getAttackBoxPosition().x + this.atackBox.width * this.textureMirroring
-    } else {
-      this.attackBoxXMin = this.getAttackBoxPosition().x + this.atackBox.width * this.textureMirroring
-      this.attackBoxXMax = this.getAttackBoxPosition().x
-    }
-  }
-
   freez () {
     this.velocity.x = 0
     if (this.velocity.y < 0) {
@@ -232,11 +201,11 @@ class Fighter extends SpriteAnimated {
         this.previousHealth = this.health
       }
 
-      if (this.attack) {
+      if (this.command === 'attack') {
         this.newState = 'attack1'
       }
 
-      if (this.state === 'attack1' && this.attack) {
+      if (this.state === 'attack1' && this.command === 'attack') {
         this.newState = 'attack2'
       }
 
@@ -411,7 +380,6 @@ class Button {
   }
 
   update () {
-    // исправиьь на добавление 1 эвент листенера
     if (gameOver) {
       canvas.addEventListener('click', function (event) {
         const rect = canvas.getBoundingClientRect()

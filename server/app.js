@@ -176,17 +176,13 @@ io.on('connection', (socket) => {
       winner = 'Player 2'
       gameOver = true
 
-      sockets.forEach(socket => {
-        socket.emit('game-over', { gameOver, winner })
-      })
+      sendingTheWinnerToClients (gameOver, winner)
     }
     if (ninja.health === 0) {
       winner = 'Player 1'
       gameOver = true
 
-      sockets.forEach(socket => {
-        socket.emit('game-over', { gameOver, winner })
-      })
+      sendingTheWinnerToClients (gameOver, winner)
     }
   })
 })
@@ -221,4 +217,10 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   } else {
     return 1
   }
+}
+
+function sendingTheWinnerToClients (gameOver, winner) {
+  sockets.forEach(socket => {
+    socket.emit('game-over', { gameOver, winner })
+  })
 }

@@ -90,7 +90,7 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
-  socket.emit('set-fighters-data', fightersData )
+  socket.emit('set-fighters-data', fightersData)
 
   if (users.length > 0) {
     if (users[users.length - 1].type === 'samurai') {

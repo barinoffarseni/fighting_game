@@ -176,13 +176,13 @@ io.on('connection', (socket) => {
       winner = 'Player 2'
       gameOver = true
 
-      sendingTheWinnerToClients (gameOver, winner)
+      sendingTheWinnerToClients(gameOver, winner)
     }
     if (ninja.health === 0) {
       winner = 'Player 1'
       gameOver = true
 
-      sendingTheWinnerToClients (gameOver, winner)
+      sendingTheWinnerToClients(gameOver, winner)
     }
   })
 })

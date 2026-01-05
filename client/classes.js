@@ -83,7 +83,6 @@ class Fighter extends SpriteAnimated {
     this.velocity = velocity
     this.width = 50
     this.height = 150
-    this.attackBox
     this.textureMirroring = 1
     this.isAttack = false
     this.attackFrame = attackFrame

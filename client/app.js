@@ -113,43 +113,43 @@ const ninja = new Fighter({
   },
   sprites: {
     idle: {
-      rightSrc: './img/kenji/Idle inverted.png',
-      leftScr: './img/kenji/Idle.png',
+      rightSrc: './img/ninja/Idle inverted.png',
+      leftScr: './img/ninja/Idle.png',
       frames: 4
     },
     run: {
-      rightSrc: './img/kenji/Run inverted.png',
-      leftScr: './img/kenji/Run.png',
+      rightSrc: './img/ninja/Run inverted.png',
+      leftScr: './img/ninja/Run.png',
       frames: 8
     },
     jump: {
-      rightSrc: './img/kenji/Jump inverted.png',
-      leftScr: './img/kenji/Jump.png',
+      rightSrc: './img/ninja/Jump inverted.png',
+      leftScr: './img/ninja/Jump.png',
       frames: 2
     },
     fall: {
-      rightSrc: './img/kenji/Fall inverted.png',
-      leftScr: './img/kenji/Fall.png',
+      rightSrc: './img/ninja/Fall inverted.png',
+      leftScr: './img/ninja/Fall.png',
       frames: 2
     },
     attack1: {
-      rightSrc: './img/kenji/Attack1 inverted.png',
-      leftScr: './img/kenji/Attack1.png',
+      rightSrc: './img/ninja/Attack1 inverted.png',
+      leftScr: './img/ninja/Attack1.png',
       frames: 4
     },
     attack2: {
-      rightSrc: './img/kenji/Attack2 inverted.png',
-      leftScr: './img/kenji/Attack2.png',
+      rightSrc: './img/ninja/Attack2 inverted.png',
+      leftScr: './img/ninja/Attack2.png',
       frames: 4
     },
     takeHit: {
-      rightSrc: './img/kenji/Take Hit inverted.png',
-      leftScr: './img/kenji/Take Hit.png',
+      rightSrc: './img/ninja/Take Hit inverted.png',
+      leftScr: './img/ninja/Take Hit.png',
       frames: 3
     },
     death: {
-      rightSrc: './img/kenji/Death inverted.png',
-      leftScr: './img/kenji/Death.png',
+      rightSrc: './img/ninja/Death inverted.png',
+      leftScr: './img/ninja/Death.png',
       frames: 7
     }
   },
@@ -289,7 +289,7 @@ function update () {
   if (gameOver) {
     timer.timeOut = true
   }
-  
+
   gameObjects.forEach(gameObject => {
     gameObject.update()
   })

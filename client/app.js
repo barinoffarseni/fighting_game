@@ -20,31 +20,7 @@ player.keys = {
 }
 
 const gameObjects = []
-
-gameObjects.push(new SpriteStatic({
-  position: {
-    x: 0,
-    y: 0
-  },
-  imgSrc: './img/background.png'
-}))
-
-gameObjects.push(new SpriteAnimated({
-  position: {
-    x: 650,
-    y: 173
-  },
-  imgSrc: './img/shop.png',
-  scale: 2.4,
-  framesHold: 10,
-  imgFrames: 6,
-  offset: {
-    x: 0,
-    y: 0
-  }
-}))
-
-const samurai = new Fighter({
+const samuraiData = {
   position: {
     x: 0,
     y: 0
@@ -100,9 +76,14 @@ const samurai = new Fighter({
     y: -155
   },
   attackFrame: 4
-})
+}
 
-const ninja = new Fighter({
+function getFighterScr (x1, x2) {
+  if ()
+}
+
+
+const ninjaData = {
   position: {
     x: canvas.width / 2,
     y: 0
@@ -158,7 +139,33 @@ const ninja = new Fighter({
     y: -170
   },
   attackFrame: 1
-})
+}
+
+gameObjects.push(new SpriteStatic({
+  position: {
+    x: 0,
+    y: 0
+  },
+  imgSrc: './img/background.png'
+}))
+
+gameObjects.push(new SpriteAnimated({
+  position: {
+    x: 650,
+    y: 173
+  },
+  imgSrc: './img/shop.png',
+  scale: 2.4,
+  framesHold: 10,
+  imgFrames: 6,
+  offset: {
+    x: 0,
+    y: 0
+  }
+}))
+
+const samurai = new Fighter(samuraiData)
+const ninja = new Fighter(ninjaData)
 
 gameObjects.push(new HealthBar({
   offset: {
@@ -370,3 +377,4 @@ function getFighterTextureMirroring (x1, x2) {
     return 1
   }
 }
+

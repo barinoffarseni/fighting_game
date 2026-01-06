@@ -8,23 +8,16 @@ let gameOver = false
 
 const debug = false
 
-const keys = {
-  samurai: {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-  },
-  ninja: {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-  }
-}
-
 let user = false
-let playerType = null
+let player = {}
+let enemy = {}
+
+player.keys = {
+    w: false,
+    a: false,
+    s: false,
+    d: false
+}
 
 const gameObjects = []
 
@@ -203,34 +196,27 @@ function gameLoop () {
 }
 
 function waitingForPlayers () {
-  socket.on('set-data', function ({ type, id, ninjaHealth, samuraiHealth }) {
+  socket.on('set-data', function ({ type, id }) {
     if (!user) {
       user = { type, id }
 
       if (user.type === 'samurai') {
         gameObjects.push(samurai)
 
-        samurai.health = samuraiHealth
-
-        playerType = 'samurai'
-        enemyType = 'ninja'
+        player.type = 'samurai'
+        enemy.type = 'ninja'
       }
 
       if (user.type === 'ninja') {
         gameObjects.push(ninja)
         gameObjects.push(samurai)
 
-        samurai.health = samuraiHealth
-        ninja.health = ninjaHealth
-
-        playerType = 'ninja'
-        enemyType = 'samurai'
+        player.type = 'ninja'
+        enemy.type = 'samurai'
       }
     } else {
       if (user.type === 'samurai') {
         gameObjects.push(ninja)
-
-        ninja.health = ninjaHealth
       }
     }
   })
@@ -241,42 +227,26 @@ function waitingForPlayers () {
 waitingForPlayers()
 
 function control () {
-  if (keys.samurai.w) {
-    socket.emit('set-move-command', { playerType: 'samurai', command: 'up' })
+  if (player.keys.w) {
+    socket.emit('set-move-command', { player: {type: player.type, command: 'up' }})
     // Ваня разобраться что тут set-move-command отправляется 60 раз в секунду
   }
 
-  if (keys.samurai.d) {
-    socket.emit('set-move-command', { playerType: 'samurai', command: 'right' })
+  if (player.keys.d) {
+    socket.emit('set-move-command', { player: {type: player.type, command: 'right' }})
   }
 
-  if (keys.samurai.a) {
-    socket.emit('set-move-command', { playerType: 'samurai', command: 'left' })
+  if (player.keys.a) {
+    socket.emit('set-move-command', { player: {type: player.type, command: 'left' }})
   }
 
-  if (keys.samurai.s) {
-    socket.emit('set-move-command', { playerType: 'samurai', command: 'attack' })
-  }
-
-  if (keys.ninja.w) {
-    socket.emit('set-move-command', { playerType: 'ninja', command: 'up' })
-  }
-
-  if (keys.ninja.d) {
-    socket.emit('set-move-command', { playerType: 'ninja', command: 'right' })
-  }
-
-  if (keys.ninja.a) {
-    socket.emit('set-move-command', { playerType: 'ninja', command: 'left' })
-  }
-
-  if (keys.ninja.s) {
-    socket.emit('set-move-command', { playerType: 'ninja', command: 'attack' })
+  if (player.keys.s) {
+    socket.emit('set-move-command', { player: {type: player.type, command: 'attack' }})
   }
 }
 
-socket.on('id', function (msg) {
-  id = msg
+socket.on('id', function (message) {
+  id = message
 })
 
 socket.on('set-fighters-data', function (data) {
@@ -309,17 +279,17 @@ function update () {
   samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
   ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 
-  if (playerType == 'samurai') {
+  if (player.type == 'samurai') {
     checkAttackIsSuccess(samurai)
   }
-  if (playerType == 'ninja') {
+  if (player.type == 'ninja') {
     checkAttackIsSuccess(ninja)
   }
 
   if (gameOver) {
     timer.timeOut = true
   }
-
+  
   gameObjects.forEach(gameObject => {
     gameObject.update()
   })
@@ -336,16 +306,16 @@ window.addEventListener('keyup', keyup)
 function keyup (event) {
   switch (event.key) {
     case 'd':
-      keys[playerType].d = false
+      player.keys.d = false
       break
     case 'a':
-      keys[playerType].a = false
+      player.keys.a = false
       break
     case 'w':
-      keys[playerType].w = false
+      player.keys.w = false
       break
     case 's':
-      keys[playerType].s = false
+      player.keys.s = false
       break
   }
 }
@@ -355,16 +325,16 @@ function keydown (event) {
   if (!gameOver) {
     switch (event.key) {
       case 'd':
-        keys[playerType].d = true
+        player.keys.d = true
         break
       case 'a':
-        keys[playerType].a = true
+        player.keys.a = true
         break
       case 'w':
-        keys[playerType].w = true
+        player.keys.w = true
         break
       case 's':
-        keys[playerType].s = true
+        player.keys.s = true
         break
     }
   }
@@ -388,7 +358,7 @@ function checkAttackIsSuccess(attacker) {
   }
 
   if (attacker.framesElapsed % attacker.framesHold === 0) {
-    socket.emit('check-attack-is-success', { attacker: playerType })
+    socket.emit('check-attack-is-success', { attacker: player.type })
   }
 }
 

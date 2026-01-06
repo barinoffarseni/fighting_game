@@ -118,44 +118,44 @@ io.on('connection', (socket) => {
   })
 
   socket.on('set-move-command', (data) => {
-    if (data.playerType === 'samurai') {
-      if (data.command === 'right') {
+    if (data.player.type === 'samurai') {
+      if (data.player.command === 'right') {
         samurai.velocity.x = 4
         if (samurai.canJump) {
-          samurai.command = data.command
+          samurai.command = data.player.command
         }
       }
-      if (data.command === 'left') {
+      if (data.player.command === 'left') {
         samurai.velocity.x = -4
         if (samurai.canJump) {
-          samurai.command = data.command
+          samurai.command = data.player.command
         }
       }
-      if (data.command === 'up' && samurai.canJump) {
+      if (data.player.command === 'up' && samurai.canJump) {
         samurai.velocity.y = -10
       }
-      if (data.command === 'attack') {
-        samurai.command = data.command
+      if (data.player.command === 'attack') {
+        samurai.command = data.player.command
       }
     }
-    if (data.playerType === 'ninja') {
-      if (data.command === 'right') {
+    if (data.player.type === 'ninja') {
+      if (data.player.command === 'right') {
         ninja.velocity.x = 4
         if (ninja.canJump) {
-          ninja.command = data.command
+          ninja.command = data.player.command
         }
       }
-      if (data.command === 'left') {
+      if (data.player.command === 'left') {
         ninja.velocity.x = -4
         if (ninja.canJump) {
-          ninja.command = data.command
+          ninja.command = data.player.command
         }
       }
-      if (data.command === 'up' && ninja.canJump) {
+      if (data.player.command === 'up' && ninja.canJump) {
         ninja.velocity.y = -10
       }
-      if (data.command === 'attack') {
-        ninja.command = data.command
+      if (data.player.command === 'attack') {
+        ninja.command = data.player.command
       }
     }
   })

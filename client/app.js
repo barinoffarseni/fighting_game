@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-const debug = true
+const debug = false
 
 const keys = {
   samurai: {
@@ -24,8 +24,7 @@ const keys = {
 }
 
 let user = false
-let playerType
-let enemyType
+let playerType = null
 
 const gameObjects = []
 
@@ -303,7 +302,7 @@ socket.on('timer', function (data) {
 
 socket.on('game-over', function (data) {
   winIndicator.winner = data.winner
-  gameOver = data.gameOver
+  gameOver = true
 })
 
 function update () {

@@ -11,11 +11,10 @@ const io = require('socket.io')(httpServer, {
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
-const debug = true
+const debug = false
 
 const users = []
 const gameObjects = []
-let gameOver = false
 let winner = ''
 let gameTimer = null
 const samurai = new Fighter({
@@ -62,19 +61,16 @@ setInterval(() => {
     if (gameTimer.timeRemaining === 1) {
       if (ninja.health > samurai.health) {
         winner = 'Player 2'
-        gameOver = true
+        sendingTheWinnerToClients ( winner )
       }
       if (samurai.health > ninja.health) {
         winner = 'Player 1'
-        gameOver = true
+        sendingTheWinnerToClients ( winner )
       }
       if (ninja.health === samurai.health) {
         gameTimer.timeRemaining += 9
         gameTimer.timeOut = false
       }
-      sockets.forEach(socket => {
-        socket.emit('game-over', { gameOver, winner })
-      })
     }
   }
 
@@ -174,15 +170,11 @@ io.on('connection', (socket) => {
 
     if (samurai.health === 0) {
       winner = 'Player 2'
-      gameOver = true
-
-      sendingTheWinnerToClients(gameOver, winner)
+      sendingTheWinnerToClients( winner )
     }
     if (ninja.health === 0) {
       winner = 'Player 1'
-      gameOver = true
-
-      sendingTheWinnerToClients(gameOver, winner)
+      sendingTheWinnerToClients( winner )
     }
   })
 })
@@ -219,8 +211,8 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   }
 }
 
-function sendingTheWinnerToClients (gameOver, winner) {
+function sendingTheWinnerToClients ( winner ) {
   sockets.forEach(socket => {
-    socket.emit('game-over', { gameOver, winner })
+    socket.emit('game-over', { winner })
   })
 }

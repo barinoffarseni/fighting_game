@@ -55,43 +55,43 @@ const samurai = new Fighter({
   },
   sprites: {
     idle: {
-      rightSrc: './img/samuraiMack/Idle.png',
-      leftScr: './img/samuraiMack/Idle inverted.png',
+      rightSrc: './img/samurai/Idle.png',
+      leftScr: './img/samurai/Idle inverted.png',
       frames: 8
     },
     run: {
-      rightSrc: './img/samuraiMack/Run.png',
-      leftScr: './img/samuraiMack/Run inverted.png',
+      rightSrc: './img/samurai/Run.png',
+      leftScr: './img/samurai/Run inverted.png',
       frames: 8
     },
     jump: {
-      rightSrc: './img/samuraiMack/Jump.png',
-      leftScr: './img/samuraiMack/Jump inverted.png',
+      rightSrc: './img/samurai/Jump.png',
+      leftScr: './img/samurai/Jump inverted.png',
       frames: 2
     },
     fall: {
-      rightSrc: './img/samuraiMack/Fall.png',
-      leftScr: './img/samuraiMack/Fall inverted.png',
+      rightSrc: './img/samurai/Fall.png',
+      leftScr: './img/samurai/Fall inverted.png',
       frames: 2
     },
     attack1: {
-      rightSrc: './img/samuraiMack/Attack1.png',
-      leftScr: './img/samuraiMack/Attack1 inverted.png',
+      rightSrc: './img/samurai/Attack1.png',
+      leftScr: './img/samurai/Attack1 inverted.png',
       frames: 6
     },
     attack2: {
-      rightSrc: './img/samuraiMack/Attack2.png',
-      leftScr: './img/samuraiMack/Attack2 inverted.png',
+      rightSrc: './img/samurai/Attack2.png',
+      leftScr: './img/samurai/Attack2 inverted.png',
       frames: 6
     },
     takeHit: {
-      rightSrc: './img/samuraiMack/Take Hit.png',
-      leftScr: './img/samuraiMack/Take Hit inverted.png',
+      rightSrc: './img/samurai/Take Hit.png',
+      leftScr: './img/samurai/Take Hit inverted.png',
       frames: 4
     },
     death: {
-      rightSrc: './img/samuraiMack/Death.png',
-      leftScr: './img/samuraiMack/Death inverted.png',
+      rightSrc: './img/samurai/Death.png',
+      leftScr: './img/samurai/Death inverted.png',
       frames: 6
     }
   },
@@ -285,6 +285,7 @@ function update () {
   if (player.type == 'ninja') {
     checkAttackIsSuccess(ninja)
   }
+  console.log()
 
   if (gameOver) {
     timer.timeOut = true

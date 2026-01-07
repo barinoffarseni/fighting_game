@@ -21,7 +21,6 @@ player.keys = {
 
 const gameObjects = []
 const samuraiData = {
-  name: 'samurai',
   position: {
     x: 0,
     y: 0
@@ -34,7 +33,7 @@ const samuraiData = {
     idle: {
       rightSrc: './img/samurai/Idle.png',
       leftScr: './img/samurai/Idle inverted.png',
-      frames: 8,
+      frames: 8
     },
     run: {
       rightSrc: './img/samurai/Run.png',
@@ -79,10 +78,8 @@ const samuraiData = {
   attackFrame: 4
 }
 
-// function getFighterScr (state, fighter) {
-for (const key of Object.keys(samuraiData.sprites)) {
-console.log(key);
-}
+// function getFighterScr (x1, x2) {
+//   if ()
 // }
 
 
@@ -286,7 +283,6 @@ socket.on('game-over', function (data) {
 })
 
 function update () {
-  // console.log(samuraiData.sprites.attack1)
   samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
   ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 
@@ -296,6 +292,7 @@ function update () {
   if (player.type == 'ninja') {
     checkAttackIsSuccess(ninja)
   }
+  console.log()
 
   if (gameOver) {
     timer.timeOut = true

@@ -81,7 +81,9 @@ const samuraiData = {
 
 // function getFighterScr (state, fighter) {
 for (const key of Object.keys(samuraiData.sprites)) {
-console.log(key);
+  samuraiData.sprites[key].leftScr = './img/samurai/' + key.replace(key[0], key[0].toUpperCase()) + ' inverted.png'
+  samuraiData.sprites[key].rightSrc = './img/samurai/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
+  console.log(samuraiData.sprites[key].rightSrc);
 }
 // }
 

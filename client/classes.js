@@ -70,7 +70,7 @@ class SpriteAnimated extends SpriteStatic {
 }
 
 class Fighter extends SpriteAnimated {
-  constructor ({ position, velocity, sprites, offset, attackFrame }) {
+  constructor ({ position, velocity, sprites, offset, attackFrame, name }) {
     super({
       position,
       imgSrc: './img/samurai/Idle.png',
@@ -96,6 +96,7 @@ class Fighter extends SpriteAnimated {
     this.restartState = false
     this.command = 'idle'
     this.attackFrame = attackFrame
+    this.name = name
   }
 
   getPosition () {
@@ -177,6 +178,13 @@ class Fighter extends SpriteAnimated {
     this.velocity.x = 0
     if (this.velocity.y < 0) {
       this.velocity.y = 0
+    }
+  }
+
+  getScr () {
+    for (const key of Object.keys(this.sprites)) {
+    this.sprites[key].leftScr = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + ' inverted.png'
+    this.sprites[key].rightSrc = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
     }
   }
 

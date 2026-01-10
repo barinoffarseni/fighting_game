@@ -129,14 +129,13 @@ gameObjects.push(new SpriteAnimated({
   }
 }))
 
-getScr(samuraiData.sprites, samuraiData.name)
-getScr(ninjaData.sprites, ninjaData.name)
-
 const samurai = new Fighter(samuraiData)
 const ninja = new Fighter(ninjaData)
 
-const fighter = Object.keys(samurai)
-console.log(fighter)
+samurai.getScr()
+ninja.getScr()
+
+console.log(samurai.sprites)
 
 gameObjects.push(new HealthBar({
   offset: {
@@ -347,11 +346,4 @@ function getFighterTextureMirroring (x1, x2) {
   } else {
     return 1
   }
-}
-
-function getScr (sprites, fighter) {
-    for (const key of Object.keys(sprites)) {
-    sprites[key].leftScr = './img/' + fighter + '/' + key.replace(key[0], key[0].toUpperCase()) + ' inverted.png'
-    sprites[key].rightSrc = './img/' + fighter + '/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
-    }
 }

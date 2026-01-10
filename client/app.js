@@ -21,7 +21,6 @@ player.keys = {
 
 const gameObjects = []
 const samuraiData = {
-  name: 'samurai',
   position: {
     x: 0,
     y: 0
@@ -32,43 +31,27 @@ const samuraiData = {
   },
   sprites: {
     idle: {
-      rightSrc: './img/samurai/Idle.png',
-      leftScr: './img/samurai/Idle inverted.png',
       frames: 8,
     },
     run: {
-      rightSrc: './img/samurai/Run.png',
-      leftScr: './img/samurai/Run inverted.png',
       frames: 8
     },
     jump: {
-      rightSrc: './img/samurai/Jump.png',
-      leftScr: './img/samurai/Jump inverted.png',
       frames: 2
     },
     fall: {
-      rightSrc: './img/samurai/Fall.png',
-      leftScr: './img/samurai/Fall inverted.png',
       frames: 2
     },
     attack1: {
-      rightSrc: './img/samurai/Attack1.png',
-      leftScr: './img/samurai/Attack1 inverted.png',
       frames: 6
     },
     attack2: {
-      rightSrc: './img/samurai/Attack2.png',
-      leftScr: './img/samurai/Attack2 inverted.png',
       frames: 6
     },
     takeHit: {
-      rightSrc: './img/samurai/Take Hit.png',
-      leftScr: './img/samurai/Take Hit inverted.png',
       frames: 4
     },
     death: {
-      rightSrc: './img/samurai/Death.png',
-      leftScr: './img/samurai/Death inverted.png',
       frames: 6
     }
   },
@@ -76,17 +59,9 @@ const samuraiData = {
     x: -215,
     y: -155
   },
-  attackFrame: 4
+  attackFrame: 4,
+  name: 'samurai'
 }
-
-// function getFighterScr (state, fighter) {
-for (const key of Object.keys(samuraiData.sprites)) {
-  samuraiData.sprites[key].leftScr = './img/samurai/' + key.replace(key[0], key[0].toUpperCase()) + ' inverted.png'
-  samuraiData.sprites[key].rightSrc = './img/samurai/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
-  console.log(samuraiData.sprites[key].rightSrc);
-}
-// }
-
 
 const ninjaData = {
   position: {
@@ -99,43 +74,27 @@ const ninjaData = {
   },
   sprites: {
     idle: {
-      rightSrc: './img/ninja/Idle inverted.png',
-      leftScr: './img/ninja/Idle.png',
       frames: 4
     },
     run: {
-      rightSrc: './img/ninja/Run inverted.png',
-      leftScr: './img/ninja/Run.png',
       frames: 8
     },
     jump: {
-      rightSrc: './img/ninja/Jump inverted.png',
-      leftScr: './img/ninja/Jump.png',
       frames: 2
     },
     fall: {
-      rightSrc: './img/ninja/Fall inverted.png',
-      leftScr: './img/ninja/Fall.png',
       frames: 2
     },
     attack1: {
-      rightSrc: './img/ninja/Attack1 inverted.png',
-      leftScr: './img/ninja/Attack1.png',
       frames: 4
     },
     attack2: {
-      rightSrc: './img/ninja/Attack2 inverted.png',
-      leftScr: './img/ninja/Attack2.png',
       frames: 4
     },
     takeHit: {
-      rightSrc: './img/ninja/Take Hit inverted.png',
-      leftScr: './img/ninja/Take Hit.png',
       frames: 3
     },
     death: {
-      rightSrc: './img/ninja/Death inverted.png',
-      leftScr: './img/ninja/Death.png',
       frames: 7
     }
   },
@@ -143,7 +102,8 @@ const ninjaData = {
     x: -215,
     y: -170
   },
-  attackFrame: 1
+  attackFrame: 1,
+  name: 'ninja'
 }
 
 gameObjects.push(new SpriteStatic({
@@ -169,8 +129,14 @@ gameObjects.push(new SpriteAnimated({
   }
 }))
 
+getScr(samuraiData.sprites, samuraiData.name)
+getScr(ninjaData.sprites, ninjaData.name)
+
 const samurai = new Fighter(samuraiData)
 const ninja = new Fighter(ninjaData)
+
+const fighter = Object.keys(samurai)
+console.log(fighter)
 
 gameObjects.push(new HealthBar({
   offset: {
@@ -383,3 +349,9 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
+function getScr (sprites, fighter) {
+    for (const key of Object.keys(sprites)) {
+    sprites[key].leftScr = './img/' + fighter + '/' + key.replace(key[0], key[0].toUpperCase()) + ' inverted.png'
+    sprites[key].rightSrc = './img/' + fighter + '/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
+    }
+}

@@ -132,11 +132,6 @@ gameObjects.push(new SpriteAnimated({
 const samurai = new Fighter(samuraiData)
 const ninja = new Fighter(ninjaData)
 
-samurai.getScr()
-ninja.getScr()
-
-console.log(ninja.sprites)
-
 gameObjects.push(new HealthBar({
   offset: {
     x: 50,
@@ -178,6 +173,8 @@ function waitingForPlayers () {
       user = { type, id }
 
       if (user.type === 'samurai') {
+        // player.samurai = new Fighter(samuraiData)
+
         gameObjects.push(samurai)
 
         player.type = 'samurai'
@@ -185,6 +182,9 @@ function waitingForPlayers () {
       }
 
       if (user.type === 'ninja') {
+        // player.ninja = new Fighter(samuraiData)
+        // enemy.samurai = new Fighter(samuraiData)
+
         gameObjects.push(ninja)
         gameObjects.push(samurai)
 
@@ -193,9 +193,14 @@ function waitingForPlayers () {
       }
     } else {
       if (user.type === 'samurai') {
+        // enemy.samurai = new Fighter(samuraiData)
+
         gameObjects.push(ninja)
       }
     }
+
+    // samurai.getScr()
+    // ninja.getScr()
   })
 
   gameLoop()
@@ -258,9 +263,6 @@ function update () {
 
   if (player.type == 'samurai') {
     checkAttackIsSuccess(samurai)
-  }
-  if (player.type == 'ninja') {
-    checkAttackIsSuccess(ninja)
   }
 
   if (gameOver) {

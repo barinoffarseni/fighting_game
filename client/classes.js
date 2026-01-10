@@ -97,6 +97,7 @@ class Fighter extends SpriteAnimated {
     this.command = 'idle'
     this.attackFrame = attackFrame
     this.name = name
+    this.getScr()
   }
 
   getPosition () {

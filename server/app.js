@@ -61,11 +61,11 @@ setInterval(() => {
     if (gameTimer.timeRemaining === 1) {
       if (ninja.health > samurai.health) {
         winner = 'Player 2'
-        sendingTheWinnerToClients ( winner )
+        sendingTheWinnerToClients(winner)
       }
       if (samurai.health > ninja.health) {
         winner = 'Player 1'
-        sendingTheWinnerToClients ( winner )
+        sendingTheWinnerToClients(winner)
       }
       if (ninja.health === samurai.health) {
         gameTimer.timeRemaining += 9
@@ -170,11 +170,11 @@ io.on('connection', (socket) => {
 
     if (samurai.health === 0) {
       winner = 'Player 2'
-      sendingTheWinnerToClients( winner )
+      sendingTheWinnerToClients(winner)
     }
     if (ninja.health === 0) {
       winner = 'Player 1'
-      sendingTheWinnerToClients( winner )
+      sendingTheWinnerToClients(winner)
     }
   })
 })
@@ -211,7 +211,7 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   }
 }
 
-function sendingTheWinnerToClients ( winner ) {
+function sendingTheWinnerToClients (winner) {
   sockets.forEach(socket => {
     socket.emit('game-over', { winner })
   })

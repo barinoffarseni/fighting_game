@@ -9,14 +9,14 @@ let gameOver = false
 const debug = false
 
 let user = false
-let player = {}
-let enemy = {}
+const player = {}
+const enemy = {}
 
 player.keys = {
-    w: false,
-    a: false,
-    s: false,
-    d: false
+  w: false,
+  a: false,
+  s: false,
+  d: false
 }
 
 const gameObjects = []
@@ -31,7 +31,7 @@ const samuraiData = {
   },
   sprites: {
     idle: {
-      frames: 8,
+      frames: 8
     },
     run: {
       frames: 8
@@ -207,20 +207,20 @@ waitingForPlayers()
 
 function control () {
   if (player.keys.w) {
-    socket.emit('set-move-command', { player: {type: player.type, command: 'up' }})
+    socket.emit('set-move-command', { player: { type: player.type, command: 'up' } })
     // Ваня разобраться что тут set-move-command отправляется 60 раз в секунду
   }
 
   if (player.keys.d) {
-    socket.emit('set-move-command', { player: {type: player.type, command: 'right' }})
+    socket.emit('set-move-command', { player: { type: player.type, command: 'right' } })
   }
 
   if (player.keys.a) {
-    socket.emit('set-move-command', { player: {type: player.type, command: 'left' }})
+    socket.emit('set-move-command', { player: { type: player.type, command: 'left' } })
   }
 
   if (player.keys.s) {
-    socket.emit('set-move-command', { player: {type: player.type, command: 'attack' }})
+    socket.emit('set-move-command', { player: { type: player.type, command: 'attack' } })
   }
 }
 
@@ -258,9 +258,8 @@ function update () {
   samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
   ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 
-  // if (player.type == 'samurai') {
   samurai.checkAttackIsSuccess()
-  // }
+  ninja.checkAttackIsSuccess()
 
   if (gameOver) {
     timer.timeOut = true

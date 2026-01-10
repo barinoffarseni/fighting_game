@@ -184,12 +184,12 @@ class Fighter extends SpriteAnimated {
 
   getScr () {
     for (const key of Object.keys(this.sprites)) {
-    this.sprites[key].leftScr = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + ' inverted.png'
-    this.sprites[key].rightSrc = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
+      this.sprites[key].leftScr = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + ' inverted.png'
+      this.sprites[key].rightSrc = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
     }
   }
 
-  checkAttackIsSuccess() {
+  checkAttackIsSuccess () {
     if (this.state != 'attack1' && this.state != 'attack2') {
       return false
     }

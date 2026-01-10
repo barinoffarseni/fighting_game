@@ -135,7 +135,7 @@ const ninja = new Fighter(ninjaData)
 samurai.getScr()
 ninja.getScr()
 
-console.log(samurai.sprites)
+console.log(ninja.sprites)
 
 gameObjects.push(new HealthBar({
   offset: {
@@ -253,7 +253,6 @@ socket.on('game-over', function (data) {
 })
 
 function update () {
-  // console.log(samuraiData.sprites.attack1)
   samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
   ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 

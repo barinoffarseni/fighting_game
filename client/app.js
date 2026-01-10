@@ -198,9 +198,6 @@ function waitingForPlayers () {
         gameObjects.push(ninja)
       }
     }
-
-    // samurai.getScr()
-    // ninja.getScr()
   })
 
   gameLoop()
@@ -261,9 +258,9 @@ function update () {
   samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
   ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
 
-  if (player.type == 'samurai') {
-    checkAttackIsSuccess(samurai)
-  }
+  // if (player.type == 'samurai') {
+  samurai.checkAttackIsSuccess()
+  // }
 
   if (gameOver) {
     timer.timeOut = true
@@ -327,24 +324,16 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
-function checkAttackIsSuccess(attacker) {
-  if (attacker.state != 'attack1' && attacker.state != 'attack2') {
-    return false
-  }
+// function checkAttackIsSuccess(attacker) {
+//   if (attacker.state != 'attack1' && attacker.state != 'attack2') {
+//     return false
+//   }
 
-  if (attacker.currentFrame != attacker.attackFrame) {
-    return false
-  }
+//   if (attacker.currentFrame != attacker.attackFrame) {
+//     return false
+//   }
 
-  if (attacker.framesElapsed % attacker.framesHold === 0) {
-    socket.emit('check-attack-is-success', { attacker: player.type })
-  }
-}
-
-function getFighterTextureMirroring (x1, x2) {
-  if (x1 >= x2) {
-    return -1
-  } else {
-    return 1
-  }
-}
+//   if (attacker.framesElapsed % attacker.framesHold === 0) {
+//     socket.emit('check-attack-is-success', { attacker: player.type })
+//   }
+// }

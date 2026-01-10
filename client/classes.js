@@ -189,6 +189,20 @@ class Fighter extends SpriteAnimated {
     }
   }
 
+  checkAttackIsSuccess() {
+    if (this.state != 'attack1' && this.state != 'attack2') {
+      return false
+    }
+
+    if (this.currentFrame != this.attackFrame) {
+      return false
+    }
+
+    if (this.framesElapsed % this.framesHold === 0) {
+      socket.emit('check-attack-is-success', { attacker: this.name })
+    }
+  }
+
   update () {
     if (this.state != 'death') {
       this.newState = 'idle'

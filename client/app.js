@@ -29,6 +29,21 @@ gameObjects.push(new SpriteStatic({
   imgSrc: './img/background.png'
 }))
 
+gameObjects.push(new SpriteAnimated({
+  position: {
+    x: 650,
+    y: 173
+  },
+  imgSrc: './img/shop.png',
+  scale: 2.4,
+  framesHold: 10,
+  imgFrames: 6,
+  offset: {
+    x: 0,
+    y: 0
+  }
+}))
+
 const samuraiData = {
   position: {
     x: 0,
@@ -114,21 +129,6 @@ const ninjaData = {
   attackFrame: 1,
   name: 'ninja'
 }
-
-gameObjects.push(new SpriteAnimated({
-  position: {
-    x: 650,
-    y: 173
-  },
-  imgSrc: './img/shop.png',
-  scale: 2.4,
-  framesHold: 10,
-  imgFrames: 6,
-  offset: {
-    x: 0,
-    y: 0
-  }
-}))
 
 const samurai = new Fighter(samuraiData)
 const ninja = new Fighter(ninjaData)

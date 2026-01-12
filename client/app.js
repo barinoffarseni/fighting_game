@@ -20,6 +20,15 @@ player.keys = {
 }
 
 const gameObjects = []
+
+gameObjects.push(new SpriteStatic({
+  position: {
+    x: 0,
+    y: 0
+  },
+  imgSrc: './img/background.png'
+}))
+
 const samuraiData = {
   position: {
     x: 0,
@@ -105,14 +114,6 @@ const ninjaData = {
   attackFrame: 1,
   name: 'ninja'
 }
-
-gameObjects.push(new SpriteStatic({
-  position: {
-    x: 0,
-    y: 0
-  },
-  imgSrc: './img/background.png'
-}))
 
 gameObjects.push(new SpriteAnimated({
   position: {

@@ -180,7 +180,6 @@ function waitingForPlayers () {
         enemy.type = 'ninja'
       }
       if (user.type === 'ninja') {
-
         gameObjects.push(ninja)
         gameObjects.push(samurai)
 
@@ -189,7 +188,6 @@ function waitingForPlayers () {
       }
     } else {
       if (user.type === 'samurai') {
-
         gameObjects.push(ninja)
       }
     }

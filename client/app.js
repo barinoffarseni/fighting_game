@@ -174,17 +174,12 @@ function waitingForPlayers () {
       user = { type, id }
 
       if (user.type === 'samurai') {
-        // player.samurai = new Fighter(samuraiData)
-
         gameObjects.push(samurai)
 
         player.type = 'samurai'
         enemy.type = 'ninja'
       }
-
       if (user.type === 'ninja') {
-        // player.ninja = new Fighter(samuraiData)
-        // enemy.samurai = new Fighter(samuraiData)
 
         gameObjects.push(ninja)
         gameObjects.push(samurai)
@@ -194,7 +189,6 @@ function waitingForPlayers () {
       }
     } else {
       if (user.type === 'samurai') {
-        // enemy.samurai = new Fighter(samuraiData)
 
         gameObjects.push(ninja)
       }
@@ -323,17 +317,3 @@ function getFighterTextureMirroring (x1, x2) {
     return 1
   }
 }
-
-// function checkAttackIsSuccess(attacker) {
-//   if (attacker.state != 'attack1' && attacker.state != 'attack2') {
-//     return false
-//   }
-
-//   if (attacker.currentFrame != attacker.attackFrame) {
-//     return false
-//   }
-
-//   if (attacker.framesElapsed % attacker.framesHold === 0) {
-//     socket.emit('check-attack-is-success', { attacker: player.type })
-//   }
-// }

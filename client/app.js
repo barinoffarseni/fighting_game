@@ -231,13 +231,14 @@ socket.on('id', function (message) {
 
 socket.on('set-fighters-data', function (data) {
   player[player.type].health = data[player.type].health
-  enemy[enemy.type].health = data[enemy.type].health
-
   player[player.type].position = data[player.type].position
-  enemy[enemy.type].position = data[enemy.type].position
-
   player[player.type].command = data[player.type].command
-  enemy[enemy.type].command = data[enemy.type].command
+  
+  if (enemy[enemy.type]) {
+    enemy[enemy.type].health = data[enemy.type].health
+    enemy[enemy.type].position = data[enemy.type].position
+    enemy[enemy.type].command = data[enemy.type].command
+  }
 
   if (debug && data[player.type].attackBox && data[enemy.type].attackBox) {
     player[player.type].attackBox = data[player.type].attackBox

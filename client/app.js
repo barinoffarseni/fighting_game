@@ -257,11 +257,9 @@ socket.on('game-over', function (data) {
 
 function update () {
   console.log(player)
-  if (player[player.type]) {
+  if (player[player.type] && enemy[enemy.type]) {
     player[player.type].textureMirroring = getFighterTextureMirroring(player[player.type].position.x, enemy[enemy.type].position.x)
-    if (enemy[enemy.type]) {
-      enemy[enemy.type].textureMirroring = getFighterTextureMirroring(enemy[enemy.type].position.x, player[player.type].position.x)
-    }
+    enemy[enemy.type].textureMirroring = getFighterTextureMirroring(enemy[enemy.type].position.x, player[player.type].position.x)
 
     player[player.type].checkAttackIsSuccess()
   }

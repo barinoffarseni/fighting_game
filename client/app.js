@@ -19,6 +19,9 @@ player.keys = {
   d: false
 }
 
+player.samurai = null
+player.type = null
+
 const gameObjects = []
 
 gameObjects.push(new SpriteStatic({
@@ -130,32 +133,8 @@ const ninjaData = {
   name: 'ninja'
 }
 
-const samurai = new Fighter(samuraiData)
-const ninja = new Fighter(ninjaData)
-
-gameObjects.push(new HealthBar({
-  offset: {
-    x: 50,
-    y: 0
-  },
-  textureMirroring: 1,
-  entity: ninja
-}))
-
-gameObjects.push(new HealthBar({
-  offset: {
-    x: -50,
-    y: 0
-  },
-  textureMirroring: -1,
-  entity: samurai
-}))
-
 const timer = new Timer()
 gameObjects.push(timer)
-
-const winIndicator = new WinIndicator(samurai, ninja, timer)
-gameObjects.push(winIndicator)
 
 const restartButton = new Button()
 gameObjects.push(restartButton)
@@ -174,24 +153,53 @@ function waitingForPlayers () {
       user = { type, id }
 
       if (user.type === 'samurai') {
-        gameObjects.push(samurai)
+        player.samurai = new Fighter(samuraiData)
+        // console.log(player.samurai)
+
+        gameObjects.push(player.samurai)
 
         player.type = 'samurai'
         enemy.type = 'ninja'
       }
       if (user.type === 'ninja') {
-        gameObjects.push(ninja)
-        gameObjects.push(samurai)
+        player.ninja = new Fighter(ninjaData)
+        enemy.samurai = new Fighter(samuraiData)
+
+        gameObjects.push(player.ninja)
+        gameObjects.push(enemy.samurai)
 
         player.type = 'ninja'
         enemy.type = 'samurai'
       }
     } else {
       if (user.type === 'samurai') {
-        gameObjects.push(ninja)
+        enemy.ninja = new Fighter(ninjaData)
+
+        gameObjects.push(enemy.ninja)
       }
     }
   })
+
+  // gameObjects.push(new HealthBar({
+  // offset: {
+  //   x: 50,
+  //   y: 0
+  // },
+  // textureMirroring: 1,
+  // entity: ninja
+  // }))
+
+  // gameObjects.push(new HealthBar({
+  // offset: {
+  //   x: -50,
+  //   y: 0
+  // },
+  // textureMirroring: -1,
+  // entity: samurai
+  // }))
+
+  // const winIndicator = new WinIndicator(samurai, ninja, timer)
+  // gameObjects.push(winIndicator)
 
   gameLoop()
 }
@@ -222,18 +230,18 @@ socket.on('id', function (message) {
 })
 
 socket.on('set-fighters-data', function (data) {
-  samurai.health = data.samurai.health
-  ninja.health = data.ninja.health
+  player[player.type].health = data[player.type].health
+  enemy[enemy.type].health = data[enemy.type].health
 
-  samurai.position = data.samurai.position
-  ninja.position = data.ninja.position
+  player[player.type].position = data[player.type].position
+  enemy[enemy.type].position = data[enemy.type].position
 
-  samurai.command = data.samurai.command
-  ninja.command = data.ninja.command
+  player[player.type].command = data[player.type].command
+  enemy[enemy.type].command = data[enemy.type].command
 
-  if (debug && data.samurai.attackBox && data.ninja.attackBox) {
-    samurai.attackBox = data.samurai.attackBox
-    ninja.attackBox = data.ninja.attackBox
+  if (debug && data[player.type].attackBox && data[enemy.type].attackBox) {
+    player[player.type].attackBox = data[player.type].attackBox
+    enemy[enemy.type].attackBox = data[enemy.type].attackBox
   }
 })
 
@@ -248,11 +256,15 @@ socket.on('game-over', function (data) {
 })
 
 function update () {
-  samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
-  ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
+  console.log(player)
+  if (player[player.type]) {
+    player[player.type].textureMirroring = getFighterTextureMirroring(player[player.type].position.x, enemy[enemy.type].position.x)
+    if (enemy[enemy.type]) {
+      enemy[enemy.type].textureMirroring = getFighterTextureMirroring(enemy[enemy.type].position.x, player[player.type].position.x)
+    }
 
-  samurai.checkAttackIsSuccess()
-  ninja.checkAttackIsSuccess()
+    player[player.type].checkAttackIsSuccess()
+  }
 
   if (gameOver) {
     timer.timeOut = true

@@ -153,6 +153,9 @@ gameObjects.push(timer)
 const restartButton = new Button()
 gameObjects.push(restartButton)
 
+const winIndicator = new WinIndicator()
+gameObjects.push(winIndicator)
+
 function gameLoop () {
   control()
   update()
@@ -203,9 +206,6 @@ function waitingForPlayers () {
       gameObjects.push(new HealthBar(rightHealthBar))
     }
   })
-
-  // const winIndicator = new WinIndicator(samurai, ninja, timer)
-  // gameObjects.push(winIndicator)
 
   gameLoop()
 }

@@ -369,7 +369,6 @@ class HealthBar extends Indicator {
   }
 
   update () {
-    console.log(this.entity.health)
     this.healthValue = (this.entity.health * 100) / 10000
   }
 }

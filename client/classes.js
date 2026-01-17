@@ -86,7 +86,6 @@ class Fighter extends SpriteAnimated {
     this.textureMirroring = 1
     this.isAttack = false
     this.attackFrame = attackFrame
-    this.health = 100
     this.previousHealth = 100
     this.sprites = sprites
     this.state = 'idle'

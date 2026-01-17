@@ -236,11 +236,10 @@ socket.on('id', function (message) {
 })
 
 socket.on('set-fighters-data', function (data) {
-  if (player[player.type]) {
-    player[player.type].health = data[player.type].health
-    player[player.type].position = data[player.type].position
-    player[player.type].command = data[player.type].command
-  }
+  player[player.type].health = data[player.type].health
+  player[player.type].position = data[player.type].position
+  player[player.type].command = data[player.type].command
+
 
   if (enemy[enemy.type]) {
     enemy[enemy.type].health = data[enemy.type].health

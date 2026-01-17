@@ -132,6 +132,20 @@ const ninjaData = {
   attackFrame: 1,
   name: 'ninja'
 }
+const rihgtHealthBar = {
+  offset: {
+    x: 50,
+    y: 0
+  },
+  textureMirroring: 1
+}
+const leftHealthBar = {
+  offset: {
+    x: -50,
+    y: 0
+  },
+  textureMirroring: -1
+}
 
 const timer = new Timer()
 gameObjects.push(timer)
@@ -154,7 +168,8 @@ function waitingForPlayers () {
 
       if (user.type === 'samurai') {
         player.samurai = new Fighter(samuraiData)
-        // console.log(player.samurai)
+
+        rihgtHealthBar.entity = player.samurai
 
         gameObjects.push(player.samurai)
 
@@ -164,6 +179,9 @@ function waitingForPlayers () {
       if (user.type === 'ninja') {
         player.ninja = new Fighter(ninjaData)
         enemy.samurai = new Fighter(samuraiData)
+
+        leftHealthBar.entity = player.ninja
+        rihgtHealthBar.entity = enemy.samurai
 
         gameObjects.push(player.ninja)
         gameObjects.push(enemy.samurai)
@@ -175,28 +193,16 @@ function waitingForPlayers () {
       if (user.type === 'samurai') {
         enemy.ninja = new Fighter(ninjaData)
 
+        leftHealthBar.entity = enemy.ninja
+
         gameObjects.push(enemy.ninja)
       }
     }
+    if (player[player.type] && enemy[enemy.type]) {
+      gameObjects.push(new HealthBar(rihgtHealthBar))
+      gameObjects.push(new HealthBar(leftHealthBar))
+    }
   })
-
-  // gameObjects.push(new HealthBar({
-  // offset: {
-  //   x: 50,
-  //   y: 0
-  // },
-  // textureMirroring: 1,
-  // entity: ninja
-  // }))
-
-  // gameObjects.push(new HealthBar({
-  // offset: {
-  //   x: -50,
-  //   y: 0
-  // },
-  // textureMirroring: -1,
-  // entity: samurai
-  // }))
 
   // const winIndicator = new WinIndicator(samurai, ninja, timer)
   // gameObjects.push(winIndicator)
@@ -230,10 +236,12 @@ socket.on('id', function (message) {
 })
 
 socket.on('set-fighters-data', function (data) {
-  player[player.type].health = data[player.type].health
-  player[player.type].position = data[player.type].position
-  player[player.type].command = data[player.type].command
-  
+  if (player[player.type]) {
+    player[player.type].health = data[player.type].health
+    player[player.type].position = data[player.type].position
+    player[player.type].command = data[player.type].command
+  }
+
   if (enemy[enemy.type]) {
     enemy[enemy.type].health = data[enemy.type].health
     enemy[enemy.type].position = data[enemy.type].position
@@ -257,7 +265,6 @@ socket.on('game-over', function (data) {
 })
 
 function update () {
-  console.log(player)
   if (player[player.type] && enemy[enemy.type]) {
     player[player.type].textureMirroring = getFighterTextureMirroring(player[player.type].position.x, enemy[enemy.type].position.x)
     enemy[enemy.type].textureMirroring = getFighterTextureMirroring(enemy[enemy.type].position.x, player[player.type].position.x)

@@ -132,7 +132,7 @@ const ninjaData = {
   attackFrame: 1,
   name: 'ninja'
 }
-const rihgtHealthBar = {
+const rightHealthBar = {
   offset: {
     x: 50,
     y: 0
@@ -169,7 +169,7 @@ function waitingForPlayers () {
       if (user.type === 'samurai') {
         player.samurai = new Fighter(samuraiData)
 
-        rihgtHealthBar.entity = player.samurai
+        leftHealthBar.entity = player.samurai
 
         gameObjects.push(player.samurai)
 
@@ -180,8 +180,8 @@ function waitingForPlayers () {
         player.ninja = new Fighter(ninjaData)
         enemy.samurai = new Fighter(samuraiData)
 
-        leftHealthBar.entity = player.ninja
-        rihgtHealthBar.entity = enemy.samurai
+        rightHealthBar.entity = player.ninja
+        leftHealthBar.entity = enemy.samurai
 
         gameObjects.push(player.ninja)
         gameObjects.push(enemy.samurai)
@@ -193,14 +193,14 @@ function waitingForPlayers () {
       if (user.type === 'samurai') {
         enemy.ninja = new Fighter(ninjaData)
 
-        leftHealthBar.entity = enemy.ninja
+        rightHealthBar.entity = enemy.ninja
 
         gameObjects.push(enemy.ninja)
       }
     }
-    if (player[player.type] && enemy[enemy.type]) {
-      gameObjects.push(new HealthBar(rihgtHealthBar))
-      gameObjects.push(new HealthBar(leftHealthBar))
+    gameObjects.push(new HealthBar(leftHealthBar))
+    if (enemy[enemy.type]) {
+      gameObjects.push(new HealthBar(rightHealthBar))
     }
   })
 

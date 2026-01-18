@@ -48,10 +48,6 @@ gameObjects.push(new SpriteAnimated({
 }))
 
 const samuraiData = {
-  position: {
-    x: 0,
-    y: 0
-  },
   velocity: {
     x: 0,
     y: 0
@@ -89,12 +85,10 @@ const samuraiData = {
   attackFrame: 4,
   name: 'samurai'
 }
+samuraiData.position = await Promise.setFightersPosition(samuraiData)
+
 
 const ninjaData = {
-  position: {
-    x: canvas.width / 2,
-    y: 0
-  },
   velocity: {
     x: 0,
     y: 0
@@ -332,3 +326,12 @@ function getFighterTextureMirroring (x1, x2) {
     return 1
   }
 }
+
+async function setFightersPosition(player) {
+  socket.on('set-fighters-data', function (data, player) {
+    return (let position = data[player].position)
+  })
+}
+// async function hello() {
+//   return (greeting = await Promise.resolve("Hello"));
+// }

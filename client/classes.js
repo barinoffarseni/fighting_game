@@ -70,7 +70,7 @@ class SpriteAnimated extends SpriteStatic {
 }
 
 class Fighter extends SpriteAnimated {
-  constructor ({ position, velocity, sprites, offset, attackFrame, name }) {
+  constructor ({ velocity, sprites, offset, attackFrame, name, position }) {
     super({
       position,
       imgSrc: './img/samurai/Idle.png',

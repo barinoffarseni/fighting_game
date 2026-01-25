@@ -163,27 +163,20 @@ function waitingForPlayers () {
       user = { type, id }
 
       if (user.type === 'samurai') {
-        // leftHealthBar.entity = player.samurai
-
         player.type = 'samurai'
       }
       if (user.type === 'ninja') {
-        // rightHealthBarData.entity = player.ninja
-        // leftHealthBarData.entity = enemy.samurai
-
         player.type = 'ninja'
         enemy.type = 'samurai'
       }
     } else {
       if (user.type === 'samurai') {
-        // rightHealthBarData.entity = enemy.ninja
-
         enemy.type = 'ninja'
       }
     }
 
-  setFighter(player, leftHealthBarData, rightHealthBarData)
-  setFighter(enemy, leftHealthBarData, rightHealthBarData)
+    setFighter(player, leftHealthBarData, rightHealthBarData)
+    setFighter(enemy, leftHealthBarData, rightHealthBarData)
   })
 
   gameLoop()
@@ -215,7 +208,7 @@ socket.on('id', function (message) {
 })
 
 socket.on('set-fighters-data', function (data) {
-  if (enemy[enemy.type]) {
+  if (player[player.type]) {
     player[player.type].health = data[player.type].health
     player[player.type].position = data[player.type].position
     player[player.type].command = data[player.type].command
@@ -319,7 +312,7 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
-function setFighter(player, leftHealthBarData, rightHealthBarData) {
+function setFighter (player, leftHealthBarData, rightHealthBarData) {
   const intervalId = setInterval(() => {
     if (!player[player.type]) {
       if (player.type == 'samurai' && samuraiData.position) {

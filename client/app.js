@@ -6,26 +6,21 @@ canvas.height = 576
 
 let gameOver = false
 
-const debug = true
-
-const keys = {
-  samurai: {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-  },
-  ninja: {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-  }
-}
+const debug = false
 
 let user = false
-let playerType
-let enemyType
+const player = {}
+const enemy = {}
+
+player.keys = {
+  w: false,
+  a: false,
+  s: false,
+  d: false
+}
+
+player.samurai = null
+player.type = null
 
 const gameObjects = []
 
@@ -52,54 +47,34 @@ gameObjects.push(new SpriteAnimated({
   }
 }))
 
-const samurai = new Fighter({
-  position: {
-    x: 0,
-    y: 0
-  },
+const samuraiData = {
   velocity: {
     x: 0,
     y: 0
   },
   sprites: {
     idle: {
-      rightSrc: './img/samuraiMack/Idle.png',
-      leftScr: './img/samuraiMack/Idle inverted.png',
       frames: 8
     },
     run: {
-      rightSrc: './img/samuraiMack/Run.png',
-      leftScr: './img/samuraiMack/Run inverted.png',
       frames: 8
     },
     jump: {
-      rightSrc: './img/samuraiMack/Jump.png',
-      leftScr: './img/samuraiMack/Jump inverted.png',
       frames: 2
     },
     fall: {
-      rightSrc: './img/samuraiMack/Fall.png',
-      leftScr: './img/samuraiMack/Fall inverted.png',
       frames: 2
     },
     attack1: {
-      rightSrc: './img/samuraiMack/Attack1.png',
-      leftScr: './img/samuraiMack/Attack1 inverted.png',
       frames: 6
     },
     attack2: {
-      rightSrc: './img/samuraiMack/Attack2.png',
-      leftScr: './img/samuraiMack/Attack2 inverted.png',
       frames: 6
     },
     takeHit: {
-      rightSrc: './img/samuraiMack/Take Hit.png',
-      leftScr: './img/samuraiMack/Take Hit inverted.png',
       frames: 4
     },
     death: {
-      rightSrc: './img/samuraiMack/Death.png',
-      leftScr: './img/samuraiMack/Death inverted.png',
       frames: 6
     }
   },
@@ -107,57 +82,38 @@ const samurai = new Fighter({
     x: -215,
     y: -155
   },
-  attackFrame: 4
-})
+  attackFrame: 4,
+  name: 'samurai'
+}
 
-const ninja = new Fighter({
-  position: {
-    x: canvas.width / 2,
-    y: 0
-  },
+const ninjaData = {
   velocity: {
     x: 0,
     y: 0
   },
   sprites: {
     idle: {
-      rightSrc: './img/kenji/Idle inverted.png',
-      leftScr: './img/kenji/Idle.png',
       frames: 4
     },
     run: {
-      rightSrc: './img/kenji/Run inverted.png',
-      leftScr: './img/kenji/Run.png',
       frames: 8
     },
     jump: {
-      rightSrc: './img/kenji/Jump inverted.png',
-      leftScr: './img/kenji/Jump.png',
       frames: 2
     },
     fall: {
-      rightSrc: './img/kenji/Fall inverted.png',
-      leftScr: './img/kenji/Fall.png',
       frames: 2
     },
     attack1: {
-      rightSrc: './img/kenji/Attack1 inverted.png',
-      leftScr: './img/kenji/Attack1.png',
       frames: 4
     },
     attack2: {
-      rightSrc: './img/kenji/Attack2 inverted.png',
-      leftScr: './img/kenji/Attack2.png',
       frames: 4
     },
     takeHit: {
-      rightSrc: './img/kenji/Take Hit inverted.png',
-      leftScr: './img/kenji/Take Hit.png',
       frames: 3
     },
     death: {
-      rightSrc: './img/kenji/Death inverted.png',
-      leftScr: './img/kenji/Death.png',
       frames: 7
     }
   },
@@ -165,35 +121,33 @@ const ninja = new Fighter({
     x: -215,
     y: -170
   },
-  attackFrame: 1
-})
+  attackFrame: 1,
+  name: 'ninja'
+}
 
-gameObjects.push(new HealthBar({
+const rightHealthBarData = {
   offset: {
     x: 50,
     y: 0
   },
-  textureMirroring: 1,
-  entity: ninja
-}))
-
-gameObjects.push(new HealthBar({
+  textureMirroring: 1
+}
+const leftHealthBarData = {
   offset: {
     x: -50,
     y: 0
   },
-  textureMirroring: -1,
-  entity: samurai
-}))
+  textureMirroring: -1
+}
 
 const timer = new Timer()
 gameObjects.push(timer)
 
-const winIndicator = new WinIndicator(samurai, ninja, timer)
-gameObjects.push(winIndicator)
-
 const restartButton = new Button()
 gameObjects.push(restartButton)
+
+const winIndicator = new WinIndicator()
+gameObjects.push(winIndicator)
 
 function gameLoop () {
   control()
@@ -204,36 +158,25 @@ function gameLoop () {
 }
 
 function waitingForPlayers () {
-  socket.on('set-data', function ({ type, id, ninjaHealth, samuraiHealth }) {
+  socket.on('set-data', function ({ type, id }) {
     if (!user) {
       user = { type, id }
 
       if (user.type === 'samurai') {
-        gameObjects.push(samurai)
-
-        samurai.health = samuraiHealth
-
-        playerType = 'samurai'
-        enemyType = 'ninja'
+        player.type = 'samurai'
       }
-
       if (user.type === 'ninja') {
-        gameObjects.push(ninja)
-        gameObjects.push(samurai)
-
-        samurai.health = samuraiHealth
-        ninja.health = ninjaHealth
-
-        playerType = 'ninja'
-        enemyType = 'samurai'
+        player.type = 'ninja'
+        enemy.type = 'samurai'
       }
     } else {
       if (user.type === 'samurai') {
-        gameObjects.push(ninja)
-
-        ninja.health = ninjaHealth
+        enemy.type = 'ninja'
       }
     }
+
+    setFighter(player, leftHealthBarData, rightHealthBarData)
+    setFighter(enemy, leftHealthBarData, rightHealthBarData)
   })
 
   gameLoop()
@@ -242,57 +185,44 @@ function waitingForPlayers () {
 waitingForPlayers()
 
 function control () {
-  if (keys.samurai.w) {
-    socket.emit('set-move-command', { playerType: 'samurai', command: 'up' })
+  if (player.keys.w) {
+    socket.emit('set-move-command', { player: { type: player.type, command: 'up' } })
     // Ваня разобраться что тут set-move-command отправляется 60 раз в секунду
   }
 
-  if (keys.samurai.d) {
-    socket.emit('set-move-command', { playerType: 'samurai', command: 'right' })
+  if (player.keys.d) {
+    socket.emit('set-move-command', { player: { type: player.type, command: 'right' } })
   }
 
-  if (keys.samurai.a) {
-    socket.emit('set-move-command', { playerType: 'samurai', command: 'left' })
+  if (player.keys.a) {
+    socket.emit('set-move-command', { player: { type: player.type, command: 'left' } })
   }
 
-  if (keys.samurai.s) {
-    socket.emit('set-move-command', { playerType: 'samurai', command: 'attack' })
-  }
-
-  if (keys.ninja.w) {
-    socket.emit('set-move-command', { playerType: 'ninja', command: 'up' })
-  }
-
-  if (keys.ninja.d) {
-    socket.emit('set-move-command', { playerType: 'ninja', command: 'right' })
-  }
-
-  if (keys.ninja.a) {
-    socket.emit('set-move-command', { playerType: 'ninja', command: 'left' })
-  }
-
-  if (keys.ninja.s) {
-    socket.emit('set-move-command', { playerType: 'ninja', command: 'attack' })
+  if (player.keys.s) {
+    socket.emit('set-move-command', { player: { type: player.type, command: 'attack' } })
   }
 }
 
-socket.on('id', function (msg) {
-  id = msg
+socket.on('id', function (message) {
+  id = message
 })
 
 socket.on('set-fighters-data', function (data) {
-  samurai.health = data.samurai.health
-  ninja.health = data.ninja.health
+  if (player[player.type]) {
+    player[player.type].health = data[player.type].health
+    player[player.type].position = data[player.type].position
+    player[player.type].command = data[player.type].command
+  }
 
-  samurai.position = data.samurai.position
-  ninja.position = data.ninja.position
+  if (enemy[enemy.type]) {
+    enemy[enemy.type].health = data[enemy.type].health
+    enemy[enemy.type].position = data[enemy.type].position
+    enemy[enemy.type].command = data[enemy.type].command
+  }
 
-  samurai.command = data.samurai.command
-  ninja.command = data.ninja.command
-
-  if (debug && data.samurai.attackBox && data.ninja.attackBox) {
-    samurai.attackBox = data.samurai.attackBox
-    ninja.attackBox = data.ninja.attackBox
+  if (debug && data[player.type].attackBox && data[enemy.type].attackBox) {
+    player[player.type].attackBox = data[player.type].attackBox
+    enemy[enemy.type].attackBox = data[enemy.type].attackBox
   }
 })
 
@@ -303,18 +233,21 @@ socket.on('timer', function (data) {
 
 socket.on('game-over', function (data) {
   winIndicator.winner = data.winner
-  gameOver = data.gameOver
+  gameOver = true
+})
+
+socket.on('set-fighters-data', function (data) {
+  samuraiData.position = data.samurai.position
+
+  ninjaData.position = data.ninja.position
 })
 
 function update () {
-  samurai.textureMirroring = getFighterTextureMirroring(samurai.position.x, ninja.position.x)
-  ninja.textureMirroring = getFighterTextureMirroring(ninja.position.x, samurai.position.x)
+  if (player[player.type] && enemy[enemy.type]) {
+    player[player.type].textureMirroring = getFighterTextureMirroring(player[player.type].position.x, enemy[enemy.type].position.x)
+    enemy[enemy.type].textureMirroring = getFighterTextureMirroring(enemy[enemy.type].position.x, player[player.type].position.x)
 
-  if (playerType == 'samurai') {
-    checkAttackIsSuccess(samurai)
-  }
-  if (playerType == 'ninja') {
-    checkAttackIsSuccess(ninja)
+    player[player.type].checkAttackIsSuccess()
   }
 
   if (gameOver) {
@@ -337,16 +270,16 @@ window.addEventListener('keyup', keyup)
 function keyup (event) {
   switch (event.key) {
     case 'd':
-      keys[playerType].d = false
+      player.keys.d = false
       break
     case 'a':
-      keys[playerType].a = false
+      player.keys.a = false
       break
     case 'w':
-      keys[playerType].w = false
+      player.keys.w = false
       break
     case 's':
-      keys[playerType].s = false
+      player.keys.s = false
       break
   }
 }
@@ -356,16 +289,16 @@ function keydown (event) {
   if (!gameOver) {
     switch (event.key) {
       case 'd':
-        keys[playerType].d = true
+        player.keys.d = true
         break
       case 'a':
-        keys[playerType].a = true
+        player.keys.a = true
         break
       case 'w':
-        keys[playerType].w = true
+        player.keys.w = true
         break
       case 's':
-        keys[playerType].s = true
+        player.keys.s = true
         break
     }
   }
@@ -379,24 +312,25 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
-function checkAttackIsSuccess(attacker) {
-  if (attacker.state != 'attack1' && attacker.state != 'attack2') {
-    return false
-  }
+function setFighter (player, leftHealthBarData, rightHealthBarData) {
+  const intervalId = setInterval(() => {
+    if (!player[player.type]) {
+      if (player.type == 'samurai' && samuraiData.position) {
+        player.samurai = new Fighter(samuraiData)
+        gameObjects.push(player.samurai)
 
-  if (attacker.currentFrame != attacker.attackFrame) {
-    return false
-  }
+        leftHealthBarData.entity = player.samurai
+        gameObjects.push(new HealthBar(leftHealthBarData))
+      }
+      if (player.type == 'ninja' && ninjaData.position) {
+        player.ninja = new Fighter(ninjaData)
+        gameObjects.push(player.ninja)
 
-  if (attacker.framesElapsed % attacker.framesHold === 0) {
-    socket.emit('check-attack-is-success', { attacker: playerType })
-  }
-}
-
-function getFighterTextureMirroring (x1, x2) {
-  if (x1 >= x2) {
-    return -1
-  } else {
-    return 1
-  }
+        rightHealthBarData.entity = player.ninja
+        gameObjects.push(new HealthBar(rightHealthBarData))
+      }
+    } else {
+      clearInterval(intervalId)
+    }
+  }, 100)
 }

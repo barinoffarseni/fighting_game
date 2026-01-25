@@ -11,11 +11,10 @@ const io = require('socket.io')(httpServer, {
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
-const debug = true
+const debug = false
 
 const users = []
 const gameObjects = []
-let gameOver = false
 let winner = ''
 let gameTimer = null
 const samurai = new Fighter({
@@ -62,19 +61,16 @@ setInterval(() => {
     if (gameTimer.timeRemaining === 1) {
       if (ninja.health > samurai.health) {
         winner = 'Player 2'
-        gameOver = true
+        sendingTheWinnerToClients(winner)
       }
       if (samurai.health > ninja.health) {
         winner = 'Player 1'
-        gameOver = true
+        sendingTheWinnerToClients(winner)
       }
       if (ninja.health === samurai.health) {
         gameTimer.timeRemaining += 9
         gameTimer.timeOut = false
       }
-      sockets.forEach(socket => {
-        socket.emit('game-over', { gameOver, winner })
-      })
     }
   }
 
@@ -106,7 +102,7 @@ io.on('connection', (socket) => {
 
   users.push({ type, id })
 
-  io.emit('set-data', { type, id, ninjaHealth: ninja.health, samuraiHealth: samurai.health })
+  io.emit('set-data', { type, id })
   if (users.length === 2) {
     gameTimer = new Timer()
     gameObjects.push(gameTimer)
@@ -122,44 +118,44 @@ io.on('connection', (socket) => {
   })
 
   socket.on('set-move-command', (data) => {
-    if (data.playerType === 'samurai') {
-      if (data.command === 'right') {
+    if (data.player.type === 'samurai') {
+      if (data.player.command === 'right') {
         samurai.velocity.x = 4
         if (samurai.canJump) {
-          samurai.command = data.command
+          samurai.command = data.player.command
         }
       }
-      if (data.command === 'left') {
+      if (data.player.command === 'left') {
         samurai.velocity.x = -4
         if (samurai.canJump) {
-          samurai.command = data.command
+          samurai.command = data.player.command
         }
       }
-      if (data.command === 'up' && samurai.canJump) {
+      if (data.player.command === 'up' && samurai.canJump) {
         samurai.velocity.y = -10
       }
-      if (data.command === 'attack') {
-        samurai.command = data.command
+      if (data.player.command === 'attack') {
+        samurai.command = data.player.command
       }
     }
-    if (data.playerType === 'ninja') {
-      if (data.command === 'right') {
+    if (data.player.type === 'ninja') {
+      if (data.player.command === 'right') {
         ninja.velocity.x = 4
         if (ninja.canJump) {
-          ninja.command = data.command
+          ninja.command = data.player.command
         }
       }
-      if (data.command === 'left') {
+      if (data.player.command === 'left') {
         ninja.velocity.x = -4
         if (ninja.canJump) {
-          ninja.command = data.command
+          ninja.command = data.player.command
         }
       }
-      if (data.command === 'up' && ninja.canJump) {
+      if (data.player.command === 'up' && ninja.canJump) {
         ninja.velocity.y = -10
       }
-      if (data.command === 'attack') {
-        ninja.command = data.command
+      if (data.player.command === 'attack') {
+        ninja.command = data.player.command
       }
     }
   })
@@ -174,15 +170,11 @@ io.on('connection', (socket) => {
 
     if (samurai.health === 0) {
       winner = 'Player 2'
-      gameOver = true
-
-      sendingTheWinnerToClients(gameOver, winner)
+      sendingTheWinnerToClients(winner)
     }
     if (ninja.health === 0) {
       winner = 'Player 1'
-      gameOver = true
-
-      sendingTheWinnerToClients(gameOver, winner)
+      sendingTheWinnerToClients(winner)
     }
   })
 })
@@ -219,8 +211,8 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   }
 }
 
-function sendingTheWinnerToClients (gameOver, winner) {
+function sendingTheWinnerToClients (winner) {
   sockets.forEach(socket => {
-    socket.emit('game-over', { gameOver, winner })
+    socket.emit('game-over', { winner })
   })
 }

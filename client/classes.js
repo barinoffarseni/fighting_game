@@ -70,10 +70,10 @@ class SpriteAnimated extends SpriteStatic {
 }
 
 class Fighter extends SpriteAnimated {
-  constructor ({ position, velocity, sprites, offset, attackFrame }) {
+  constructor ({ velocity, sprites, offset, attackFrame, name, position }) {
     super({
       position,
-      imgSrc: './img/samuraiMack/Idle.png',
+      imgSrc: './img/samurai/Idle.png',
       scale: 2.5,
       framesHold: 10,
       imgFrames: 8,
@@ -86,7 +86,6 @@ class Fighter extends SpriteAnimated {
     this.textureMirroring = 1
     this.isAttack = false
     this.attackFrame = attackFrame
-    this.health = 100
     this.previousHealth = 100
     this.sprites = sprites
     this.state = 'idle'
@@ -96,6 +95,8 @@ class Fighter extends SpriteAnimated {
     this.restartState = false
     this.command = 'idle'
     this.attackFrame = attackFrame
+    this.name = name
+    this.getScr()
   }
 
   getPosition () {
@@ -177,6 +178,27 @@ class Fighter extends SpriteAnimated {
     this.velocity.x = 0
     if (this.velocity.y < 0) {
       this.velocity.y = 0
+    }
+  }
+
+  getScr () {
+    for (const key of Object.keys(this.sprites)) {
+      this.sprites[key].leftScr = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + 'Inverted.png'
+      this.sprites[key].rightSrc = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
+    }
+  }
+
+  checkAttackIsSuccess () {
+    if (this.state != 'attack1' && this.state != 'attack2') {
+      return false
+    }
+
+    if (this.currentFrame != this.attackFrame) {
+      return false
+    }
+
+    if (this.framesElapsed % this.framesHold === 0) {
+      socket.emit('check-attack-is-success', { attacker: this.name })
     }
   }
 
@@ -305,9 +327,6 @@ class Timer extends Indicator {
       },
       style: 'bold 48px serif'
     }
-
-    this.timeRemaining = 30
-    this.timeOut = false
   }
 
   update () { }
@@ -346,7 +365,9 @@ class HealthBar extends Indicator {
   }
 
   update () {
-    this.healthValue = (this.entity.health * 100) / 10000
+    if (this.entity.health >= 0) {
+      this.healthValue = (this.entity.health * 100) / 10000
+    }
   }
 }
 

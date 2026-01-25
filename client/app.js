@@ -125,20 +125,14 @@ const ninjaData = {
   name: 'ninja'
 }
 
-socket.on('set-fighters-data', function (data) {
-  samuraiData.position = data.samurai.position
-
-  ninjaData.position = data.ninja.position
-})
-
-const rightHealthBar = {
+const rightHealthBarData = {
   offset: {
     x: 50,
     y: 0
   },
   textureMirroring: 1
 }
-const leftHealthBar = {
+const leftHealthBarData = {
   offset: {
     x: -50,
     y: 0
@@ -169,31 +163,26 @@ function waitingForPlayers () {
       user = { type, id }
 
       if (user.type === 'samurai') {
-        leftHealthBar.entity = player.samurai
+        // leftHealthBar.entity = player.samurai
 
         player.type = 'samurai'
         enemy.type = 'ninja'
       }
       if (user.type === 'ninja') {
-        rightHealthBar.entity = player.ninja
-        leftHealthBar.entity = enemy.samurai
+        // rightHealthBarData.entity = player.ninja
+        // leftHealthBarData.entity = enemy.samurai
 
         player.type = 'ninja'
         enemy.type = 'samurai'
       }
     } else {
       if (user.type === 'samurai') {
-        rightHealthBar.entity = enemy.ninja
+        // rightHealthBarData.entity = enemy.ninja
       }
     }
-    
-    setFighter(player)
-    setFighter(enemy)
 
-    // gameObjects.push(new HealthBar(leftHealthBar))
-    // if (enemy[enemy.type]) {
-    //   gameObjects.push(new HealthBar(rightHealthBar))
-    // }
+  setFighter(player, leftHealthBarData, rightHealthBarData)
+  setFighter(enemy, leftHealthBarData, rightHealthBarData)
   })
 
   gameLoop()
@@ -251,6 +240,12 @@ socket.on('timer', function (data) {
 socket.on('game-over', function (data) {
   winIndicator.winner = data.winner
   gameOver = true
+})
+
+socket.on('set-fighters-data', function (data) {
+  samuraiData.position = data.samurai.position
+
+  ninjaData.position = data.ninja.position
 })
 
 function update () {
@@ -323,16 +318,22 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
-function setFighter(player) {
+function setFighter(player, leftHealthBarData, rightHealthBarData) {
   const intervalId = setInterval(() => {
     if (!player[player.type]) {
       if (player.type == 'samurai' && samuraiData.position) {
         player.samurai = new Fighter(samuraiData)
         gameObjects.push(player.samurai)
+
+        leftHealthBarData.entity = player.samurai
+        gameObjects.push(new HealthBar(leftHealthBarData))
       }
       if (player.type == 'ninja' && ninjaData.position) {
         player.ninja = new Fighter(ninjaData)
         gameObjects.push(player.ninja)
+
+        rightHealthBarData.entity = player.ninja
+        gameObjects.push(new HealthBar(rightHealthBarData))
       }
     } else {
       clearInterval(intervalId)

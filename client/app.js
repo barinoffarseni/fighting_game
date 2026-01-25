@@ -85,8 +85,6 @@ const samuraiData = {
   attackFrame: 4,
   name: 'samurai'
 }
-samuraiData.position = await Promise.setFightersPosition(samuraiData)
-
 
 const ninjaData = {
   velocity: {
@@ -126,6 +124,13 @@ const ninjaData = {
   attackFrame: 1,
   name: 'ninja'
 }
+
+socket.on('set-fighters-data', function (data) {
+  samuraiData.position = data.samurai.position
+
+  ninjaData.position = data.ninja.position
+})
+
 const rightHealthBar = {
   offset: {
     x: 50,
@@ -164,41 +169,31 @@ function waitingForPlayers () {
       user = { type, id }
 
       if (user.type === 'samurai') {
-        player.samurai = new Fighter(samuraiData)
-
         leftHealthBar.entity = player.samurai
-
-        gameObjects.push(player.samurai)
 
         player.type = 'samurai'
         enemy.type = 'ninja'
       }
       if (user.type === 'ninja') {
-        player.ninja = new Fighter(ninjaData)
-        enemy.samurai = new Fighter(samuraiData)
-
         rightHealthBar.entity = player.ninja
         leftHealthBar.entity = enemy.samurai
-
-        gameObjects.push(player.ninja)
-        gameObjects.push(enemy.samurai)
 
         player.type = 'ninja'
         enemy.type = 'samurai'
       }
     } else {
       if (user.type === 'samurai') {
-        enemy.ninja = new Fighter(ninjaData)
-
         rightHealthBar.entity = enemy.ninja
-
-        gameObjects.push(enemy.ninja)
       }
     }
-    gameObjects.push(new HealthBar(leftHealthBar))
-    if (enemy[enemy.type]) {
-      gameObjects.push(new HealthBar(rightHealthBar))
-    }
+    
+    setFighter(player)
+    setFighter(enemy)
+
+    // gameObjects.push(new HealthBar(leftHealthBar))
+    // if (enemy[enemy.type]) {
+    //   gameObjects.push(new HealthBar(rightHealthBar))
+    // }
   })
 
   gameLoop()
@@ -230,10 +225,11 @@ socket.on('id', function (message) {
 })
 
 socket.on('set-fighters-data', function (data) {
-  player[player.type].health = data[player.type].health
-  player[player.type].position = data[player.type].position
-  player[player.type].command = data[player.type].command
-
+  if (enemy[enemy.type]) {
+    player[player.type].health = data[player.type].health
+    player[player.type].position = data[player.type].position
+    player[player.type].command = data[player.type].command
+  }
 
   if (enemy[enemy.type]) {
     enemy[enemy.type].health = data[enemy.type].health
@@ -327,11 +323,22 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
-async function setFightersPosition(player) {
-  socket.on('set-fighters-data', function (data, player) {
-    return (let position = data[player].position)
-  })
+async function setFighter(player) {
+  if (player.type == 'samurai' && samuraiData.position) {
+    player.samurai = new Fighter(samuraiData)
+    gameObjects.push(player.samurai)
+  }
+  if (player.type == 'ninja' && ninjaData.position) {
+    player.ninja = new Fighter(ninjaData)
+    gameObjects.push(player.ninja)
+  }
+
+  // if (enemy.type == 'samurai' && samuraiData.position) {
+  //   enemy.samurai = new Fighter(samuraiData)
+  //   gameObjects.push(enemy.samurai)
+  // }
+  // if (enemy.type == 'ninja' && ninjaData.position) {
+  //   enemy.ninja = new Fighter(ninjaData)
+  //   gameObjects.push(enemy.ninja)
+  // }
 }
-// async function hello() {
-//   return (greeting = await Promise.resolve("Hello"));
-// }

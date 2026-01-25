@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
 
   users.push({ type, id })
 
-  io.emit('set-data', { type, id, ninjaHealth: ninja.health, samuraiHealth: samurai.health })
+  io.emit('set-data', { type, id })
   if (users.length === 2) {
     gameTimer = new Timer()
     gameObjects.push(gameTimer)

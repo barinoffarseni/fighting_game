@@ -166,7 +166,6 @@ function waitingForPlayers () {
         // leftHealthBar.entity = player.samurai
 
         player.type = 'samurai'
-        enemy.type = 'ninja'
       }
       if (user.type === 'ninja') {
         // rightHealthBarData.entity = player.ninja
@@ -178,6 +177,8 @@ function waitingForPlayers () {
     } else {
       if (user.type === 'samurai') {
         // rightHealthBarData.entity = enemy.ninja
+
+        enemy.type = 'ninja'
       }
     }
 

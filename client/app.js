@@ -323,22 +323,19 @@ function getFighterTextureMirroring (x1, x2) {
   }
 }
 
-async function setFighter(player) {
-  if (player.type == 'samurai' && samuraiData.position) {
-    player.samurai = new Fighter(samuraiData)
-    gameObjects.push(player.samurai)
-  }
-  if (player.type == 'ninja' && ninjaData.position) {
-    player.ninja = new Fighter(ninjaData)
-    gameObjects.push(player.ninja)
-  }
-
-  // if (enemy.type == 'samurai' && samuraiData.position) {
-  //   enemy.samurai = new Fighter(samuraiData)
-  //   gameObjects.push(enemy.samurai)
-  // }
-  // if (enemy.type == 'ninja' && ninjaData.position) {
-  //   enemy.ninja = new Fighter(ninjaData)
-  //   gameObjects.push(enemy.ninja)
-  // }
+function setFighter(player) {
+  const intervalId = setInterval(() => {
+    if (!player[player.type]) {
+      if (player.type == 'samurai' && samuraiData.position) {
+        player.samurai = new Fighter(samuraiData)
+        gameObjects.push(player.samurai)
+      }
+      if (player.type == 'ninja' && ninjaData.position) {
+        player.ninja = new Fighter(ninjaData)
+        gameObjects.push(player.ninja)
+      }
+    } else {
+      clearInterval(intervalId)
+    }
+  }, 100)
 }

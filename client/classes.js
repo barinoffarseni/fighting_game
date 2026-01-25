@@ -327,9 +327,6 @@ class Timer extends Indicator {
       },
       style: 'bold 48px serif'
     }
-
-    this.timeRemaining = 30
-    this.timeOut = false
   }
 
   update () { }

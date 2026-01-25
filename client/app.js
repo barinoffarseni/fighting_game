@@ -6,7 +6,7 @@ canvas.height = 576
 
 let gameOver = false
 
-const debug = true
+const debug = false
 
 let user = false
 const player = {}

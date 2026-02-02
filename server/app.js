@@ -14,6 +14,7 @@ const Fighter = require('./fighter.js').Fighter
 const debug = false
 
 const users = []
+const rooms = {}
 const gameObjects = []
 let winner = ''
 let gameTimer = null
@@ -86,6 +87,12 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
+  // io.of("/").adapter.on("join-room", (room, id) => {
+  //   console.log(`socket ${id} has joined room ${room}`);
+  // });
+
+  // console.log(socket, id)
+
   socket.emit('set-fighters-data', fightersData)
 
   if (users.length > 0) {
@@ -96,8 +103,10 @@ io.on('connection', (socket) => {
     }
   }
 
-  if (users.length > 2) {
-    return
+  if (users.length % 2 == 0) {
+    io.of("/").adapter.on("create-room", (room) => {
+      console.log(`room ${room} was created`, io.of("/").adapter.rooms);
+    });
   }
 
   users.push({ type, id })

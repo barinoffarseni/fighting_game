@@ -87,29 +87,17 @@ io.on('connection', (socket) => {
 
   const id = socket.handshake.issued
 
-  // io.of("/").adapter.on("join-room", (room, id) => {
-  //   console.log(`socket ${id} has joined room ${room}`);
-  // });
-
-  // console.log(socket, id)
-
   socket.emit('set-fighters-data', fightersData)
 
-  if (users.length > 0) {
-    if (users[users.length - 1].type === 'samurai') {
-      type = 'ninja'
-      gameObjects.push(samurai)
-      gameObjects.push(ninja)
-    }
-  }
+  users.push({ type, id })
 
   if (users.length % 2 == 0) {
-    io.of("/").adapter.on("create-room", (room) => {
-      console.log(`room ${room} was created`, io.of("/").adapter.rooms);
-    });
+    type = 'ninja'
+    gameObjects.push(ninja)
+  } else {
+    gameObjects.push(samurai)
   }
 
-  users.push({ type, id })
 
   io.emit('set-data', { type, id })
   if (users.length === 2) {

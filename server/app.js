@@ -14,7 +14,7 @@ const Fighter = require('./fighter.js').Fighter
 const debug = false
 
 const users = []
-const rooms = {}
+const rooms = []
 const gameObjects = []
 let winner = ''
 let gameTimer = null
@@ -90,16 +90,21 @@ io.on('connection', (socket) => {
   socket.emit('set-fighters-data', fightersData)
 
   users.push({ type, id })
-
+  socket.join()
   if (users.length % 2 == 0) {
     type = 'ninja'
     gameObjects.push(ninja)
   } else {
+    let room = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    rooms.push(room)
+
     gameObjects.push(samurai)
   }
-
+  socket.join(room)
+  console.log( io.of("/").adapter.rooms.size, io.of("/").adapter.rooms)
 
   io.emit('set-data', { type, id })
+
   if (users.length === 2) {
     gameTimer = new Timer()
     gameObjects.push(gameTimer)

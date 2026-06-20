@@ -158,9 +158,9 @@ function gameLoop () {
 }
 
 function waitingForPlayers () {
-  socket.on('set-data', function ({ type, id }) {
+  socket.on('set-data', function ({ type }) {
     if (!user) {
-      user = { type, id }
+      user = { type }
 
       if (user.type === 'samurai') {
         player.type = 'samurai'
@@ -178,6 +178,13 @@ function waitingForPlayers () {
     setFighter(player, leftHealthBarData, rightHealthBarData)
     setFighter(enemy, leftHealthBarData, rightHealthBarData)
   })
+
+  let tabId = localStorage.getItem("tabId");
+
+  if (!tabId) {
+      tabId = crypto.randomUUID();
+      localStorage.setItem("tabId", tabId);
+  }
 
   gameLoop()
 }

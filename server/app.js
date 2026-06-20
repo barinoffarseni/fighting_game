@@ -14,8 +14,10 @@ const Fighter = require('./fighter.js').Fighter
 const debug = false
 
 const users = []
-const rooms = []
 const gameObjects = []
+const expectedPlayers = []
+const rooms = new Map();
+const players = new Map();
 let winner = ''
 let gameTimer = null
 const samurai = new Fighter({
@@ -90,7 +92,6 @@ io.on('connection', (socket) => {
   socket.emit('set-fighters-data', fightersData)
 
   users.push({ type, id })
-  socket.join()
   if (users.length % 2 == 0) {
     type = 'ninja'
     gameObjects.push(ninja)
@@ -101,11 +102,8 @@ io.on('connection', (socket) => {
   io.emit('set-data', { type, id })
 
   if (users.length === 2) {
-    let room = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
-    rooms.push(room)
     gameTimer = new Timer()
     gameObjects.push(gameTimer)
-    console.log(rooms)
   }
 
   socket.on('disconnect', () => {
@@ -215,4 +213,43 @@ function sendingTheWinnerToClients (winner) {
   sockets.forEach(socket => {
     socket.emit('game-over', { winner })
   })
+}
+
+function setIdOfRoom () {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
+}
+
+function createRoom(player, enemy) {
+
+    const roomId = setIdOfRoom () 
+
+    const room = {
+        id: roomId,
+        state: "playing",
+
+        player,
+        enemy
+
+        // reconnectTimer: null
+    };
+
+    rooms.set(roomId, room);
+
+    player.roomId = roomId;
+    enemy.roomId = roomId;
+
+    player.socket.join(roomId);
+    enemy.socket.join(roomId);
+
+    // io.to(roomId).emit("roomStarted", {
+    //     roomId,
+
+    //     player: {
+    //         fighter: player.fighter
+    //     },
+
+    //     enemy: {
+    //         fighter: enemy.fighter
+    //     }
+    // });
 }

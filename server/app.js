@@ -16,7 +16,7 @@ const debug = false
 const users = []
 const gameObjects = []
 const player = {}
-const enemy = {}
+let roomId
 const players = [];
 let waitingPlayers = []
 const rooms = [];
@@ -47,27 +47,12 @@ const fightersData = {}
 const sockets = []
 setInterval(() => {
 
-  if (waitingPlayers.length > 1) {
-    let roomId = setIdOfRoom()
-
-    rooms.push(roomId);
-    player.roomId = roomId;
-    waitingPlayers.forEach(socket => {
-      socket.join(player.roomId)
-    })
-
+  if (waitingPlayers.length > 1 ) {
     waitingPlayers = []
   }
   if (player.roomId) {
-    io.to(player.roomId).emit('room_started', {
-      player: {
-          fighter: player.fighter
-      },
-
-      enemy: {
-          fighter: enemy.fighter
-      }
-    });
+    gameTimer = new Timer()
+    gameObjects.push(gameTimer)
   }
   samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
   ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
@@ -202,19 +187,26 @@ io.on('connection', (socket) => {
   socket.on('get-player-id', (id) => {
     if (players.findIndex(id => id == -1)) {
       player.id = id
-      if (waitingPlayers > 0) {
+      if (waitingPlayers.length > 0) {
         player.type = 'ninja'
-        enemy.type = 'samurai'
 
-        player.socket.join(roomId);
+        roomId = rooms[0]
 
         gameObjects.push(ninja)
       } else {
         player.type = 'samurai'
-        enemy.type = 'ninja'
+
+        roomId = setIdOfRoom()
+        rooms.push(roomId);
+
         gameObjects.push(samurai)
       }
       players.push(id)
+      player.socket = socket
+      player.roomId = roomId;
+      player.socket.join(roomId)
+
+      io.to(player.roomId).emit('set-data', { type: player.type });
       waitingPlayers.push(socket)
     }
   })
@@ -261,22 +253,3 @@ function sendingTheWinnerToClients (winner) {
 function setIdOfRoom () {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
 }
-
-// function createRoom(player, enemy, socket) {
-
-//     const roomId = setIdOfRoom () 
-
-//     // const room = {
-//     //     id: roomId,
-//     //     state: 'playing',
-
-//     //     player,
-//     //     enemy
-
-//         // reconnectTimer: null
-//     // };
-
-//     enemy.socket.join(roomId);
-
-    
-// }

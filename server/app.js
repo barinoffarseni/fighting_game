@@ -15,9 +15,11 @@ const debug = false
 
 const users = []
 const gameObjects = []
-const expectedPlayers = []
-const rooms = new Map();
-const players = new Map();
+const player = {}
+const enemy = {}
+const players = [];
+let waitingPlayers = []
+const rooms = [];
 let winner = ''
 let gameTimer = null
 const samurai = new Fighter({
@@ -44,6 +46,29 @@ const ninja = new Fighter({
 const fightersData = {}
 const sockets = []
 setInterval(() => {
+
+  if (waitingPlayers.length > 1) {
+    let roomId = setIdOfRoom()
+
+    rooms.push(roomId);
+    player.roomId = roomId;
+    waitingPlayers.forEach(socket => {
+      socket.join(player.roomId)
+    })
+
+    waitingPlayers = []
+  }
+  if (player.roomId) {
+    io.to(player.roomId).emit('room_started', {
+      player: {
+          fighter: player.fighter
+      },
+
+      enemy: {
+          fighter: enemy.fighter
+      }
+    });
+  }
   samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
   ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
 
@@ -84,31 +109,30 @@ setInterval(() => {
 
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id)
-  let type = 'samurai'
   sockets.push(socket)
 
-  const id = socket.handshake.issued
 
   socket.emit('set-fighters-data', fightersData)
 
-  users.push({ type, id })
-  if (users.length % 2 == 0) {
-    type = 'ninja'
-    gameObjects.push(ninja)
-  } else {
-    gameObjects.push(samurai)
-  }
+  // users.push({ type, id })
+  // if (users.length % 2 == 0) {
+  //   type = 'ninja'
+  //   gameObjects.push(ninja)
+  // } else {
+  //   gameObjects.push(samurai)
+  // }
 
-  io.emit('set-data', { type, id })
+  // io.emit('set-data', { player.type })
 
-  if (users.length === 2) {
-    gameTimer = new Timer()
-    gameObjects.push(gameTimer)
-  }
+  // if (users.length === 2) {
+  //   gameTimer = new Timer()
+  //   gameObjects.push(gameTimer)
+  // }
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', socket.id)
-    const index = users.findIndex(user => user.id === id)
+    const index = users.findIndex(user => user.id === player.id)
+    player.socket = socket
 
     if (index > -1) {
       users.splice(index, 1)
@@ -175,6 +199,25 @@ io.on('connection', (socket) => {
       sendingTheWinnerToClients(winner)
     }
   })
+  socket.on('get-player-id', (id) => {
+    if (players.findIndex(id => id == -1)) {
+      player.id = id
+      if (waitingPlayers > 0) {
+        player.type = 'ninja'
+        enemy.type = 'samurai'
+
+        player.socket.join(roomId);
+
+        gameObjects.push(ninja)
+      } else {
+        player.type = 'samurai'
+        enemy.type = 'ninja'
+        gameObjects.push(samurai)
+      }
+      players.push(id)
+      waitingPlayers.push(socket)
+    }
+  })
 })
 
 httpServer.listen(3000, () => {
@@ -219,37 +262,21 @@ function setIdOfRoom () {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
 }
 
-function createRoom(player, enemy) {
+// function createRoom(player, enemy, socket) {
 
-    const roomId = setIdOfRoom () 
+//     const roomId = setIdOfRoom () 
 
-    const room = {
-        id: roomId,
-        state: "playing",
+//     // const room = {
+//     //     id: roomId,
+//     //     state: 'playing',
 
-        player,
-        enemy
+//     //     player,
+//     //     enemy
 
-        // reconnectTimer: null
-    };
+//         // reconnectTimer: null
+//     // };
 
-    rooms.set(roomId, room);
+//     enemy.socket.join(roomId);
 
-    player.roomId = roomId;
-    enemy.roomId = roomId;
-
-    player.socket.join(roomId);
-    enemy.socket.join(roomId);
-
-    // io.to(roomId).emit("roomStarted", {
-    //     roomId,
-
-    //     player: {
-    //         fighter: player.fighter
-    //     },
-
-    //     enemy: {
-    //         fighter: enemy.fighter
-    //     }
-    // });
-}
+    
+// }

@@ -158,6 +158,14 @@ function gameLoop () {
 }
 
 function waitingForPlayers () {
+  let id = localStorage.getItem("id");
+
+  if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("id", id);
+  }
+  socket.emit('get-player-id', id )
+
   socket.on('set-data', function ({ type }) {
     if (!user) {
       user = { type }
@@ -178,13 +186,6 @@ function waitingForPlayers () {
     setFighter(player, leftHealthBarData, rightHealthBarData)
     setFighter(enemy, leftHealthBarData, rightHealthBarData)
   })
-
-  let tabId = localStorage.getItem("tabId");
-
-  if (!tabId) {
-      tabId = crypto.randomUUID();
-      localStorage.setItem("tabId", tabId);
-  }
 
   gameLoop()
 }
@@ -247,6 +248,10 @@ socket.on('set-fighters-data', function (data) {
   samuraiData.position = data.samurai.position
 
   ninjaData.position = data.ninja.position
+})
+
+socket.on('room_started', function (data) {
+  console.log('lol')
 })
 
 function update () {

@@ -16,7 +16,7 @@ const debug = false
 const users = []
 const gameObjects = []
 
-let room = {}
+let room
 const player = {}
 const players = [];
 let waitingPlayers = []
@@ -52,9 +52,11 @@ setInterval(() => {
   if (waitingPlayers.length > 1 ) {
     waitingPlayers = []
   }
-  if (rooms[player.roomId]) {
-    gameTimer = new Timer()
-    gameObjects.push(gameTimer)
+  if (room) {
+    if (room.players.length == 2) {
+      gameTimer = new Timer()
+      gameObjects.push(gameTimer)
+    }
   }
   samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
   ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)

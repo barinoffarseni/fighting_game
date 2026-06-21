@@ -167,7 +167,6 @@ function waitingForPlayers () {
   socket.emit('get-player-id', id )
 
   socket.on('set-data', function ({ type }) {
-    console.log(type)
     if (!user) {
       user = { type }
 

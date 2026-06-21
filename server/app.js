@@ -15,11 +15,13 @@ const debug = false
 
 const users = []
 const gameObjects = []
+
+let room = {}
 const player = {}
-let roomId
 const players = [];
 let waitingPlayers = []
 const rooms = [];
+
 let winner = ''
 let gameTimer = null
 const samurai = new Fighter({
@@ -50,7 +52,7 @@ setInterval(() => {
   if (waitingPlayers.length > 1 ) {
     waitingPlayers = []
   }
-  if (player.roomId) {
+  if (rooms[player.roomId]) {
     gameTimer = new Timer()
     gameObjects.push(gameTimer)
   }
@@ -96,23 +98,7 @@ io.on('connection', (socket) => {
   console.log('New connection:', socket.id)
   sockets.push(socket)
 
-
   socket.emit('set-fighters-data', fightersData)
-
-  // users.push({ type, id })
-  // if (users.length % 2 == 0) {
-  //   type = 'ninja'
-  //   gameObjects.push(ninja)
-  // } else {
-  //   gameObjects.push(samurai)
-  // }
-
-  // io.emit('set-data', { player.type })
-
-  // if (users.length === 2) {
-  //   gameTimer = new Timer()
-  //   gameObjects.push(gameTimer)
-  // }
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', socket.id)
@@ -190,24 +176,31 @@ io.on('connection', (socket) => {
       if (waitingPlayers.length > 0) {
         player.type = 'ninja'
 
-        roomId = rooms[0]
+        room = rooms.find(room => {
+          return room.players.some(player => player.id == waitingPlayers[0])
+        })
+        room.players.push({id: id})
 
         gameObjects.push(ninja)
       } else {
         player.type = 'samurai'
 
-        roomId = setIdOfRoom()
-        rooms.push(roomId);
+        room = {
+          id: setIdOfRoom(),
+          players: [{id: id}],
+          timeStop: false
+        }
+        rooms.push(room) 
 
         gameObjects.push(samurai)
       }
       players.push(id)
       player.socket = socket
-      player.roomId = roomId;
-      player.socket.join(roomId)
+      player.roomId = room.id;
+      player.socket.join(room.id)
 
       io.to(player.roomId).emit('set-data', { type: player.type });
-      waitingPlayers.push(socket)
+      waitingPlayers.push(id)
     }
   })
 })

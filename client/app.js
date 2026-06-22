@@ -211,10 +211,6 @@ function control () {
   }
 }
 
-socket.on('id', function (message) {
-  id = message
-})
-
 socket.on('set-fighters-data', function (data) {
   if (player[player.type]) {
     player[player.type].health = data[player.type].health

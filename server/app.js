@@ -50,7 +50,7 @@ setInterval(() => {
     waitingPlayers = []
   }
   if (room) {
-    if (room.players.length == 2) {
+    if (room.players.length == 2 && room.state == 'launched') {
       gameTimer = new Timer()
       gameObjects.push(gameTimer)
     }
@@ -66,7 +66,7 @@ setInterval(() => {
     fightersData.samurai.attackBox = samurai.attackBox
   }
 
-  if (gameTimer !== null) {
+  if (gameTimer !== null && room.state == 'launched') {
     room.sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
       socket.emit('set-fighters-data', fightersData)
@@ -100,10 +100,18 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', player.id)
-    if (room.players.length == 2) {
-      room.state = 'stoped'
-    } else {
-      waitingPlayers = []
+    if (room) {
+      if (room.players.length == 2) {
+        const index = room.sockets.indexOf(socket)
+
+        if (index > -1) {
+          room.sockets.splice(index, 1)
+        }
+
+        room.state = 'stoped'
+      } else {
+        waitingPlayers = []
+      }
     }
   })
 

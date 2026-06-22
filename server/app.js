@@ -48,7 +48,6 @@ const ninja = new Fighter({
 const fightersData = {}
 const sockets = []
 setInterval(() => {
-
   if (waitingPlayers.length > 1 ) {
     waitingPlayers = []
   }
@@ -70,7 +69,7 @@ setInterval(() => {
   }
 
   if (gameTimer !== null) {
-    sockets.forEach(socket => {
+    room.sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
       socket.emit('set-fighters-data', fightersData)
     })
@@ -182,6 +181,7 @@ io.on('connection', (socket) => {
           return room.players.some(player => player.id == waitingPlayers[0])
         })
         room.players.push({id: id})
+        room.sockets.push(socket)
 
         gameObjects.push(ninja)
       } else {
@@ -190,6 +190,7 @@ io.on('connection', (socket) => {
         room = {
           id: setIdOfRoom(),
           players: [{id: id}],
+          sockets: [socket],
           timeStop: false
         }
         rooms.push(room) 

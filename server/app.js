@@ -13,12 +13,11 @@ const Fighter = require('./fighter.js').Fighter
 
 const debug = false
 
-const users = []
 const gameObjects = []
 
 let room
 const player = {}
-const players = [];
+// const players = [];
 let waitingPlayers = []
 const rooms = [];
 
@@ -46,7 +45,6 @@ const ninja = new Fighter({
 })
 
 const fightersData = {}
-const sockets = []
 setInterval(() => {
   if (waitingPlayers.length > 1 ) {
     waitingPlayers = []
@@ -97,17 +95,15 @@ setInterval(() => {
 
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id)
-  sockets.push(socket)
 
   socket.emit('set-fighters-data', fightersData)
 
   socket.on('disconnect', () => {
-    console.log('Disconnect:', socket.id)
-    const index = users.findIndex(user => user.id === player.id)
-    player.socket = socket
-
-    if (index > -1) {
-      users.splice(index, 1)
+    console.log('Disconnect:', player.id)
+    if (room.players.length == 2) {
+      room.state = 'stoped'
+    } else {
+      waitingPlayers = []
     }
   })
 
@@ -172,39 +168,39 @@ io.on('connection', (socket) => {
     }
   })
   socket.on('get-player-id', (id) => {
-    if (players.findIndex(id => id == -1)) {
-      player.id = id
-      if (waitingPlayers.length > 0) {
-        player.type = 'ninja'
+    // if (players.findIndex(id => id == -1)) {
+    player.id = id
+    if (waitingPlayers.length > 0) {
+      player.type = 'ninja'
 
-        room = rooms.find(room => {
-          return room.players.some(player => player.id == waitingPlayers[0])
-        })
-        room.players.push({id: id})
-        room.sockets.push(socket)
+      room = rooms.find(room => {
+        return room.players.some(player => player.id == waitingPlayers[0])
+      })
+      room.players.push({id: id})
+      room.sockets.push(socket)
 
-        gameObjects.push(ninja)
-      } else {
-        player.type = 'samurai'
+      gameObjects.push(ninja)
+    } else {
+      player.type = 'samurai'
 
-        room = {
-          id: setIdOfRoom(),
-          players: [{id: id}],
-          sockets: [socket],
-          timeStop: false
-        }
-        rooms.push(room) 
-
-        gameObjects.push(samurai)
+      room = {
+        id: setIdOfRoom(),
+        players: [{id: id}],
+        sockets: [socket],
+        state: 'launched'
       }
-      players.push(id)
-      player.socket = socket
-      player.roomId = room.id;
-      player.socket.join(room.id)
+      rooms.push(room) 
 
-      io.to(player.roomId).emit('set-data', { type: player.type });
-      waitingPlayers.push(id)
+      gameObjects.push(samurai)
     }
+    // players.push(id)
+    player.socket = socket
+    player.roomId = room.id;
+    player.socket.join(room.id)
+
+    io.to(player.roomId).emit('set-data', { type: player.type });
+    waitingPlayers.push(id)
+    // }
   })
 })
 
@@ -241,7 +237,7 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
 }
 
 function sendingTheWinnerToClients (winner) {
-  sockets.forEach(socket => {
+  room.sockets.forEach(socket => {
     socket.emit('game-over', { winner })
   })
 }

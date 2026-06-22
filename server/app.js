@@ -47,7 +47,8 @@ const ninja = new Fighter({
 const fightersData = {}
 setInterval(() => {
   if (room) {
-    if (room.players.length == 2 && room.state == 'launched' && room.timerRuning == false) {
+    if (room.players.length == 2 && room.state == 'start' && room.timerRuning == false) {
+      room.state = 'continue'
       room.timerRuning = true
       gameTimer = new Timer()
       gameObjects.push(gameTimer)
@@ -64,7 +65,7 @@ setInterval(() => {
     fightersData.samurai.attackBox = samurai.attackBox
   }
 
-  if (gameTimer !== null && room.state == 'launched') {
+  if (gameTimer !== null && room.state == 'continue') {
     room.sockets.forEach(socket => {
       socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
       socket.emit('set-fighters-data', fightersData)
@@ -106,7 +107,7 @@ io.on('connection', (socket) => {
           room.sockets.splice(socketIndex, 1)
         }
 
-        room.state = 'stoped'
+        room.state = 'stop'
       } else {
         waitingPlayers = []
         const roomIndex = rooms.findIndex(room => room.sockets.length < 2)
@@ -198,7 +199,7 @@ io.on('connection', (socket) => {
         id: setIdOfRoom(),
         players: [{id: id}],
         sockets: [socket],
-        state: 'launched',
+        state: 'start',
         timerRuning: false
       }
       rooms.push(room) 

@@ -17,7 +17,7 @@ const gameObjects = []
 
 let room
 const player = {}
-// const players = [];
+const players = [];
 let waitingPlayers = []
 const rooms = [];
 
@@ -47,9 +47,9 @@ const ninja = new Fighter({
 const fightersData = {}
 setInterval(() => {
   if (room) {
-    if (room.players.length == 2 && room.state == 'start' && room.timerRuning == false) {
+    if (room.players.length == 2 && room.state == 'start') {
       room.state = 'continue'
-      room.timerRuning = true
+      // room.timerRuning = true
       gameTimer = new Timer()
       gameObjects.push(gameTimer)
     }
@@ -179,40 +179,63 @@ io.on('connection', (socket) => {
     }
   })
   socket.on('get-player-id', (id) => {
-    // if (players.findIndex(id => id == -1)) {
     player.id = id
-    if (waitingPlayers.length > 0) {
-      player.type = 'ninja'
-
-      room = rooms.find(room => {
-        return room.players.some(player => player.id == waitingPlayers[0])
-      })
-      room.players.push({id: id})
-      room.sockets.push(socket)
-      waitingPlayers = []
-
-      gameObjects.push(ninja)
-    } else {
-      player.type = 'samurai'
-
-      room = {
-        id: setIdOfRoom(),
-        players: [{id: id}],
-        sockets: [socket],
-        state: 'start',
-        timerRuning: false
+    console.log(rooms.some(room => {
+      if (room.state == 'stop') {
+        return room.players.some(player => player.id !== id)
       }
-      rooms.push(room) 
+    }))
+    if (rooms.some(room => {
+      if (room.state == 'stop') {
+        return room.players.some(player => player.id === id)
+      }
+    })) {
+      room = rooms.find(room => {
+        if (room.state == 'stop') {
+          return room.players.some(player => player.id === id)
+        }
+      })
+      room.sockets.push(socket)
+      room.state = 'continue'
+      socket.join(room.id)
 
-      gameObjects.push(samurai)
-      waitingPlayers.push(id)
+      const playerIndex = room.players.findIndex(player => player.id == id)
+      player.type = room.players[playerIndex].type
+    } else { 
+      if (waitingPlayers.length > 0) {
+        player.type = 'ninja'
+
+        room = rooms.find(room => {
+          return room.players.some(player => player.id == waitingPlayers[0])
+        })
+        room.players.push({id: id, type: player.type})
+        room.sockets.push(socket)
+        waitingPlayers = []
+
+        gameObjects.push(ninja)
+      } else {
+        player.type = 'samurai'
+
+        room = {
+          id: setIdOfRoom(),
+          players: [{id: id, type: player.type}],
+          sockets: [socket],
+          state: 'start',
+          timerRuning: false
+        }
+        rooms.push(room) 
+
+        gameObjects.push(samurai)
+        waitingPlayers.push(id)
+      }
+
+      // players.push(id)
+      // player.socket = socket
+      // player.roomId = room.id;
+      socket.join(room.id)
     }
-    // players.push(id)
-    player.socket = socket
-    player.roomId = room.id;
-    player.socket.join(room.id)
-    io.to(player.roomId).emit('set-data', { type: player.type });
-    // }
+  
+  io.to(room.id).emit('set-data', { type: player.type });
   })
 })
 

@@ -13,7 +13,7 @@ const Fighter = require('./fighter.js').Fighter
 
 const debug = false
 
-const gameObjects = []
+// const gameObjects = []
 
 let room
 const player = {}
@@ -47,11 +47,11 @@ const ninja = new Fighter({
 const fightersData = {}
 setInterval(() => {
   if (room) {
-    if (room.players.length == 2 && room.state == 'start') {
+    if (room.players.length === 2 && room.state === 'start') {
       room.state = 'continue'
       // room.timerRuning = true
       gameTimer = new Timer()
-      gameObjects.push(gameTimer)
+      room.gameObjects.push(gameTimer)
     }
   }
   samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
@@ -65,7 +65,7 @@ setInterval(() => {
     fightersData.samurai.attackBox = samurai.attackBox
   }
 
-  if (gameTimer !== null && room.state == 'continue') {
+  if (gameTimer !== null && room.state === 'continue') {
     room.players.forEach(player => {
       player.socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
       player.socket.emit('set-fighters-data', fightersData)
@@ -87,9 +87,11 @@ setInterval(() => {
     }
   }
 
-  gameObjects.forEach(gameObject => {
-    gameObject.update()
-  })
+  if (room) {
+    room.gameObjects.forEach(gameObject => {
+      gameObject.update()
+    })
+  }
 }, 50)
 
 io.on('connection', (socket) => {
@@ -102,8 +104,8 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('Disconnect:', [player.id, socket.id])
     if (room) {
-      if (room.players.length == 2 && room.state !== 'stop') {
-          playerIndex = room.players.findIndex(player => player.socket == socket)
+      if (room.players.length === 2 && room.state !== 'stop') {
+          playerIndex = room.players.findIndex(player => player.socket === socket)
 
         if (playerIndex > -1) {
           room.players[playerIndex].socket = null
@@ -111,7 +113,7 @@ io.on('connection', (socket) => {
         }
       } else {
         waitingPlayers = []
-        const roomIndex = rooms.findIndex(room => room.players.some(player => player.socket == null) || room.players.length <2)
+        const roomIndex = rooms.findIndex(room => room.players.some(player => player.socket === null) || room.players.length <2)
         if (roomIndex > -1) {
           rooms.splice(roomIndex, 1)
         }
@@ -204,19 +206,18 @@ io.on('connection', (socket) => {
         room.players.push({id: id, type: player.type, socket: socket})
         waitingPlayers = []
 
-        gameObjects.push(ninja)
+        room.gameObjects.push(ninja)
       } else {
         player.type = 'samurai'
 
         room = {
           id: setIdOfRoom(),
           players: [{id: id, type: player.type, socket: socket}],
+          gameObjects: [samurai],
           state: 'start',
           timerRuning: false
         }
         rooms.push(room) 
-
-        gameObjects.push(samurai)
         waitingPlayers.push(id)
       }
 

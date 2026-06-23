@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
     console.log('Disconnect:', [player.id, socket.id])
     if (room) {
       if (room.players.length == 2 && room.state !== 'stop') {
-          playerIndex = getPlayerIndex(room, player.id)
+          playerIndex = room.players.findIndex(player => player.socket == socket)
 
         if (playerIndex > -1) {
           room.players[playerIndex].socket = null
@@ -192,6 +192,7 @@ io.on('connection', (socket) => {
         }
       })
       playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
+      console.log(playerIndex, room)
       player.type = room.players[playerIndex].type
 
       room.players[playerIndex].socket = socket
@@ -270,8 +271,4 @@ function sendingTheWinnerToClients (winner) {
 
 function setIdOfRoom () {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
-}
-
-function getPlayerIndex (room, id) {
-  return room.players.findIndex(player => player.id == id)
 }

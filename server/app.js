@@ -17,7 +17,6 @@ const gameObjects = []
 
 let room
 const player = {}
-const players = [];
 let waitingPlayers = []
 const rooms = [];
 
@@ -66,9 +65,9 @@ setInterval(() => {
   }
 
   if (gameTimer !== null && room.state == 'continue') {
-    room.sockets.forEach(socket => {
-      socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
-      socket.emit('set-fighters-data', fightersData)
+    room.players.forEach(player => {
+      player.socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
+      player.socket.emit('set-fighters-data', fightersData)
     })
 
     if (gameTimer.timeRemaining === 1) {
@@ -180,11 +179,6 @@ io.on('connection', (socket) => {
   })
   socket.on('get-player-id', (id) => {
     player.id = id
-    console.log(rooms.some(room => {
-      if (room.state == 'stop') {
-        return room.players.some(player => player.id !== id)
-      }
-    }))
     if (rooms.some(room => {
       if (room.state == 'stop') {
         return room.players.some(player => player.id === id)
@@ -208,7 +202,7 @@ io.on('connection', (socket) => {
         room = rooms.find(room => {
           return room.players.some(player => player.id == waitingPlayers[0])
         })
-        room.players.push({id: id, type: player.type})
+        room.players.push({id: id, type: player.type, socket: socket})
         room.sockets.push(socket)
         waitingPlayers = []
 
@@ -218,7 +212,7 @@ io.on('connection', (socket) => {
 
         room = {
           id: setIdOfRoom(),
-          players: [{id: id, type: player.type}],
+          players: [{id: id, type: player.type, socket: socket}],
           sockets: [socket],
           state: 'start',
           timerRuning: false
@@ -229,9 +223,6 @@ io.on('connection', (socket) => {
         waitingPlayers.push(id)
       }
 
-      // players.push(id)
-      // player.socket = socket
-      // player.roomId = room.id;
       socket.join(room.id)
     }
   
@@ -272,7 +263,7 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
 }
 
 function sendingTheWinnerToClients (winner) {
-  room.sockets.forEach(socket => {
+  room.player.socket.forEach(socket => {
     socket.emit('game-over', { winner })
   })
 }

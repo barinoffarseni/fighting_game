@@ -181,16 +181,12 @@ io.on('connection', (socket) => {
   })
   socket.on('get-player-id', (id) => {
     player.id = id
-    if (rooms.some(room => {
+    room = rooms.find(room => {
       if (room.state == 'stop') {
         return room.players.some(player => player.id === id)
       }
-    })) {
-      room = rooms.find(room => {
-        if (room.state == 'stop') {
-          return room.players.some(player => player.id === id)
-        }
-      })
+    })
+    if (room) {
       playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
       console.log(playerIndex, room)
       player.type = room.players[playerIndex].type

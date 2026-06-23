@@ -16,14 +16,15 @@ const debug = false
 // const gameObjects = []
 
 let room
+let roomIndex 
 const player = {}
-let playerIndex = 0
+let playerIndex
 let waitingPlayers = []
 const rooms = [];
 
 let winner = ''
 let gameTimer = null
-const samurai = new Fighter({
+let samurai = new Fighter({
   position: {
     x: 0,
     y: 0
@@ -33,7 +34,7 @@ const samurai = new Fighter({
     y: 0
   }
 })
-const ninja = new Fighter({
+let ninja = new Fighter({
   position: {
     x: 512,
     y: 0
@@ -95,7 +96,7 @@ setInterval(() => {
 }, 50)
 
 io.on('connection', (socket) => {
-  if (player) {
+  if (player.id) {
     console.log('New connection:', [player.id, socket.id])
   }
 
@@ -113,7 +114,7 @@ io.on('connection', (socket) => {
         }
       } else {
         waitingPlayers = []
-        const roomIndex = rooms.findIndex(room => room.players.some(player => player.socket === null) || room.players.length <2)
+        roomIndex = rooms.findIndex(room => room.players.some(player => player.socket === null) || room.players.length <2)
         if (roomIndex > -1) {
           rooms.splice(roomIndex, 1)
         }
@@ -122,6 +123,10 @@ io.on('connection', (socket) => {
   })
 
   socket.on('set-move-command', (data) => {
+    roomIndex = rooms.findIndex(room => room.players.some(player => player.socket === socket))
+    samurai = rooms[roomIndex].fighters.samurai
+    ninja = rooms[roomIndex].fighters.ninja
+
     if (data.player.type === 'samurai') {
       if (data.player.command === 'right') {
         samurai.velocity.x = 4
@@ -213,6 +218,10 @@ io.on('connection', (socket) => {
         room = {
           id: setIdOfRoom(),
           players: [{id: id, type: player.type, socket: socket}],
+          fighters: {
+            samurai: samurai,
+            ninja: ninja
+          },
           gameObjects: [samurai],
           state: 'start',
           timerRuning: false

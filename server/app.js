@@ -14,8 +14,6 @@ const Fighter = require('./fighter.js').Fighter
 const debug = false
 
 
-let room
-let roomIndex 
 const player = {}
 let playerIndex
 const rooms = [];
@@ -53,11 +51,11 @@ setInterval(() => {
       if (gameTimer.timeRemaining === 1) {
         if (ninja.health > samurai.health) {
           winner = 'Player 2'
-          sendingTheWinnerToClients(winner)
+          sendingTheWinnerToClients(winner, room)
         }
         if (samurai.health > ninja.health) {
           winner = 'Player 1'
-          sendingTheWinnerToClients(winner)
+          sendingTheWinnerToClients(winner, room)
         }
         if (ninja.health === samurai.health) {
           gameTimer.timeRemaining += 9
@@ -81,30 +79,33 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', [player.id, socket.id])
-    if (room) {
-      if (room.players.length === 2 && room.state !== 'stop') {
-          playerIndex = room.players.findIndex(player => player.socket === socket)
+    const room = findRoomBySocket(socket)
+    if (!room) {
+      return
+    }
+    if (room.players.length === 2 && room.state !== 'stop') {
+      playerIndex = room.players.findIndex(player => player.socket === socket)
 
-        if (playerIndex > -1) {
-          room.players[playerIndex].socket = null
-          room.state = 'stop'
-        }
-      } else {
-        roomIndex = rooms.findIndex(room => room.players.some(player => player.socket === null) || room.players.length <2)
-        if (roomIndex > -1) {
-          rooms.splice(roomIndex, 1)
-        }
+      if (playerIndex > -1) {
+        room.players[playerIndex].socket = null
+        room.state = 'stop'
+      }
+    } else {
+      const roomIndex = rooms.findIndex(room => room.players.some(player => player.socket === null) || room.players.length <2)
+      if (roomIndex > -1) {
+        rooms.splice(roomIndex, 1)
       }
     }
   })
 
   socket.on('set-move-command', (data) => {
-    roomIndex = rooms.findIndex(room => room.players.some(player => player.socket === socket))
-    if (roomIndex === -1) {
+    const room = findRoomBySocket(socket)
+    if (!room || room.state !== 'continue') {
       return
     }
-    const samurai = rooms[roomIndex].fighters.samurai
-    const ninja = rooms[roomIndex].fighters.ninja
+
+    const samurai = room.fighters.samurai
+    const ninja = room.fighters.ninja
 
     if (data.player.type === 'samurai') {
       if (data.player.command === 'right') {
@@ -149,6 +150,11 @@ io.on('connection', (socket) => {
   })
 
   socket.on('check-attack-is-success', (data) => {
+    const room = findRoomBySocket(socket)
+    if (!room || room.state !== 'continue') {
+      return
+    }
+
     const samurai = room.fighters.samurai
     const ninja = room.fighters.ninja
 
@@ -161,26 +167,24 @@ io.on('connection', (socket) => {
 
     if (samurai.health === 0) {
       winner = 'Player 2'
-      sendingTheWinnerToClients(winner)
+      sendingTheWinnerToClients(winner, room)
     }
     if (ninja.health === 0) {
       winner = 'Player 1'
-      sendingTheWinnerToClients(winner)
+      sendingTheWinnerToClients(winner, room)
     }
   })
   socket.on('get-player-id', (id) => {
     player.id = id
-    room = findStoppadRoomByPlayerId(id)
+    let room = findStoppadRoomByPlayerId(id)
     if (room) {
       playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
-      console.log(playerIndex, room)
       player.type = room.players[playerIndex].type
 
       room.players[playerIndex].socket = socket
       room.state = 'continue'
       socket.join(room.id)
     } else { 
-      console.log(rooms)
       room = findWaitingRoom()
       if (room) {
         player.type = 'ninja'
@@ -243,7 +247,7 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   }
 }
 
-function sendingTheWinnerToClients (winner) {
+function sendingTheWinnerToClients (winner, room) {
   room.players.forEach(player => {
     player.socket.emit('game-over', { winner })
   })
@@ -263,6 +267,10 @@ function findStoppadRoomByPlayerId (id) {
 
 function findWaitingRoom () {
   return rooms.find(room => room.state == 'start' && room.players.length == 1)
+}
+
+function findRoomBySocket (socket) {
+  return rooms.find(room => room.players.some(player => player.socket === socket))
 }
 
 function creatFighter (x, y) {

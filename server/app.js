@@ -149,6 +149,9 @@ io.on('connection', (socket) => {
   })
 
   socket.on('check-attack-is-success', (data) => {
+    const samurai = room.fighters.samurai
+    const ninja = room.fighters.ninja
+
     if (data.attacker == 'samurai') {
       checkAttackIsSuccess(samurai, ninja)
     }

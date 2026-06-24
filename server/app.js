@@ -14,14 +14,12 @@ const Fighter = require('./fighter.js').Fighter
 const debug = false
 const rooms = [];
 
-let gameTimer = null
 setInterval(() => {
   rooms.forEach(room => {
     if (room.players.length === 2 && room.state === 'start') {
         room.state = 'continue'
-        // room.timerRuning = true
-        gameTimer = new Timer()
-        room.gameObjects.push(gameTimer)
+        room.gameTimer = new Timer()
+        room.gameObjects.push(room.gameTimer)
     }
 
     const samurai = room.fighters.samurai
@@ -39,11 +37,11 @@ setInterval(() => {
       fightersData.samurai.attackBox = samurai.attackBox
     }
 
-    if (gameTimer !== null && room.state === 'continue') {
-      io.to(room.id).emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
+    if (room.gameTimer !== null && room.state === 'continue') {
+      io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining - 1, timeOut: room.gameTimer.timeOut })
       io.to(room.id).emit('set-fighters-data', fightersData)
 
-      if (gameTimer.timeRemaining === 1) {
+      if (room.gameTimer.timeRemaining === 1) {
         if (ninja.health > samurai.health) {
           room.winner = 'Player 2'
           sendingTheWinnerToClients(room)
@@ -53,8 +51,8 @@ setInterval(() => {
           sendingTheWinnerToClients(room)
         }
         if (ninja.health === samurai.health) {
-          gameTimer.timeRemaining += 9
-          gameTimer.timeOut = false
+          room.gameTimer.timeRemaining += 9
+          room.gameTimer.timeOut = false
         }
       }
     }
@@ -199,7 +197,7 @@ io.on('connection', (socket) => {
           gameObjects: [],
           state: 'start',
           winner: '',
-          timerRuning: false
+          gameTimer: null
         }
         room.gameObjects.push(room.fighters.samurai)
         rooms.push(room) 

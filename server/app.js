@@ -19,7 +19,6 @@ const rooms = [];
 
 let winner = ''
 let gameTimer = null
-const fightersData = {}
 setInterval(() => {
   rooms.forEach(room => {
     if (room.players.length === 2 && room.state === 'start') {
@@ -35,6 +34,7 @@ setInterval(() => {
     samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
     ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
 
+    const fightersData = {}
     fightersData.ninja = { position: ninja.position, command: ninja.command, health: ninja.health }
     fightersData.samurai = { position: samurai.position, command: samurai.command, health: samurai.health }
 
@@ -73,8 +73,6 @@ io.on('connection', (socket) => {
   if (player.id) {
     console.log('New connection:', [player.id, socket.id])
   }
-
-  socket.emit('set-fighters-data', fightersData)
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', [player.id, socket.id])

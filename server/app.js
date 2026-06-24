@@ -13,13 +13,11 @@ const Fighter = require('./fighter.js').Fighter
 
 const debug = false
 
-// const gameObjects = []
 
 let room
 let roomIndex 
 const player = {}
 let playerIndex
-let waitingPlayers = []
 const rooms = [];
 
 let winner = ''
@@ -113,7 +111,6 @@ io.on('connection', (socket) => {
           room.state = 'stop'
         }
       } else {
-        waitingPlayers = []
         roomIndex = rooms.findIndex(room => room.players.some(player => player.socket === null) || room.players.length <2)
         if (roomIndex > -1) {
           rooms.splice(roomIndex, 1)
@@ -201,16 +198,13 @@ io.on('connection', (socket) => {
       room.state = 'continue'
       socket.join(room.id)
     } else { 
-      if (waitingPlayers.length > 0) {
+      console.log(rooms)
+      room = findWaitingRoom()
+      if (room) {
         player.type = 'ninja'
-
-        room = rooms.find(room => {
-          return room.players.some(player => player.id == waitingPlayers[0])
-        })
         room.players.push({id: id, type: player.type, socket: socket})
-        waitingPlayers = []
 
-        room.gameObjects.push(ninja)
+        room.gameObjects.push(room.fighters.ninja)
       } else {
         player.type = 'samurai'
 
@@ -221,14 +215,13 @@ io.on('connection', (socket) => {
             samurai: samurai,
             ninja: ninja
           },
-          gameObjects: [samurai],
+          gameObjects: [],
           state: 'start',
           timerRuning: false
         }
+        room.gameObjects.push(room.fighters.samurai)
         rooms.push(room) 
-        waitingPlayers.push(id)
       }
-
       socket.join(room.id)
     }
   
@@ -284,4 +277,8 @@ function findStoppadRoomByPlayerId (id) {
         return room.players.some(player => player.id === id)
       }
     })
+}
+
+function findWaitingRoom () {
+  return rooms.find(room => room.state == 'start' && room.players.length == 1)
 }

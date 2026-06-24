@@ -245,9 +245,7 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
 }
 
 function sendingTheWinnerToClients (room) {
-  room.players.forEach(player => {
-    player.socket.emit('game-over', { winner: room.winner })
-  })
+  io.to(room.id).emit('game-over', { winner: room.winner })
 }
 
 function setIdOfRoom () {

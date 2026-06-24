@@ -88,14 +88,11 @@ setInterval(() => {
         }
       }
     }
-  })
-  
 
-  if (room) {
     room.gameObjects.forEach(gameObject => {
       gameObject.update()
     })
-  }
+  })
 }, 50)
 
 io.on('connection', (socket) => {
@@ -127,6 +124,9 @@ io.on('connection', (socket) => {
 
   socket.on('set-move-command', (data) => {
     roomIndex = rooms.findIndex(room => room.players.some(player => player.socket === socket))
+    if (roomIndex === -1) {
+      return
+    }
     samurai = rooms[roomIndex].fighters.samurai
     ninja = rooms[roomIndex].fighters.ninja
 
@@ -191,11 +191,7 @@ io.on('connection', (socket) => {
   })
   socket.on('get-player-id', (id) => {
     player.id = id
-    room = rooms.find(room => {
-      if (room.state == 'stop') {
-        return room.players.some(player => player.id === id)
-      }
-    })
+    room = findStoppadRoomByPlayerId(id)
     if (room) {
       playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
       console.log(playerIndex, room)
@@ -280,4 +276,12 @@ function sendingTheWinnerToClients (winner) {
 
 function setIdOfRoom () {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
+}
+
+function findStoppadRoomByPlayerId (id) {
+  return rooms.find(room => {
+      if (room.state == 'stop') {
+        return room.players.some(player => player.id === id)
+      }
+    })
 }

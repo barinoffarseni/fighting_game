@@ -15,7 +15,6 @@ const debug = false
 
 
 const player = {}
-let playerIndex
 const rooms = [];
 
 let winner = ''
@@ -84,7 +83,7 @@ io.on('connection', (socket) => {
       return
     }
     if (room.players.length === 2 && room.state !== 'stop') {
-      playerIndex = room.players.findIndex(player => player.socket === socket)
+      const playerIndex = room.players.findIndex(player => player.socket === socket)
 
       if (playerIndex > -1) {
         room.players[playerIndex].socket = null
@@ -178,7 +177,7 @@ io.on('connection', (socket) => {
     player.id = id
     let room = findStoppadRoomByPlayerId(id)
     if (room) {
-      playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
+      const playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
       player.type = room.players[playerIndex].type
 
       room.players[playerIndex].socket = socket

@@ -12,9 +12,6 @@ const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
 const debug = false
-
-
-const player = {}
 const rooms = [];
 
 let gameTimer = null
@@ -69,12 +66,10 @@ setInterval(() => {
 }, 50)
 
 io.on('connection', (socket) => {
-  if (player.id) {
-    console.log('New connection:', [player.id, socket.id])
-  }
+  console.log('New connection:', socket.id)
 
   socket.on('disconnect', () => {
-    console.log('Disconnect:', [player.id, socket.id])
+    console.log('Disconnect:', socket.id)
     const room = findRoomBySocket(socket)
     if (!room) {
       return
@@ -171,7 +166,11 @@ io.on('connection', (socket) => {
     }
   })
   socket.on('get-player-id', (id) => {
-    player.id = id
+    const player = {
+      id: id,
+      socket: socket,
+      type: ''
+    }
     let room = findStoppadRoomByPlayerId(id)
     if (room) {
       const playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
@@ -184,7 +183,7 @@ io.on('connection', (socket) => {
       room = findWaitingRoom()
       if (room) {
         player.type = 'ninja'
-        room.players.push({id: id, type: player.type, socket: socket})
+        room.players.push(player)
 
         room.gameObjects.push(room.fighters.ninja)
       } else {
@@ -192,7 +191,7 @@ io.on('connection', (socket) => {
 
         room = {
           id: setIdOfRoom(),
-          players: [{id: id, type: player.type, socket: socket}],
+          players: [player],
           fighters: {
             samurai: creatFighter(0, 0),
             ninja:  creatFighter(512, 0)

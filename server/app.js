@@ -17,7 +17,6 @@ const debug = false
 const player = {}
 const rooms = [];
 
-let winner = ''
 let gameTimer = null
 setInterval(() => {
   rooms.forEach(room => {
@@ -49,12 +48,12 @@ setInterval(() => {
 
       if (gameTimer.timeRemaining === 1) {
         if (ninja.health > samurai.health) {
-          winner = 'Player 2'
-          sendingTheWinnerToClients(winner, room)
+          room.winner = 'Player 2'
+          sendingTheWinnerToClients(room)
         }
         if (samurai.health > ninja.health) {
-          winner = 'Player 1'
-          sendingTheWinnerToClients(winner, room)
+          room.winner = 'Player 1'
+          sendingTheWinnerToClients(room)
         }
         if (ninja.health === samurai.health) {
           gameTimer.timeRemaining += 9
@@ -163,12 +162,12 @@ io.on('connection', (socket) => {
     }
 
     if (samurai.health === 0) {
-      winner = 'Player 2'
-      sendingTheWinnerToClients(winner, room)
+      room.winner = 'Player 2'
+      sendingTheWinnerToClients(room)
     }
     if (ninja.health === 0) {
-      winner = 'Player 1'
-      sendingTheWinnerToClients(winner, room)
+      room.winner = 'Player 1'
+      sendingTheWinnerToClients(room)
     }
   })
   socket.on('get-player-id', (id) => {
@@ -200,6 +199,7 @@ io.on('connection', (socket) => {
           },
           gameObjects: [],
           state: 'start',
+          winner: '',
           timerRuning: false
         }
         room.gameObjects.push(room.fighters.samurai)
@@ -244,9 +244,9 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   }
 }
 
-function sendingTheWinnerToClients (winner, room) {
+function sendingTheWinnerToClients (room) {
   room.players.forEach(player => {
-    player.socket.emit('game-over', { winner })
+    player.socket.emit('game-over', { winner: room.winner })
   })
 }
 

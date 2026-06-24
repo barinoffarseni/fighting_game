@@ -57,9 +57,11 @@ setInterval(() => {
       }
     }
 
-    room.gameObjects.forEach(gameObject => {
-      gameObject.update()
-    })
+    if (room.state !== 'stop') {
+      room.gameObjects.forEach(gameObject => {
+        gameObject.update()
+      })
+    }
   })
 }, 50)
 

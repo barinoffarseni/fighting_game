@@ -22,27 +22,6 @@ const rooms = [];
 
 let winner = ''
 let gameTimer = null
-let samurai = new Fighter({
-  position: {
-    x: 0,
-    y: 0
-  },
-  velocity: {
-    x: 0,
-    y: 0
-  }
-})
-let ninja = new Fighter({
-  position: {
-    x: 512,
-    y: 0
-  },
-  velocity: {
-    x: 0,
-    y: 0
-  }
-})
-
 const fightersData = {}
 setInterval(() => {
   rooms.forEach(room => {
@@ -53,8 +32,8 @@ setInterval(() => {
         room.gameObjects.push(gameTimer)
     }
 
-    samurai = room.fighters.samurai
-    ninja = room.fighters.ninja
+    const samurai = room.fighters.samurai
+    const ninja = room.fighters.ninja
 
     samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
     ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
@@ -124,8 +103,8 @@ io.on('connection', (socket) => {
     if (roomIndex === -1) {
       return
     }
-    samurai = rooms[roomIndex].fighters.samurai
-    ninja = rooms[roomIndex].fighters.ninja
+    const samurai = rooms[roomIndex].fighters.samurai
+    const ninja = rooms[roomIndex].fighters.ninja
 
     if (data.player.type === 'samurai') {
       if (data.player.command === 'right') {
@@ -212,8 +191,8 @@ io.on('connection', (socket) => {
           id: setIdOfRoom(),
           players: [{id: id, type: player.type, socket: socket}],
           fighters: {
-            samurai: samurai,
-            ninja: ninja
+            samurai: creatFighter(0, 0),
+            ninja:  creatFighter(512, 0)
           },
           gameObjects: [],
           state: 'start',
@@ -281,4 +260,17 @@ function findStoppadRoomByPlayerId (id) {
 
 function findWaitingRoom () {
   return rooms.find(room => room.state == 'start' && room.players.length == 1)
+}
+
+function creatFighter (x, y) {
+  return new Fighter({
+    position: {
+      x: x,
+      y: y
+    },
+    velocity: {
+      x: 0,
+      y: 0
+    }
+  })
 }

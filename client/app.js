@@ -246,10 +246,6 @@ socket.on('set-fighters-data', function (data) {
   ninjaData.position = data.ninja.position
 })
 
-socket.on('room_started', function (data) {
-  console.log('lol')
-})
-
 function update () {
   if (player[player.type] && enemy[enemy.type]) {
     player[player.type].textureMirroring = getFighterTextureMirroring(player[player.type].position.x, enemy[enemy.type].position.x)

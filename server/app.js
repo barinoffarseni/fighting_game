@@ -56,6 +56,8 @@ setInterval(() => {
           room.gameTimer.timeOut = false
         }
       }
+    } else {
+      io.to(room.id).emit('timer', { timeRemaining: 0, timeOut: false})
     }
 
     if (room.state !== 'stop') {

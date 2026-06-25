@@ -5,10 +5,9 @@ canvas.width = 1024
 canvas.height = 576
 
 let gameOver = false
-
+let gameStart = false
 const debug = false
 
-let user = false
 const player = {}
 const enemy = {}
 
@@ -167,25 +166,18 @@ function waitingForPlayers () {
   socket.emit('get-player-id', id )
 
   socket.on('set-data', function ({ type }) {
-    if (!user) {
-      user = { type }
-
-      if (user.type === 'samurai') {
-        player.type = 'samurai'
-      }
-      if (user.type === 'ninja') {
-        player.type = 'ninja'
-        enemy.type = 'samurai'
-      }
-    } else {
-      if (user.type === 'samurai') {
-        enemy.type = 'ninja'
-      }
+    if (type === 'samurai') {
+      player.type = 'samurai'
+      enemy.type = 'ninja'
     }
-
-    setFighter(player, leftHealthBarData, rightHealthBarData)
-    setFighter(enemy, leftHealthBarData, rightHealthBarData)
+    if (type === 'ninja') {
+      player.type = 'ninja'
+      enemy.type = 'samurai'
+    }
   })
+
+  setFighter(player, leftHealthBarData, rightHealthBarData)
+  setFighter(enemy, leftHealthBarData, rightHealthBarData)
 
   gameLoop()
 }

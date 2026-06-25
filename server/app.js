@@ -217,7 +217,7 @@ io.on('connection', (socket) => {
       socket.join(room.id)
     }
   
-  io.to(room.id).emit('set-data', { type: player.type });
+  socket.emit('set-data', { type: player.type });
   })
 })
 

@@ -13,6 +13,7 @@ const Fighter = require('./fighter.js').Fighter
 
 const debug = false
 const rooms = [];
+const socketRooms = new Map()
 
 setInterval(() => {
   rooms.forEach(room => {
@@ -70,7 +71,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', socket.id)
-    const room = findRoomBySocket(socket)
+    const room = findRoom(socket)
     if (!room) {
       return
     }
@@ -88,10 +89,11 @@ io.on('connection', (socket) => {
         rooms.splice(roomIndex, 1)
       }
     }
+    socketRooms.delete(socket.id)
   })
 
   socket.on('set-move-command', (data) => {
-    const room = findRoomBySocket(socket)
+    const room = findRoom(socket)
     if (!room || room.state !== 'continue') {
       return
     }
@@ -142,7 +144,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('check-attack-is-success', (data) => {
-    const room = findRoomBySocket(socket)
+    const room = findRoom(socket)
     if (!room || room.state !== 'continue') {
       return
     }
@@ -183,6 +185,7 @@ io.on('connection', (socket) => {
       room.gameTimer.timeStop = false
       room.gameTimer.startTimer()
 
+      socketRooms.set(socket.id,room.id)
       socket.join(room.id)
     } else { 
       room = findWaitingRoom()
@@ -191,6 +194,7 @@ io.on('connection', (socket) => {
         room.players.push(player)
 
         room.gameObjects.push(room.fighters.ninja)
+        socketRooms.set(socket.id,room.id)
       } else {
         player.type = 'samurai'
 
@@ -209,6 +213,7 @@ io.on('connection', (socket) => {
         room.gameObjects.push(room.fighters.samurai)
         rooms.push(room) 
       }
+      socketRooms.set(socket.id,room.id)
       socket.join(room.id)
     }
   
@@ -268,8 +273,8 @@ function findWaitingRoom () {
   return rooms.find(room => room.state == 'start' && room.players.length == 1)
 }
 
-function findRoomBySocket (socket) {
-  return rooms.find(room => room.players.some(player => player.socket === socket))
+function findRoom (socket) {
+  return rooms.find(room => room.id == socketRooms.get(socket.id))
 }
 
 function creatFighter (x, y) {

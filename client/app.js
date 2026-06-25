@@ -5,7 +5,7 @@ canvas.width = 1024
 canvas.height = 576
 
 let gameOver = false
-let gameStart = false
+const gameStart = false
 const debug = false
 
 const player = {}
@@ -157,13 +157,13 @@ function gameLoop () {
 }
 
 function waitingForPlayers () {
-  let id = localStorage.getItem("id");
+  let id = localStorage.getItem('id')
 
   if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem("id", id);
+    id = crypto.randomUUID()
+    localStorage.setItem('id', id)
   }
-  socket.emit('get-player-id', id )
+  socket.emit('get-player-id', id)
 
   socket.on('set-data', function ({ type }) {
     if (type === 'samurai') {

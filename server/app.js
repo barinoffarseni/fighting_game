@@ -49,7 +49,6 @@ setInterval(() => {
   if (room) {
     if (room.players.length == 2 && room.state == 'start') {
       room.state = 'continue'
-      // room.timerRuning = true
       gameTimer = new Timer()
       gameObjects.push(gameTimer)
     }
@@ -188,7 +187,6 @@ io.on('connection', (socket) => {
     })
     if (room) {
       playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
-      console.log(playerIndex, room)
       player.type = room.players[playerIndex].type
 
       room.players[playerIndex].socket = socket

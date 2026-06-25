@@ -19,7 +19,7 @@ let room
 const player = {}
 let playerIndex = 0
 let waitingPlayers = []
-const rooms = [];
+const rooms = []
 
 let winner = ''
 let gameTimer = null
@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
     console.log('Disconnect:', [player.id, socket.id])
     if (room) {
       if (room.players.length == 2 && room.state !== 'stop') {
-          playerIndex = room.players.findIndex(player => player.socket == socket)
+        playerIndex = room.players.findIndex(player => player.socket == socket)
 
         if (playerIndex > -1) {
           room.players[playerIndex].socket = null
@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
         }
       } else {
         waitingPlayers = []
-        const roomIndex = rooms.findIndex(room => room.players.some(player => player.socket == null) || room.players.length <2)
+        const roomIndex = rooms.findIndex(room => room.players.some(player => player.socket == null) || room.players.length < 2)
         if (roomIndex > -1) {
           rooms.splice(roomIndex, 1)
         }
@@ -194,14 +194,14 @@ io.on('connection', (socket) => {
       room.players[playerIndex].socket = socket
       room.state = 'continue'
       socket.join(room.id)
-    } else { 
+    } else {
       if (waitingPlayers.length > 0) {
         player.type = 'ninja'
 
         room = rooms.find(room => {
           return room.players.some(player => player.id == waitingPlayers[0])
         })
-        room.players.push({id: id, type: player.type, socket: socket})
+        room.players.push({ id, type: player.type, socket })
         waitingPlayers = []
 
         gameObjects.push(ninja)
@@ -210,11 +210,11 @@ io.on('connection', (socket) => {
 
         room = {
           id: setIdOfRoom(),
-          players: [{id: id, type: player.type, socket: socket}],
+          players: [{ id, type: player.type, socket }],
           state: 'start',
           timerRuning: false
         }
-        rooms.push(room) 
+        rooms.push(room)
 
         gameObjects.push(samurai)
         waitingPlayers.push(id)
@@ -222,8 +222,8 @@ io.on('connection', (socket) => {
 
       socket.join(room.id)
     }
-  
-  io.to(room.id).emit('set-data', { type: player.type });
+
+    io.to(room.id).emit('set-data', { type: player.type })
   })
 })
 

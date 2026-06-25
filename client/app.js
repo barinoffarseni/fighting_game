@@ -158,13 +158,13 @@ function gameLoop () {
 }
 
 function waitingForPlayers () {
-  let id = localStorage.getItem("id");
+  let id = localStorage.getItem('id')
 
   if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem("id", id);
+    id = crypto.randomUUID()
+    localStorage.setItem('id', id)
   }
-  socket.emit('get-player-id', id )
+  socket.emit('get-player-id', id)
 
   socket.on('set-data', function ({ type }) {
     if (!user) {

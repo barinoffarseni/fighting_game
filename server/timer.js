@@ -3,7 +3,6 @@ export class Timer {
     this.timeRemaining = 31
     this.timeOut = false
     this.startTimer()
-    this.timeStop = false
   }
 
   update () {
@@ -14,7 +13,7 @@ export class Timer {
 
   startTimer () {
     const intervalId = setInterval(() => {
-      if (this.timeOut || this.timeStop) {
+      if (this.timeOut) {
         clearInterval(intervalId)
       } else {
         this.timeRemaining--

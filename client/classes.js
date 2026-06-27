@@ -73,10 +73,10 @@ class Fighter extends SpriteAnimated {
   constructor ({ velocity, sprites, offset, attackFrame, name, position }) {
     super({
       position,
-      imgSrc: `./img/${name}/Idle.png`,
+      imgSrc: './img/samurai/Idle.png',
       scale: 2.5,
       framesHold: 10,
-      imgFrames: sprites.idle.frames,
+      imgFrames: 8,
       offset
     })
     this.position = position

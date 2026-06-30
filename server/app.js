@@ -207,7 +207,7 @@ io.on('connection', (socket) => {
         player.type = 'samurai'
 
         room = {
-          id: setIdOfRoom(),
+          id: crypto.randomUUID(),
           players: [{ id, type: player.type, socket }],
           state: 'start',
           timerRuning: false
@@ -261,8 +261,4 @@ function sendingTheWinnerToClients (winner) {
   room.players.forEach(player => {
     player.socket.emit('game-over', { winner })
   })
-}
-
-function setIdOfRoom () {
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
 }

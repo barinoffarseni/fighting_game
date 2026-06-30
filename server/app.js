@@ -18,7 +18,6 @@ const gameObjects = []
 let room
 const player = {}
 let playerIndex = 0
-let waitingPlayers = []
 const rooms = []
 
 let winner = ''
@@ -109,7 +108,6 @@ io.on('connection', (socket) => {
           room.state = 'stop'
         }
       } else {
-        waitingPlayers = []
         const roomIndex = rooms.findIndex(room => room.players.some(player => player.socket == null) || room.players.length < 2)
         if (roomIndex > -1) {
           rooms.splice(roomIndex, 1)
@@ -180,27 +178,19 @@ io.on('connection', (socket) => {
   })
   socket.on('set-player-id', (id) => {
     player.id = id
-    room = rooms.find(room => {
-      if (room.state == 'stop') {
-        return room.players.some(player => player.id === id)
-      }
-    })
+    room = findStoppadRoomByPlayerId (id)
     if (room) {
       playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
       player.type = room.players[playerIndex].type
 
       room.players[playerIndex].socket = socket
       room.state = 'continue'
-      socket.join(room.id)
     } else {
-      if (waitingPlayers.length > 0) {
+      room = findWaitingRoom()
+      if (room) {
         player.type = 'ninja'
 
-        room = rooms.find(room => {
-          return room.players.some(player => player.id == waitingPlayers[0])
-        })
-        room.players.push({ id, type: player.type, socket })
-        waitingPlayers = []
+        room.players.push({ id: id, type: player.type, socket: socket })
 
         gameObjects.push(ninja)
       } else {
@@ -215,11 +205,9 @@ io.on('connection', (socket) => {
         rooms.push(room)
 
         gameObjects.push(samurai)
-        waitingPlayers.push(id)
       }
-
-      socket.join(room.id)
     }
+    socket.join(room.id)
 
     io.to(room.id).emit('set-data', { type: player.type })
   })
@@ -261,4 +249,16 @@ function sendingTheWinnerToClients (winner) {
   room.players.forEach(player => {
     player.socket.emit('game-over', { winner })
   })
+}
+
+function findStoppadRoomByPlayerId (id) {
+  return rooms.find(room => {
+    if (room.state == 'stop') {
+      return room.players.some(player => player.id === id)
+    }
+  })
+}
+
+function findWaitingRoom () {
+  return rooms.find(room => room.state == 'start' && room.players.length == 1)
 }

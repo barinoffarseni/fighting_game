@@ -178,7 +178,7 @@ io.on('connection', (socket) => {
       sendingTheWinnerToClients(winner)
     }
   })
-  socket.on('get-player-id', (id) => {
+  socket.on('set-player-id', (id) => {
     player.id = id
     room = rooms.find(room => {
       if (room.state == 'stop') {

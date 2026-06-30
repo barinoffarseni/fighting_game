@@ -164,7 +164,7 @@ function waitingForPlayers () {
     id = crypto.randomUUID()
     localStorage.setItem('id', id)
   }
-  socket.emit('get-player-id', id)
+  socket.emit('set-player-id', id)
 
   socket.on('set-data', function ({ type }) {
     if (!user) {

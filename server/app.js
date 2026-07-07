@@ -85,9 +85,11 @@ setInterval(() => {
     }
   }
 
-  gameObjects.forEach(gameObject => {
-    gameObject.update()
-  })
+  if (room && room.state === 'continue') {
+    gameObjects.forEach(gameObject => {
+      gameObject.update()
+    })
+  }
 }, 50)
 
 io.on('connection', (socket) => {

@@ -107,6 +107,8 @@ io.on('connection', (socket) => {
           room.players[playerIndex].socket = null
           room.state = 'stop'
         }
+
+        gameTimer.timeStop = true
       } else {
         const roomIndex = rooms.findIndex(room => room.players.some(player => player.socket == null) || room.players.length < 2)
         if (roomIndex > -1) {
@@ -185,6 +187,7 @@ io.on('connection', (socket) => {
 
       room.players[playerIndex].socket = socket
       room.state = 'continue'
+      gameTimer.startTimer()
     } else {
       room = findWaitingRoom()
       if (room) {
@@ -263,8 +266,7 @@ class Room {
   constructor () {
     this.id = this.setId(),
     this.players = [],
-    this.state = 'start',
-    this.timerRuning = false
+    this.state = 'start'
   }
 
   update () { }

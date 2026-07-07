@@ -196,12 +196,8 @@ io.on('connection', (socket) => {
       } else {
         player.type = 'samurai'
 
-        room = {
-          id: crypto.randomUUID(),
-          players: [{ id, type: player.type, socket }],
-          state: 'start',
-          timerRuning: false
-        }
+        room = new Room()
+        room.players.push({ id: id, type: player.type, socket: socket })
         rooms.push(room)
 
         gameObjects.push(samurai)
@@ -261,4 +257,19 @@ function findStoppadRoomByPlayerId (id) {
 
 function findWaitingRoom () {
   return rooms.find(room => room.state == 'start' && room.players.length == 1)
+}
+
+class Room {
+  constructor () {
+    this.id = this.setId(),
+    this.players = [],
+    this.state = 'start',
+    this.timerRuning = false
+  }
+
+  update () { }
+
+  setId() {
+    return crypto.randomUUID()
+  }
 }

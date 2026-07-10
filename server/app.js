@@ -51,44 +51,42 @@ setInterval(() => {
       gameTimer = new Timer()
       gameObjects.push(gameTimer)
     }
-  }
-  samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
-  ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
+    samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
+    ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
 
-  fightersData.ninja = { position: ninja.position, command: ninja.command, health: ninja.health }
-  fightersData.samurai = { position: samurai.position, command: samurai.command, health: samurai.health }
+    fightersData.ninja = { position: ninja.position, command: ninja.command, health: ninja.health }
+    fightersData.samurai = { position: samurai.position, command: samurai.command, health: samurai.health }
 
-  if (debug) {
-    fightersData.ninja.attackBox = ninja.attackBox
-    fightersData.samurai.attackBox = samurai.attackBox
-  }
-
-  if (gameTimer !== null && room.state == 'continue') {
-    room.players.forEach(player => {
-      player.socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
-      player.socket.emit('set-fighters-data', fightersData)
-    })
-
-    if (gameTimer.timeRemaining === 1) {
-      if (ninja.health > samurai.health) {
-        winner = 'Player 2'
-        sendingTheWinnerToClients(winner)
-      }
-      if (samurai.health > ninja.health) {
-        winner = 'Player 1'
-        sendingTheWinnerToClients(winner)
-      }
-      if (ninja.health === samurai.health) {
-        gameTimer.timeRemaining += 9
-        gameTimer.timeOut = false
-      }
+    if (debug) {
+      fightersData.ninja.attackBox = ninja.attackBox
+      fightersData.samurai.attackBox = samurai.attackBox
     }
-  }
 
-  if (room && room.state === 'continue') {
-    gameObjects.forEach(gameObject => {
-      gameObject.update()
-    })
+    if (room.state == 'continue' && gameTimer !== null) {
+      room.players.forEach(player => {
+        player.socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
+        player.socket.emit('set-fighters-data', fightersData)
+      })
+
+      if (gameTimer.timeRemaining === 1) {
+        if (ninja.health > samurai.health) {
+          winner = 'Player 2'
+          sendingTheWinnerToClients(winner)
+        }
+        if (samurai.health > ninja.health) {
+          winner = 'Player 1'
+          sendingTheWinnerToClients(winner)
+        }
+        if (ninja.health === samurai.health) {
+          gameTimer.timeRemaining += 9
+          gameTimer.timeOut = false
+        }
+        }
+
+      gameObjects.forEach(gameObject => {
+        gameObject.update()
+      })
+    }
   }
 }, 50)
 

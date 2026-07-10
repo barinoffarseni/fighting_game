@@ -273,8 +273,6 @@ class Room {
     this.state = 'start'
   }
 
-  update () { }
-
   setId() {
     return crypto.randomUUID()
   }

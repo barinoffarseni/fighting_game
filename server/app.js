@@ -93,6 +93,8 @@ setInterval(() => {
 }, 50)
 
 io.on('connection', (socket) => {
+  player.id = crypto.randomUUID()
+  socket.emit('set-player-id', player.id)
   if (player) {
     console.log('New connection:', [player.id, socket.id])
   }
@@ -180,7 +182,7 @@ io.on('connection', (socket) => {
       sendingTheWinnerToClients(winner)
     }
   })
-  socket.on('set-player-id', (id) => {
+  socket.on('get-player-id', (id) => {
     player.id = id
     room = findStoppadRoomByPlayerId (id)
     if (room) {

@@ -8,7 +8,7 @@ let gameOver = false
 
 const debug = false
 
-let user = false
+let id = localStorage.getItem('id')
 const player = {}
 const enemy = {}
 
@@ -158,13 +158,13 @@ function gameLoop () {
 }
 
 function waitingForPlayers () {
-  let id = localStorage.getItem('id')
-
-  if (!id) {
-    id = crypto.randomUUID()
-    localStorage.setItem('id', id)
-  }
-  socket.emit('set-player-id', id)
+  socket.on('set-player-id', function (data) {
+    if (!id) {
+      id = data.id 
+      localStorage.setItem('id', id)
+    }
+    socket.emit('get-player-id', id)
+  })
 
   socket.on('set-data', function ({ type }) {
     if (type === 'samurai') {

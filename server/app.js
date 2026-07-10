@@ -184,7 +184,7 @@ io.on('connection', (socket) => {
   })
   socket.on('get-player-id', (id) => {
     player.id = id
-    room = findStoppadRoomByPlayerId (id)
+    room = findStoppedRoomByPlayerId (id)
     if (room) {
       playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
       player.type = room.players[playerIndex].type
@@ -254,7 +254,7 @@ function sendingTheWinnerToClients (winner) {
   })
 }
 
-function findStoppadRoomByPlayerId (id) {
+function findStoppedRoomByPlayerId (id) {
   return rooms.find(room => {
     if (room.state == 'stop') {
       return room.players.some(player => player.id === id)

@@ -16,9 +16,10 @@ const debug = false
 const gameObjects = []
 
 let room
-const player = {}
-let playerIndex = 0
-const rooms = []
+const rooms = {}
+const playerRooms = new Map()
+const socketRooms = new Map()
+let waitingRoomId = null
 
 let winner = ''
 let gameTimer = null
@@ -46,7 +47,7 @@ const ninja = new Fighter({
 const fightersData = {}
 setInterval(() => {
   if (room) {
-    if (room.players.length == 2 && room.state == 'start') {
+    if (Object.keys(room.players).length === 2 && room.state === 'start') {
       room.state = 'continue'
       gameTimer = new Timer()
       gameObjects.push(gameTimer)
@@ -63,7 +64,7 @@ setInterval(() => {
     }
 
     if (room.state == 'continue' && gameTimer !== null) {
-      room.players.forEach(player => {
+      Object.values(room.players).forEach(player => {
         player.socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
         player.socket.emit('set-fighters-data', fightersData)
       })
@@ -91,32 +92,24 @@ setInterval(() => {
 }, 50)
 
 io.on('connection', (socket) => {
-  player.id = crypto.randomUUID()
-  socket.emit('set-player-id', player.id)
-  if (player) {
-    console.log('New connection:', [player.id, socket.id])
-  }
+  const player = { id: crypto.randomUUID() }
+  socket.emit('set-player-id', { id: player.id })
+  console.log('New connection:', [player.id, socket.id])
 
   socket.emit('set-fighters-data', fightersData)
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', [player.id, socket.id])
-    if (room) {
-      if (room.players.length == 2 && room.state !== 'stop') {
-        playerIndex = room.players.findIndex(player => player.socket == socket)
+    const roomId = socketRooms.get(socket.id)
 
-        if (playerIndex > -1) {
-          room.players[playerIndex].socket = null
-          room.state = 'stop'
-        }
-
-        gameTimer.timeStop = true
-      } else {
-        const roomIndex = rooms.findIndex(room => room.players.some(player => player.socket == null) || room.players.length < 2)
-        if (roomIndex > -1) {
-          rooms.splice(roomIndex, 1)
-        }
-      }
+    socketRooms.delete(socket.id)
+    if (waitingRoomId !== roomId) {
+      rooms[roomId].players[player.id].socket = null
+      rooms[roomId].state = 'stop'
+      gameTimer.timeStop = true
+    } else {
+      delete rooms[room.id]
+      waitingRoomId = null
     }
   })
 
@@ -182,33 +175,35 @@ io.on('connection', (socket) => {
   })
   socket.on('get-player-id', (id) => {
     player.id = id
-    room = findStoppedRoomByPlayerId (id)
-    if (room) {
-      playerIndex = room.players.findIndex(player => player.id == id && player.socket == null)
-      player.type = room.players[playerIndex].type
-
-      room.players[playerIndex].socket = socket
+    room = rooms[playerRooms.get(id)]
+    if (room && room.state === 'stop') {
+      console.log(room)
+      player.type = room.players[id].type
+      room.players[id].socket = socket
       room.state = 'continue'
       gameTimer.startTimer()
     } else {
-      room = findWaitingRoom()
+      room = rooms[waitingRoomId]
       if (room) {
         player.type = 'ninja'
-
-        room.players.push({ id: id, type: player.type, socket: socket })
+        waitingRoomId = null
 
         gameObjects.push(ninja)
       } else {
         player.type = 'samurai'
 
         room = new Room()
-        room.players.push({ id: id, type: player.type, socket: socket })
-        rooms.push(room)
+        rooms[room.id] = room
+        waitingRoomId = room.id
 
         gameObjects.push(samurai)
       }
     }
+    room.players[id] = { id: id, type: player.type, socket: socket }
+
     socket.join(room.id)
+    socketRooms.set(socket.id, room.id)
+    playerRooms.set(id, room.id)
 
     socket.emit('set-data', { type: player.type })
   })
@@ -247,27 +242,15 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
 }
 
 function sendingTheWinnerToClients (winner) {
-  room.players.forEach(player => {
+  Object.values(room.players).forEach(player => {
     player.socket.emit('game-over', { winner })
   })
-}
-
-function findStoppedRoomByPlayerId (id) {
-  return rooms.find(room => {
-    if (room.state == 'stop') {
-      return room.players.some(player => player.id === id)
-    }
-  })
-}
-
-function findWaitingRoom () {
-  return rooms.find(room => room.state == 'start' && room.players.length == 1)
 }
 
 class Room {
   constructor () {
     this.id = this.setId(),
-    this.players = [],
+    this.players = {},
     this.state = 'start'
   }
 

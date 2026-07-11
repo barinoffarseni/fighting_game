@@ -108,7 +108,7 @@ io.on('connection', (socket) => {
 
     socketRooms.delete(socket.id)
     if (rooms[roomId].state === 'continue') {
-      rooms[roomId].players[player.id].socket = null
+      delete rooms[roomId].players[socket.id]
       rooms[roomId].state = 'stop'
       gameTimer.timeStop = true
     } else {
@@ -183,9 +183,12 @@ io.on('connection', (socket) => {
     player.id = id
     room = rooms[playerRooms.get(id)]
     if (room && room.state === 'stop') {
-      // const playerIndex 
-      player.type = room.players[id].type
-      room.players[id].socket = socket
+      if (Object.values(room.players)[0].type === 'samurai') {
+        player.type = 'ninja'
+      } else {
+        player.type = 'samurai'
+      }
+
       room.state = 'continue'
       gameTimer.startTimer()
     } else {
@@ -205,7 +208,7 @@ io.on('connection', (socket) => {
         gameObjects.push(samurai)
       }
     }
-    room.players[id] = { id: id, type: player.type, socket: socket }
+    room.players[socket.id] = { id: id, type: player.type, socket: socket }
 
     socket.join(room.id)
     socketRooms.set(socket.id, room.id)

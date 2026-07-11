@@ -8,6 +8,7 @@ const io = require('socket.io')(httpServer, {
     methods: ['GET', 'POST']
   }
 })
+const Room = require('./room.js').Room
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter
 
@@ -254,16 +255,4 @@ function sendingTheWinnerToClients (winner) {
   Object.values(room.players).forEach(player => {
     player.socket.emit('game-over', { winner })
   })
-}
-
-class Room {
-  constructor () {
-    this.id = this.setId(),
-    this.players = {},
-    this.state = 'start'
-  }
-
-  setId () {
-    return crypto.randomUUID()
-  }
 }

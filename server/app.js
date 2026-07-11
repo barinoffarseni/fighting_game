@@ -82,7 +82,7 @@ setInterval(() => {
           gameTimer.timeRemaining += 9
           gameTimer.timeOut = false
         }
-        }
+      }
 
       gameObjects.forEach(gameObject => {
         gameObject.update()
@@ -208,7 +208,7 @@ io.on('connection', (socket) => {
         gameObjects.push(samurai)
       }
     }
-    room.players[socket.id] = { id: id, type: player.type, socket: socket }
+    room.players[socket.id] = { id, type: player.type, socket }
 
     socket.join(room.id)
     socketRooms.set(socket.id, room.id)
@@ -263,7 +263,7 @@ class Room {
     this.state = 'start'
   }
 
-  setId() {
+  setId () {
     return crypto.randomUUID()
   }
 }

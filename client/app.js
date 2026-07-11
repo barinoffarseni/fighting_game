@@ -160,7 +160,7 @@ function gameLoop () {
 function waitingForPlayers () {
   socket.on('set-player-id', function (data) {
     if (!id) {
-      id = data.id 
+      id = data.id
       localStorage.setItem('id', id)
     }
     socket.emit('get-player-id', id)

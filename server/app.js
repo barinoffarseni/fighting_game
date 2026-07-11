@@ -94,22 +94,28 @@ setInterval(() => {
 io.on('connection', (socket) => {
   const player = { id: crypto.randomUUID() }
   socket.emit('set-player-id', { id: player.id })
-  console.log('New connection:', [player.id, socket.id])
+  console.log('New connection:', socket.id)
 
   socket.emit('set-fighters-data', fightersData)
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', [player.id, socket.id])
     const roomId = socketRooms.get(socket.id)
+    if (!rooms[roomId]) {
+      console.log(rooms[roomId], roomId)
+      return
+    }
 
     socketRooms.delete(socket.id)
-    if (waitingRoomId !== roomId) {
+    if (rooms[roomId].state === 'continue') {
       rooms[roomId].players[player.id].socket = null
       rooms[roomId].state = 'stop'
       gameTimer.timeStop = true
     } else {
-      delete rooms[room.id]
-      waitingRoomId = null
+      delete rooms[roomId]
+      if (waitingRoomId === roomId) {
+        waitingRoomId = null
+      }
     }
   })
 
@@ -177,7 +183,7 @@ io.on('connection', (socket) => {
     player.id = id
     room = rooms[playerRooms.get(id)]
     if (room && room.state === 'stop') {
-      console.log(room)
+      // const playerIndex 
       player.type = room.players[id].type
       room.players[id].socket = socket
       room.state = 'continue'

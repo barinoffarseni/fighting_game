@@ -1,6 +1,7 @@
 export class Timer {
   constructor () {
     this.timeRemaining = 31
+    this.timeStop = false
     this.timeOut = false
     this.startTimer()
   }
@@ -13,7 +14,8 @@ export class Timer {
 
   startTimer () {
     const intervalId = setInterval(() => {
-      if (this.timeOut) {
+      if (this.timeOut || this.timeStop) {
+        this.timeStop = false
         clearInterval(intervalId)
       } else {
         this.timeRemaining--

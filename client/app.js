@@ -8,7 +8,7 @@ let gameOver = false
 
 const debug = false
 
-let user = false
+let id = localStorage.getItem('id')
 const player = {}
 const enemy = {}
 
@@ -158,26 +158,26 @@ function gameLoop () {
 }
 
 function waitingForPlayers () {
-  socket.on('set-data', function ({ type, id }) {
-    if (!user) {
-      user = { type, id }
-
-      if (user.type === 'samurai') {
-        player.type = 'samurai'
-      }
-      if (user.type === 'ninja') {
-        player.type = 'ninja'
-        enemy.type = 'samurai'
-      }
-    } else {
-      if (user.type === 'samurai') {
-        enemy.type = 'ninja'
-      }
+  socket.on('set-player-id', function (data) {
+    if (!id) {
+      id = data.id
+      localStorage.setItem('id', id)
     }
-
-    setFighter(player, leftHealthBarData, rightHealthBarData)
-    setFighter(enemy, leftHealthBarData, rightHealthBarData)
+    socket.emit('get-player-id', id)
   })
+
+  socket.on('set-data', function ({ type }) {
+    if (type === 'samurai') {
+      player.type = 'samurai'
+      enemy.type = 'ninja'
+    }
+    if (type === 'ninja') {
+      player.type = 'ninja'
+      enemy.type = 'samurai'
+    }
+  })
+  setFighter(player, leftHealthBarData, rightHealthBarData)
+  setFighter(enemy, leftHealthBarData, rightHealthBarData)
 
   gameLoop()
 }
@@ -202,10 +202,6 @@ function control () {
     socket.emit('set-move-command', { player: { type: player.type, command: 'attack' } })
   }
 }
-
-socket.on('id', function (message) {
-  id = message
-})
 
 socket.on('set-fighters-data', function (data) {
   if (player[player.type]) {

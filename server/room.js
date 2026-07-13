@@ -1,11 +1,7 @@
 export class Room {
   constructor () {
-    this.id = this.setId(),
+    this.id = crypto.randomUUID(),
     this.players = {},
     this.state = 'start'
-  }
-
-  setId () {
-    return crypto.randomUUID()
   }
 }

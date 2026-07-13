@@ -16,7 +16,6 @@ const debug = false
 
 const gameObjects = []
 
-let room
 const rooms = {}
 const playerRooms = new Map()
 const socketRooms = new Map()
@@ -47,7 +46,7 @@ const ninja = new Fighter({
 
 const fightersData = {}
 setInterval(() => {
-  if (room) {
+  for (const room of Object.values(rooms)) {
     if (Object.keys(room.players).length === 2 && room.state === 'start') {
       room.state = 'continue'
       gameTimer = new Timer()
@@ -103,7 +102,6 @@ io.on('connection', (socket) => {
     console.log('Disconnect:', [player.id, socket.id])
     const roomId = socketRooms.get(socket.id)
     if (!rooms[roomId]) {
-      console.log(rooms[roomId], roomId)
       return
     }
 
@@ -182,7 +180,7 @@ io.on('connection', (socket) => {
   })
   socket.on('get-player-id', (id) => {
     player.id = id
-    room = rooms[playerRooms.get(id)]
+    let room = rooms[playerRooms.get(id)]
     if (room && room.state === 'stop') {
       if (Object.values(room.players)[0].type === 'samurai') {
         player.type = 'ninja'

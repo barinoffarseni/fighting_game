@@ -7,6 +7,7 @@ services:
       - '9229:9229'
     volumes:
       - .:/app
+      - .:/room
     working_dir: /app
     command: ash -c "npm install && node --inspect=0.0.0.0 server/app.js"
 

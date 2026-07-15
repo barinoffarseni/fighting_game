@@ -14,8 +14,6 @@ const Fighter = require('./fighter.js').Fighter
 
 const debug = false
 
-const gameObjects = []
-
 const rooms = {}
 const playerRooms = new Map()
 const socketRooms = new Map()
@@ -23,26 +21,6 @@ let waitingRoomId = null
 
 let winner = ''
 let gameTimer = null
-const samurai = new Fighter({
-  position: {
-    x: 0,
-    y: 0
-  },
-  velocity: {
-    x: 0,
-    y: 0
-  }
-})
-const ninja = new Fighter({
-  position: {
-    x: 512,
-    y: 0
-  },
-  velocity: {
-    x: 0,
-    y: 0
-  }
-})
 
 const fightersData = {}
 setInterval(() => {
@@ -50,17 +28,17 @@ setInterval(() => {
     if (Object.keys(room.players).length === 2 && room.state === 'start') {
       room.state = 'continue'
       gameTimer = new Timer()
-      gameObjects.push(gameTimer)
+      room.gameObjects.push(gameTimer)
     }
-    samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(samurai.position.x, ninja.position.x)
-    ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(ninja.position.x, samurai.position.x)
+    room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
+    room.fighters.ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.ninja.position.x, room.fighters.samurai.position.x)
 
-    fightersData.ninja = { position: ninja.position, command: ninja.command, health: ninja.health }
-    fightersData.samurai = { position: samurai.position, command: samurai.command, health: samurai.health }
+    fightersData.ninja = { position: room.fighters.ninja.position, command: room.fighters.ninja.command, health: room.fighters.ninja.health }
+    fightersData.samurai = { position: room.fighters.samurai.position, command: room.fighters.samurai.command, health: room.fighters.samurai.health }
 
     if (debug) {
-      fightersData.ninja.attackBox = ninja.attackBox
-      fightersData.samurai.attackBox = samurai.attackBox
+      fightersData.ninja.attackBox = room.fighters.ninja.attackBox
+      fightersData.samurai.attackBox = room.fighters.samurai.attackBox
     }
 
     if (room.state == 'continue' && gameTimer !== null) {
@@ -70,21 +48,21 @@ setInterval(() => {
       })
 
       if (gameTimer.timeRemaining === 1) {
-        if (ninja.health > samurai.health) {
+        if (room.fighters.ninja.health > room.fighters.samurai.health) {
           winner = 'Player 2'
-          sendingTheWinnerToClients(winner)
+          sendingTheWinnerToClients(winner, room)
         }
-        if (samurai.health > ninja.health) {
+        if (room.fighters.samurai.health > room.fighters.ninja.health) {
           winner = 'Player 1'
-          sendingTheWinnerToClients(winner)
+          sendingTheWinnerToClients(winner, room)
         }
-        if (ninja.health === samurai.health) {
+        if (room.fighters.ninja.health === room.fighters.samurai.health) {
           gameTimer.timeRemaining += 9
           gameTimer.timeOut = false
         }
       }
 
-      gameObjects.forEach(gameObject => {
+      room.gameObjects.forEach(gameObject => {
         gameObject.update()
       })
     }
@@ -119,63 +97,67 @@ io.on('connection', (socket) => {
   })
 
   socket.on('set-move-command', (data) => {
+    const room = rooms[socketRooms.get(socket.id)]
+
     if (data.player.type === 'samurai') {
       if (data.player.command === 'right') {
-        samurai.velocity.x = 4
-        if (samurai.canJump) {
-          samurai.command = data.player.command
+        room.fighters.samurai.velocity.x = 4
+        if (room.fighters.samurai.canJump) {
+          room.fighters.samurai.command = data.player.command
         }
       }
       if (data.player.command === 'left') {
-        samurai.velocity.x = -4
-        if (samurai.canJump) {
-          samurai.command = data.player.command
+        room.fighters.samurai.velocity.x = -4
+        if (room.fighters.samurai.canJump) {
+          room.fighters.samurai.command = data.player.command
         }
       }
-      if (data.player.command === 'up' && samurai.canJump) {
-        samurai.velocity.y = -10
+      if (data.player.command === 'up' && room.fighters.samurai.canJump) {
+        room.fighters.samurai.velocity.y = -10
       }
       if (data.player.command === 'attack') {
-        samurai.command = data.player.command
+        room.fighters.samurai.command = data.player.command
       }
     }
     if (data.player.type === 'ninja') {
       if (data.player.command === 'right') {
-        ninja.velocity.x = 4
-        if (ninja.canJump) {
-          ninja.command = data.player.command
+        room.fighters.ninja.velocity.x = 4
+        if (room.fighters.ninja.canJump) {
+          room.fighters.ninja.command = data.player.command
         }
       }
       if (data.player.command === 'left') {
-        ninja.velocity.x = -4
-        if (ninja.canJump) {
-          ninja.command = data.player.command
+        room.fighters.ninja.velocity.x = -4
+        if (room.fighters.ninja.canJump) {
+          room.fighters.ninja.command = data.player.command
         }
       }
-      if (data.player.command === 'up' && ninja.canJump) {
-        ninja.velocity.y = -10
+      if (data.player.command === 'up' && room.fighters.ninja.canJump) {
+        room.fighters.ninja.velocity.y = -10
       }
       if (data.player.command === 'attack') {
-        ninja.command = data.player.command
+        room.fighters.ninja.command = data.player.command
       }
     }
   })
 
   socket.on('check-attack-is-success', (data) => {
+    const room = rooms[socketRooms.get(socket.id)]
+
     if (data.attacker == 'samurai') {
-      checkAttackIsSuccess(samurai, ninja)
+      checkAttackIsSuccess(room.fighters.samurai, room.fighters.ninja)
     }
     if (data.attacker == 'ninja') {
-      checkAttackIsSuccess(ninja, samurai)
+      checkAttackIsSuccess(room.fighters.ninja, room.fighters.samurai)
     }
 
-    if (samurai.health === 0) {
+    if (room.fighters.samurai.health === 0) {
       winner = 'Player 2'
-      sendingTheWinnerToClients(winner)
+      sendingTheWinnerToClients(winner, room)
     }
-    if (ninja.health === 0) {
+    if (room.fighters.ninja.health === 0) {
       winner = 'Player 1'
-      sendingTheWinnerToClients(winner)
+      sendingTheWinnerToClients(winner, room)
     }
   })
   socket.on('get-player-id', (id) => {
@@ -196,15 +178,17 @@ io.on('connection', (socket) => {
         player.type = 'ninja'
         waitingRoomId = null
 
-        gameObjects.push(ninja)
+        room.gameObjects.push(room.fighters.ninja)
       } else {
         player.type = 'samurai'
 
         room = new Room()
+        room.fighters.samurai = creatFighter(0,0)
+        room.fighters.ninja = creatFighter(512,0)
         rooms[room.id] = room
         waitingRoomId = room.id
 
-        gameObjects.push(samurai)
+        room.gameObjects.push(room.fighters.samurai)
       }
     }
     room.players[socket.id] = { id, type: player.type, socket }
@@ -249,8 +233,23 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   }
 }
 
-function sendingTheWinnerToClients (winner) {
+function sendingTheWinnerToClients (winner, room) {
   Object.values(room.players).forEach(player => {
     player.socket.emit('game-over', { winner })
   })
 }
+
+function creatFighter (x, y) {
+  return new Fighter({
+    position: {
+      x: x,
+      y: y
+    },
+    velocity: {
+      x: 0,
+      y: 0
+    }
+  })
+}
+
+

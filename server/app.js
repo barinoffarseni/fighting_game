@@ -20,15 +20,14 @@ const socketRooms = new Map()
 let waitingRoomId = null
 
 let winner = ''
-let gameTimer = null
 
 const fightersData = {}
 setInterval(() => {
   for (const room of Object.values(rooms)) {
     if (Object.keys(room.players).length === 2 && room.state === 'start') {
       room.state = 'continue'
-      gameTimer = new Timer()
-      room.gameObjects.push(gameTimer)
+      room.gameTimer = new Timer()
+      room.gameObjects.push(room.gameTimer)
     }
     room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
     room.fighters.ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.ninja.position.x, room.fighters.samurai.position.x)
@@ -41,13 +40,11 @@ setInterval(() => {
       fightersData.samurai.attackBox = room.fighters.samurai.attackBox
     }
 
-    if (room.state == 'continue' && gameTimer !== null) {
-      Object.values(room.players).forEach(player => {
-        player.socket.broadcast.emit('timer', { timeRemaining: gameTimer.timeRemaining - 1, timeOut: gameTimer.timeOut })
-        player.socket.emit('set-fighters-data', fightersData)
-      })
+    if (room.state == 'continue' && room.gameTimer !== null) {
+      io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining - 1, timeOut: room.gameTimer.timeOut })
+      io.to(room.id).emit('set-fighters-data', fightersData)
 
-      if (gameTimer.timeRemaining === 1) {
+      if (room.gameTimer.timeRemaining === 1) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
           winner = 'Player 2'
           sendingTheWinnerToClients(winner, room)
@@ -57,8 +54,8 @@ setInterval(() => {
           sendingTheWinnerToClients(winner, room)
         }
         if (room.fighters.ninja.health === room.fighters.samurai.health) {
-          gameTimer.timeRemaining += 9
-          gameTimer.timeOut = false
+          room.gameTimer.timeRemaining += 9
+          room.gameTimer.timeOut = false
         }
       }
 
@@ -87,7 +84,7 @@ io.on('connection', (socket) => {
     if (rooms[roomId].state === 'continue') {
       delete rooms[roomId].players[socket.id]
       rooms[roomId].state = 'stop'
-      gameTimer.timeStop = true
+      rooms[roomId].gameTimer.timeStop = true
     } else {
       delete rooms[roomId]
       if (waitingRoomId === roomId) {
@@ -171,7 +168,7 @@ io.on('connection', (socket) => {
       }
 
       room.state = 'continue'
-      gameTimer.startTimer()
+      room.gameTimer.startTimer()
     } else {
       room = rooms[waitingRoomId]
       if (room) {

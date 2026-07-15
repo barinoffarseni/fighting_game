@@ -3,10 +3,8 @@ export class Room {
     this.id = crypto.randomUUID(),
     this.players = {},
     this.gameObjects = [],
-    this.fighters = {
-      samurai: null,
-      ninja: null
-    },
+    this.fighters = {},
+    this.gameTimer = null
     this.gameObjects = [],
     this.state = 'start'
   }

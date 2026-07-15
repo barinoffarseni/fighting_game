@@ -19,8 +19,6 @@ const playerRooms = new Map()
 const socketRooms = new Map()
 let waitingRoomId = null
 
-let winner = ''
-
 const fightersData = {}
 setInterval(() => {
   for (const room of Object.values(rooms)) {
@@ -46,12 +44,12 @@ setInterval(() => {
 
       if (room.gameTimer.timeRemaining === 1) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
-          winner = 'Player 2'
-          sendingTheWinnerToClients(winner, room)
+          room.winner = 'Player 2'
+          io.to(room.id).emit('game-over', { winner: room.winner })
         }
         if (room.fighters.samurai.health > room.fighters.ninja.health) {
-          winner = 'Player 1'
-          sendingTheWinnerToClients(winner, room)
+          room.winner = 'Player 1'
+          io.to(room.id).emit('game-over', { winner: room.winner })
         }
         if (room.fighters.ninja.health === room.fighters.samurai.health) {
           room.gameTimer.timeRemaining += 9
@@ -149,12 +147,12 @@ io.on('connection', (socket) => {
     }
 
     if (room.fighters.samurai.health === 0) {
-      winner = 'Player 2'
-      sendingTheWinnerToClients(winner, room)
+      room.winner = 'Player 2'
+      io.to(room.id).emit('game-over', { winner: room.winner })
     }
     if (room.fighters.ninja.health === 0) {
-      winner = 'Player 1'
-      sendingTheWinnerToClients(winner, room)
+      room.winner = 'Player 1'
+      io.to(room.id).emit('game-over', { winner: room.winner })
     }
   })
   socket.on('get-player-id', (id) => {
@@ -230,12 +228,6 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   }
 }
 
-function sendingTheWinnerToClients (winner, room) {
-  Object.values(room.players).forEach(player => {
-    player.socket.emit('game-over', { winner })
-  })
-}
-
 function creatFighter (x, y) {
   return new Fighter({
     position: {
@@ -248,5 +240,3 @@ function creatFighter (x, y) {
     }
   })
 }
-
-

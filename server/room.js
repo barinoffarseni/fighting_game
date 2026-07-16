@@ -1,11 +1,18 @@
 export class Room {
   constructor () {
-    this.id = this.setId(),
+    this.id = crypto.randomUUID(),
     this.players = {},
-    this.state = 'start'
+    this.gameObjects = [],
+    this.fighters = {},
+    this.gameTimer = null
+    this.gameObjects = [],
+    this.state = 'start',
+    this.fightersData = {}
   }
 
-  setId () {
-    return crypto.randomUUID()
+  update () {
+    this.gameObjects.forEach(gameObject => {
+      gameObject.update()
+    })
   }
 }

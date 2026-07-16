@@ -19,7 +19,6 @@ const playerRooms = new Map()
 const socketRooms = new Map()
 let waitingRoomId = null
 
-const fightersData = {}
 setInterval(() => {
   for (const room of Object.values(rooms)) {
     if (Object.keys(room.players).length === 2 && room.state === 'start') {
@@ -30,17 +29,17 @@ setInterval(() => {
     room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
     room.fighters.ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.ninja.position.x, room.fighters.samurai.position.x)
 
-    fightersData.ninja = { position: room.fighters.ninja.position, command: room.fighters.ninja.command, health: room.fighters.ninja.health }
-    fightersData.samurai = { position: room.fighters.samurai.position, command: room.fighters.samurai.command, health: room.fighters.samurai.health }
+    room.fightersData.ninja = { position: room.fighters.ninja.position, command: room.fighters.ninja.command, health: room.fighters.ninja.health }
+    room.fightersData.samurai = { position: room.fighters.samurai.position, command: room.fighters.samurai.command, health: room.fighters.samurai.health }
 
     if (debug) {
-      fightersData.ninja.attackBox = room.fighters.ninja.attackBox
-      fightersData.samurai.attackBox = room.fighters.samurai.attackBox
+      room.fightersData.ninja.attackBox = room.fighters.ninja.attackBox
+      room.fightersData.samurai.attackBox = room.fighters.samurai.attackBox
     }
 
     if (room.state == 'continue' && room.gameTimer !== null) {
       io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining - 1, timeOut: room.gameTimer.timeOut })
-      io.to(room.id).emit('set-fighters-data', fightersData)
+      io.to(room.id).emit('set-fighters-data', room.fightersData)
 
       if (room.gameTimer.timeRemaining === 1) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
@@ -68,8 +67,6 @@ io.on('connection', (socket) => {
   const player = { id: crypto.randomUUID() }
   socket.emit('set-player-id', { id: player.id })
   console.log('New connection:', socket.id)
-
-  socket.emit('set-fighters-data', fightersData)
 
   socket.on('disconnect', () => {
     console.log('Disconnect:', [player.id, socket.id])

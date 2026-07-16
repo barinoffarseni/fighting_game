@@ -6,7 +6,8 @@ export class Room {
     this.fighters = {},
     this.gameTimer = null
     this.gameObjects = [],
-    this.state = 'start'
+    this.state = 'start',
+    this.fightersData = {}
   }
 
   update () {

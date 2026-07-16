@@ -56,9 +56,7 @@ setInterval(() => {
         }
       }
 
-      room.gameObjects.forEach(gameObject => {
-        gameObject.update()
-      })
+      room.update()
     }
   }
 }, 50)

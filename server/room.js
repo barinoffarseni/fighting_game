@@ -9,4 +9,10 @@ export class Room {
     this.state = 'start',
     this.fightersData = {}
   }
+
+  update() {
+    this.gameObjects.forEach(gameObject => {
+      gameObject.update()
+    })
+  }
 }

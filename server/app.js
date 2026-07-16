@@ -177,8 +177,27 @@ io.on('connection', (socket) => {
         player.type = 'samurai'
 
         room = new Room()
-        room.fighters.samurai = creatFighter(0, 0)
-        room.fighters.ninja = creatFighter(512, 0)
+        room.fighters.samurai = new Fighter({
+          position: {
+            x: 0,
+            y: 0
+          },
+          velocity: {
+            x: 0,
+            y: 0
+          }
+        })
+        room.fighters.ninja = new Fighter({
+          position: {
+            x: 512,
+            y: 0
+          },
+          velocity: {
+            x: 0,
+            y: 0
+          }
+        })
+
         rooms[room.id] = room
         waitingRoomId = room.id
 
@@ -226,17 +245,4 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   } else {
     return 1
   }
-}
-
-function creatFighter (x, y) {
-  return new Fighter({
-    position: {
-      x,
-      y
-    },
-    velocity: {
-      x: 0,
-      y: 0
-    }
-  })
 }

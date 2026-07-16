@@ -10,7 +10,7 @@ export class Room {
     this.fightersData = {}
   }
 
-  update() {
+  update () {
     this.gameObjects.forEach(gameObject => {
       gameObject.update()
     })

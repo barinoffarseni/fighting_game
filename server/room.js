@@ -9,7 +9,4 @@ export class Room {
     this.state = 'start',
     this.fightersData = {}
   }
-
-  update () {
-  }
 }

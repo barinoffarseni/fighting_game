@@ -91,7 +91,7 @@ io.on('connection', (socket) => {
       rooms[roomId].gameState = 'stop'
       rooms[roomId].gameTimer.timeStop = true
 
-      io.to(roomId).emit('set-game-state', { state: rooms[roomId].gameState})
+      io.to(roomId).emit('set-game-state', { state: rooms[roomId].gameState })
     } else {
       delete rooms[roomId]
       if (waitingRoomId === roomId) {
@@ -152,7 +152,6 @@ io.on('connection', (socket) => {
       checkAttackIsSuccess(room.fighters.samurai, room.fighters.ninja)
     }
     if (data.attacker == 'ninja') {
-      console.log(room)
       checkAttackIsSuccess(room.fighters.ninja, room.fighters.samurai)
     }
 
@@ -184,7 +183,7 @@ io.on('connection', (socket) => {
       room.waitTimer = null
       room.gameState = 'continue'
 
-      io.to(room.id).emit('set-game-state', { state: room.gameState})
+      io.to(room.id).emit('set-game-state', { state: room.gameState })
       room.gameTimer.startTimer()
     } else {
       room = rooms[waitingRoomId]

@@ -236,8 +236,7 @@ socket.on('wait-timer', function (data) {
   if (waitTimer.aWaitTimerExists) {
     waitTimer.timeRemaining = data.timeRemaining
     waitTimer.timeOut = data.timeOut
-  
-    
+
     if (waitTimer.timeOut) {
       location.reload()
     }

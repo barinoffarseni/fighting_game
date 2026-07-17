@@ -26,7 +26,7 @@ setInterval(() => {
       room.gameTimer = new Timer(30)
       room.gameObjects.push(room.gameTimer)
     }
-    
+
     if (room.state === 'stop' && room.waitTimer === null && !room.gameOver) {
       room.waitTimer = new Timer(60)
     }
@@ -66,7 +66,7 @@ setInterval(() => {
     }
 
     if (room.waitTimer !== null && room.state === 'stop') {
-      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut, aWaitTimerExists: true})
+      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut, aWaitTimerExists: true })
       room.waitTimer.update()
     }
   }

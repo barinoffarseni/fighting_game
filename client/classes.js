@@ -300,6 +300,30 @@ class WinIndicator extends Indicator {
   }
 }
 
+class WaitTimer {
+  constructor () {
+    this.text = {
+      position: {
+        x: canvas.width / 2,
+        y: canvas.height / 2
+      },
+      offset: {
+        x: 0,
+        y: 0
+      },
+      style: 'bold 128px'
+    }
+  }
+
+  update () { }
+
+  render () {
+    ctx.font = this.text.style
+    ctx.textAlign = 'center'
+    ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+  }
+}
+
 class Timer extends Indicator {
   constructor () {
     super({

@@ -143,6 +143,9 @@ const leftHealthBarData = {
 const timer = new Timer()
 gameObjects.push(timer)
 
+const waitTimer = new WaitTimer()
+gameObjects.push(waitTimer)
+
 const restartButton = new Button()
 gameObjects.push(restartButton)
 
@@ -225,6 +228,11 @@ socket.on('set-fighters-data', function (data) {
 socket.on('timer', function (data) {
   timer.timeRemaining = data.timeRemaining
   timer.timeOut = data.timeOut
+})
+
+socket.on('wait-timer', function (data) {
+  waitTimer.timeRemaining = data.timeRemaining
+  waitTimer.timeOut = data.timeOut
 })
 
 socket.on('game-over', function (data) {

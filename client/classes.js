@@ -313,12 +313,13 @@ class WaitTimer {
       },
       style: 'bold 128px'
     }
+    this.aWaitTimerExists = false
   }
 
   update () { }
 
   render () {
-    if (this.timeRemaining) {
+    if (this.aWaitTimerExists) {
       ctx.font = this.text.style
       ctx.textAlign = 'center'
       ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)

@@ -231,11 +231,16 @@ socket.on('timer', function (data) {
 })
 
 socket.on('wait-timer', function (data) {
-  waitTimer.timeRemaining = data.timeRemaining
-  waitTimer.timeOut = data.timeOut
+  waitTimer.aWaitTimerExists = data.aWaitTimerExists
+
+  if (waitTimer.aWaitTimerExists) {
+    waitTimer.timeRemaining = data.timeRemaining
+    waitTimer.timeOut = data.timeOut
   
-  if (waitTimer.timeOut) {
-    location.reload()
+    
+    if (waitTimer.timeOut) {
+      location.reload()
+    }
   }
 })
 

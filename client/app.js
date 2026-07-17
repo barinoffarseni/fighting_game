@@ -143,6 +143,9 @@ const leftHealthBarData = {
 const timer = new Timer()
 gameObjects.push(timer)
 
+const waitTimer = new WaitTimer()
+gameObjects.push(waitTimer)
+
 const restartButton = new Button()
 gameObjects.push(restartButton)
 
@@ -227,6 +230,19 @@ socket.on('timer', function (data) {
   timer.timeOut = data.timeOut
 })
 
+socket.on('wait-timer', function (data) {
+  waitTimer.aWaitTimerExists = data.aWaitTimerExists
+
+  if (waitTimer.aWaitTimerExists) {
+    waitTimer.timeRemaining = data.timeRemaining
+    waitTimer.timeOut = data.timeOut
+
+    if (waitTimer.timeOut) {
+      location.reload()
+    }
+  }
+})
+
 socket.on('game-over', function (data) {
   winIndicator.winner = data.winner
   gameOver = true
@@ -244,10 +260,6 @@ function update () {
     enemy[enemy.type].textureMirroring = getFighterTextureMirroring(enemy[enemy.type].position.x, player[player.type].position.x)
 
     player[player.type].checkAttackIsSuccess()
-  }
-
-  if (gameOver) {
-    timer.timeOut = true
   }
 
   gameObjects.forEach(gameObject => {

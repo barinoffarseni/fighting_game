@@ -23,8 +23,12 @@ setInterval(() => {
   for (const room of Object.values(rooms)) {
     if (Object.keys(room.players).length === 2 && room.state === 'start') {
       room.state = 'continue'
-      room.gameTimer = new Timer()
+      room.gameTimer = new Timer(30)
       room.gameObjects.push(room.gameTimer)
+    }
+
+    if (room.state === 'stop' && room.waitTimer === null && !room.gameOver) {
+      room.waitTimer = new Timer(60)
     }
     room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
     room.fighters.ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.ninja.position.x, room.fighters.samurai.position.x)
@@ -44,10 +48,12 @@ setInterval(() => {
       if (room.gameTimer.timeRemaining === 1) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
           room.winner = 'Player 2'
+          room.gameOver = true
           io.to(room.id).emit('game-over', { winner: room.winner })
         }
         if (room.fighters.samurai.health > room.fighters.ninja.health) {
           room.winner = 'Player 1'
+          room.gameOver = true
           io.to(room.id).emit('game-over', { winner: room.winner })
         }
         if (room.fighters.ninja.health === room.fighters.samurai.health) {
@@ -57,6 +63,11 @@ setInterval(() => {
       }
 
       room.update()
+    }
+
+    if (room.waitTimer !== null && room.state === 'stop') {
+      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut, aWaitTimerExists: true })
+      room.waitTimer.update()
     }
   }
 }, 50)
@@ -144,10 +155,12 @@ io.on('connection', (socket) => {
 
     if (room.fighters.samurai.health === 0) {
       room.winner = 'Player 2'
+      room.gameOver = true
       io.to(room.id).emit('game-over', { winner: room.winner })
     }
     if (room.fighters.ninja.health === 0) {
       room.winner = 'Player 1'
+      room.gameOver = true
       io.to(room.id).emit('game-over', { winner: room.winner })
     }
   })
@@ -164,6 +177,10 @@ io.on('connection', (socket) => {
         player.type = 'samurai'
       }
       playerRooms.get(id).pop()
+
+      room.waitTimer = null
+      io.to(room.id).emit('wait-timer', { aWaitTimerExists: false })
+
       room.state = 'continue'
       room.gameTimer.startTimer()
     } else {

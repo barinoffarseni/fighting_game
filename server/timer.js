@@ -1,6 +1,6 @@
 export class Timer {
-  constructor () {
-    this.timeRemaining = 31
+  constructor (timeRemaining) {
+    this.timeRemaining = timeRemaining
     this.timeStop = false
     this.timeOut = false
     this.startTimer()

@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576
 
-let gameOver = false
+let gameState = 'continue'
 
 const debug = false
 
@@ -231,9 +231,7 @@ socket.on('timer', function (data) {
 })
 
 socket.on('wait-timer', function (data) {
-  waitTimer.aWaitTimerExists = data.aWaitTimerExists
-
-  if (waitTimer.aWaitTimerExists) {
+  if (gameState === 'stop') {
     waitTimer.timeRemaining = data.timeRemaining
     waitTimer.timeOut = data.timeOut
 
@@ -243,9 +241,11 @@ socket.on('wait-timer', function (data) {
   }
 })
 
-socket.on('game-over', function (data) {
-  winIndicator.winner = data.winner
-  gameOver = true
+socket.on('set-game-state', function (data) {
+  gameState = data.state
+  if (gameState === 'over') {
+    winIndicator.winner = data.winner
+  }
 })
 
 socket.on('set-fighters-data', function (data) {
@@ -294,7 +294,7 @@ function keyup (event) {
 
 window.addEventListener('keydown', keydown)
 function keydown (event) {
-  if (!gameOver) {
+  if (gameState !== 'over') {
     switch (event.key) {
       case 'd':
         player.keys.d = true

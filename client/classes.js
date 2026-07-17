@@ -288,7 +288,7 @@ class WinIndicator extends Indicator {
   update () { }
 
   render () {
-    if (gameOver) {
+    if (gameState === 'over') {
       ctx.fillStyle = this.color
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
@@ -309,7 +309,7 @@ class WaitTimer {
       },
       offset: {
         x: 0,
-        y: 0
+        y: -30
       },
       style: 'bold 128px'
     }
@@ -319,7 +319,7 @@ class WaitTimer {
   update () { }
 
   render () {
-    if (this.aWaitTimerExists) {
+    if (gameState === 'stop') {
       ctx.font = this.text.style
       ctx.textAlign = 'center'
       ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
@@ -428,7 +428,7 @@ class Button {
   }
 
   update () {
-    if (gameOver) {
+    if (gameState === 'over' || gameState === 'stop') {
       canvas.addEventListener('click', function (event) {
         const rect = canvas.getBoundingClientRect()
         const mouseX = event.clientX - rect.left
@@ -442,7 +442,7 @@ class Button {
   }
 
   render () {
-    if (gameOver) {
+    if (gameState === 'over' || gameState === 'stop') {
       ctx.fillStyle = this.color
       ctx.strokeStyle = 'black'
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)

@@ -64,7 +64,7 @@ setInterval(() => {
     }
 
     if (room.waitTimer !== null && room.state === 'stop') {
-      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining - 1, timeOut: room.waitTimer.timeOut })
+      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut })
       room.waitTimer.update()
     }
   }
@@ -173,6 +173,8 @@ io.on('connection', (socket) => {
         player.type = 'samurai'
       }
       playerRooms.get(id).pop()
+
+      room.waitTimer = null
       room.state = 'continue'
       room.gameTimer.startTimer()
     } else {

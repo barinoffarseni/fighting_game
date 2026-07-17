@@ -28,7 +28,7 @@ setInterval(() => {
     }
     
     if (room.state === 'stop' && room.waitTimer === null) {
-      room.waitTimer = new Timer(60)
+      room.waitTimer = new Timer(5)
     }
     room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
     room.fighters.ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.ninja.position.x, room.fighters.samurai.position.x)

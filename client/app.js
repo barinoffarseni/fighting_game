@@ -233,6 +233,10 @@ socket.on('timer', function (data) {
 socket.on('wait-timer', function (data) {
   waitTimer.timeRemaining = data.timeRemaining
   waitTimer.timeOut = data.timeOut
+  
+  if (waitTimer.timeOut) {
+    location.reload()
+  }
 })
 
 socket.on('game-over', function (data) {
@@ -252,10 +256,6 @@ function update () {
     enemy[enemy.type].textureMirroring = getFighterTextureMirroring(enemy[enemy.type].position.x, player[player.type].position.x)
 
     player[player.type].checkAttackIsSuccess()
-  }
-
-  if (gameOver) {
-    timer.timeOut = true
   }
 
   gameObjects.forEach(gameObject => {

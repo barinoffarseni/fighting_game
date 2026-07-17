@@ -318,9 +318,11 @@ class WaitTimer {
   update () { }
 
   render () {
-    ctx.font = this.text.style
-    ctx.textAlign = 'center'
-    ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+    if (this.timeRemaining) {
+      ctx.font = this.text.style
+      ctx.textAlign = 'center'
+      ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+    }
   }
 }
 

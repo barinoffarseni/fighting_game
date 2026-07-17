@@ -27,7 +27,7 @@ setInterval(() => {
       room.gameObjects.push(room.gameTimer)
     }
     
-    if (room.state === 'stop' && room.waitTimer === null) {
+    if (room.state === 'stop' && room.waitTimer === null && !room.gameOver) {
       room.waitTimer = new Timer(60)
     }
     room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
@@ -48,10 +48,12 @@ setInterval(() => {
       if (room.gameTimer.timeRemaining === 1) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
           room.winner = 'Player 2'
+          room.gameOver = true
           io.to(room.id).emit('game-over', { winner: room.winner })
         }
         if (room.fighters.samurai.health > room.fighters.ninja.health) {
           room.winner = 'Player 1'
+          room.gameOver = true
           io.to(room.id).emit('game-over', { winner: room.winner })
         }
         if (room.fighters.ninja.health === room.fighters.samurai.health) {
@@ -153,10 +155,12 @@ io.on('connection', (socket) => {
 
     if (room.fighters.samurai.health === 0) {
       room.winner = 'Player 2'
+      room.gameOver = true
       io.to(room.id).emit('game-over', { winner: room.winner })
     }
     if (room.fighters.ninja.health === 0) {
       room.winner = 'Player 1'
+      room.gameOver = true
       io.to(room.id).emit('game-over', { winner: room.winner })
     }
   })

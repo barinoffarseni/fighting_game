@@ -21,13 +21,13 @@ let waitingRoomId = null
 
 setInterval(() => {
   for (const room of Object.values(rooms)) {
-    if (Object.keys(room.players).length === 2 && room.state === 'start') {
-      room.state = 'continue'
+    if (Object.keys(room.players).length === 2 && room.gameState === 'start') {
+      room.gameState = 'continue'
       room.gameTimer = new Timer(30)
       room.gameObjects.push(room.gameTimer)
     }
 
-    if (room.state === 'stop' && room.waitTimer === null && !room.gameOver) {
+    if (room.gameState === 'stop' && room.waitTimer === null) {
       room.waitTimer = new Timer(60)
     }
     room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
@@ -41,20 +41,20 @@ setInterval(() => {
       room.fightersData.samurai.attackBox = room.fighters.samurai.attackBox
     }
 
-    if (room.state == 'continue' && room.gameTimer !== null) {
+    if (room.gameState == 'continue' && room.gameTimer !== null) {
       io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining - 1, timeOut: room.gameTimer.timeOut })
       io.to(room.id).emit('set-fighters-data', room.fightersData)
 
       if (room.gameTimer.timeRemaining === 1) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
           room.winner = 'Player 2'
-          room.gameOver = true
-          io.to(room.id).emit('game-over', { winner: room.winner })
+          room.gameState = 'over'
+          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
         }
         if (room.fighters.samurai.health > room.fighters.ninja.health) {
           room.winner = 'Player 1'
-          room.gameOver = true
-          io.to(room.id).emit('game-over', { winner: room.winner })
+          room.gameState = 'over'
+          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
         }
         if (room.fighters.ninja.health === room.fighters.samurai.health) {
           room.gameTimer.timeRemaining += 9
@@ -65,8 +65,8 @@ setInterval(() => {
       room.update()
     }
 
-    if (room.waitTimer !== null && room.state === 'stop') {
-      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut, aWaitTimerExists: true })
+    if (room.waitTimer !== null && room.gameState === 'stop') {
+      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut })
       room.waitTimer.update()
     }
   }
@@ -85,11 +85,13 @@ io.on('connection', (socket) => {
     }
 
     socketRooms.delete(socket.id)
-    if (rooms[roomId].state === 'continue') {
+    if (rooms[roomId].gameState === 'continue') {
       playerRooms.get(player.id).push(roomId)
       delete rooms[roomId].players[socket.id]
-      rooms[roomId].state = 'stop'
+      rooms[roomId].gameState = 'stop'
       rooms[roomId].gameTimer.timeStop = true
+
+      io.to(roomId).emit('set-game-state', { state: rooms[roomId].gameState})
     } else {
       delete rooms[roomId]
       if (waitingRoomId === roomId) {
@@ -150,18 +152,19 @@ io.on('connection', (socket) => {
       checkAttackIsSuccess(room.fighters.samurai, room.fighters.ninja)
     }
     if (data.attacker == 'ninja') {
+      console.log(room)
       checkAttackIsSuccess(room.fighters.ninja, room.fighters.samurai)
     }
 
     if (room.fighters.samurai.health === 0) {
       room.winner = 'Player 2'
-      room.gameOver = true
-      io.to(room.id).emit('game-over', { winner: room.winner })
+      room.gameState = 'over'
+      io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
     }
     if (room.fighters.ninja.health === 0) {
       room.winner = 'Player 1'
-      room.gameOver = true
-      io.to(room.id).emit('game-over', { winner: room.winner })
+      room.gameState = 'over'
+      io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
     }
   })
   socket.on('get-player-id', (id) => {
@@ -170,7 +173,7 @@ io.on('connection', (socket) => {
     if (playerRooms.has(id)) {
       room = rooms[playerRooms.get(id).at(-1)]
     }
-    if (room && room.state === 'stop') {
+    if (room && room.gameState === 'stop') {
       if (Object.values(room.players)[0].type === 'samurai') {
         player.type = 'ninja'
       } else {
@@ -179,9 +182,9 @@ io.on('connection', (socket) => {
       playerRooms.get(id).pop()
 
       room.waitTimer = null
-      io.to(room.id).emit('wait-timer', { aWaitTimerExists: false })
+      room.gameState = 'continue'
 
-      room.state = 'continue'
+      io.to(room.id).emit('set-game-state', { state: room.gameState})
       room.gameTimer.startTimer()
     } else {
       room = rooms[waitingRoomId]

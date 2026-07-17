@@ -41,9 +41,9 @@ setInterval(() => {
       room.fightersData.samurai.attackBox = room.fighters.samurai.attackBox
     }
 
+    io.to(room.id).emit('set-fighters-data', room.fightersData)
     if (room.gameState == 'continue' && room.gameTimer !== null) {
       io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining - 1, timeOut: room.gameTimer.timeOut })
-      io.to(room.id).emit('set-fighters-data', room.fightersData)
 
       if (room.gameTimer.timeRemaining === 1) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
@@ -147,6 +147,9 @@ io.on('connection', (socket) => {
 
   socket.on('check-attack-is-success', (data) => {
     const room = rooms[socketRooms.get(socket.id)]
+    if (!room) {
+      return
+    }
 
     if (data.attacker == 'samurai') {
       checkAttackIsSuccess(room.fighters.samurai, room.fighters.ninja)

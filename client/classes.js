@@ -362,9 +362,11 @@ class Timer extends Indicator {
     ctx.fillStyle = this.color
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
-    ctx.font = this.text.style
-    ctx.textAlign = 'center'
-    ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+    if (this.timeRemaining) {
+      ctx.font = this.text.style
+      ctx.textAlign = 'center'
+      ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+    }
   }
 }
 
@@ -434,7 +436,7 @@ class Button {
         const mouseX = event.clientX - rect.left
         const mouseY = event.clientY - rect.top
 
-        if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+        if (mouseX > this.minX && mouseX < this.maxX && mouseY > this.minY && mouseY < this.maxY) {
           location.reload()
         }
       })

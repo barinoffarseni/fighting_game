@@ -70,20 +70,20 @@ class SpriteAnimated extends SpriteStatic {
 }
 
 class Fighter extends SpriteAnimated {
-  constructor ({ velocity, sprites, offset, attackFrame, name, position }) {
+  constructor ({ velocity, sprites, offset, attackFrame, name, position, textureMirroring }) {
     super({
       position,
-      imgSrc: './img/samurai/Idle.png',
+      imgSrc: `./img/${name}/Idle.png`,
       scale: 2.5,
       framesHold: 10,
-      imgFrames: 8,
+      imgFrames: sprites.idle.frames,
       offset
     })
     this.position = position
     this.velocity = velocity
     this.width = 50
     this.height = 150
-    this.textureMirroring = 1
+    this.textureMirroring = textureMirroring
     this.isAttack = false
     this.attackFrame = attackFrame
     this.previousHealth = 100
@@ -115,7 +115,7 @@ class Fighter extends SpriteAnimated {
         ctx.fillStyle = 'yellow'
       }
 
-      if (this.attackBox && this.attackBox) {
+      if (this.attackBox) {
         ctx.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width * this.textureMirroring, this.attackBox.height)
       }
     }
@@ -142,16 +142,16 @@ class Fighter extends SpriteAnimated {
       this.restartState = true
     }
 
+    if (this.textureMirroring < 0) {
+      this.img.src = this.sprites[this.state].leftScr
+    } else {
+      this.img.src = this.sprites[this.state].rightSrc
+    }
+    this.imgFrames = this.sprites[this.state].frames
+
     if ((this.state != this.newState && this.stateCanBeChanged) || this.restartState) {
       this.state = this.newState
 
-      if (this.textureMirroring < 0) {
-        this.img.src = this.sprites[this.state].leftScr
-        this.imgFrames = this.sprites[this.state].frames
-      } else {
-        this.img.src = this.sprites[this.state].rightSrc
-        this.imgFrames = this.sprites[this.state].frames
-      }
       this.currentFrame = 0
       this.framesElapsed = 0
 
@@ -234,7 +234,6 @@ class Fighter extends SpriteAnimated {
       if (this.health <= 0) {
         this.newState = 'death'
       }
-
       this.setState()
     }
 
@@ -436,7 +435,7 @@ class Button {
         const mouseX = event.clientX - rect.left
         const mouseY = event.clientY - rect.top
 
-        if (mouseX > this.minX && mouseX < this.maxX && mouseY > this.minY && mouseY < this.maxY) {
+        if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           location.reload()
         }
       })

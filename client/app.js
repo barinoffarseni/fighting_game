@@ -83,7 +83,8 @@ const samuraiData = {
     y: -155
   },
   attackFrame: 4,
-  name: 'samurai'
+  name: 'samurai',
+  textureMirroring: 1
 }
 
 const ninjaData = {
@@ -122,7 +123,8 @@ const ninjaData = {
     y: -170
   },
   attackFrame: 1,
-  name: 'ninja'
+  name: 'ninja',
+  textureMirroring: -1
 }
 
 const rightHealthBarData = {

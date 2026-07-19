@@ -42,7 +42,7 @@ setInterval(() => {
     }
 
     io.to(room.id).emit('set-fighters-data', room.fightersData)
-    if (room.gameState == 'continue' && room.gameTimer !== null) {
+    if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
       io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining - 1, timeOut: room.gameTimer.timeOut })
 
       if (room.gameTimer.timeRemaining === 1) {

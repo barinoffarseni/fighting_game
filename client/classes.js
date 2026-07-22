@@ -361,7 +361,7 @@ class Timer extends Indicator {
     ctx.fillStyle = this.color
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
-    if (this.timeRemaining) {
+    if (this.timeRemaining || this.timeRemaining === 0) {
       ctx.font = this.text.style
       ctx.textAlign = 'center'
       ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)

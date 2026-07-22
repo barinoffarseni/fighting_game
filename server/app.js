@@ -88,6 +88,13 @@ io.on('connection', (socket) => {
     if (rooms[roomId].gameState === 'continue') {
       playerRooms.get(player.id).push(roomId)
       delete rooms[roomId].players[socket.id]
+
+      console.log(Object.values(rooms[roomId].fightersData))
+      for (const fighter of Object.values(rooms[roomId].fightersData)) {
+        fighter.command = 'idle'
+      }
+      io.to(roomId).emit('set-fighters-data', rooms[roomId].fightersData)
+
       rooms[roomId].gameState = 'stop'
       rooms[roomId].gameTimer.timeStop = true
 
@@ -102,6 +109,9 @@ io.on('connection', (socket) => {
 
   socket.on('set-move-command', (data) => {
     const room = rooms[socketRooms.get(socket.id)]
+    if (!room || room.gameState !== 'continue') {
+      return
+    }
 
     if (data.player.type === 'samurai') {
       if (data.player.command === 'right') {

@@ -89,7 +89,13 @@ io.on('connection', (socket) => {
       playerRooms.get(player.id).push(roomId)
       delete rooms[roomId].players[socket.id]
 
-      resetFightersCommands(rooms[roomId])
+      for (const fighter of Object.values(rooms[roomId].fighters)) {
+        fighter.command = 'idle'
+      }
+
+      for (const fighter of Object.values(rooms[roomId].fightersData)) {
+        fighter.command = 'idle'
+      }
       io.to(roomId).emit('set-fighters-data', rooms[roomId].fightersData)
 
       rooms[roomId].gameState = 'stop'
@@ -265,16 +271,6 @@ function checkAttackIsSuccess (attacker, victim) {
     if (xMin < attacker.attackBoxXMax && xMax > attacker.attackBoxXMax) {
       victim.health -= 10
     }
-  }
-}
-
-function resetFightersCommands (room) {
-  for (const fighter of Object.values(room.fighters)) {
-    fighter.command = 'idle'
-  }
-
-  for (const fighter of Object.values(room.fightersData)) {
-    fighter.command = 'idle'
   }
 }
 

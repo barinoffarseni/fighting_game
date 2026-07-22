@@ -43,9 +43,9 @@ setInterval(() => {
 
     if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
       io.to(room.id).emit('set-fighters-data', room.fightersData)
-      io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining - 1, timeOut: room.gameTimer.timeOut })
+      io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining, timeOut: room.gameTimer.timeOut })
 
-      if (room.gameTimer.timeRemaining === 1) {
+      if (room.gameTimer.timeRemaining === 0) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
           room.winner = 'Player 2'
           room.gameState = 'over'
@@ -57,7 +57,7 @@ setInterval(() => {
           io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
         }
         if (room.fighters.ninja.health === room.fighters.samurai.health) {
-          room.gameTimer.timeRemaining += 9
+          room.gameTimer.timeRemaining += 10
           room.gameTimer.timeOut = false
         }
       }

@@ -174,11 +174,13 @@ io.on('connection', (socket) => {
     if (room.fighters.samurai.health === 0) {
       room.winner = 'Player 2'
       room.gameState = 'over'
+      room.gameTimer.timeStop = true
       io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
     }
     if (room.fighters.ninja.health === 0) {
       room.winner = 'Player 1'
       room.gameState = 'over'
+      room.gameTimer.timeStop = true
       io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
     }
   })

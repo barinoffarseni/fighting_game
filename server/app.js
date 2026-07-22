@@ -41,9 +41,6 @@ setInterval(() => {
       room.fightersData.samurai.attackBox = room.fighters.samurai.attackBox
     }
 
-    if (Object.values(room.fightersData).some(fighter => fighter.command === 'attack')) {
-      console.log(Object.values(room.fightersData))
-    }
     if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
       io.to(room.id).emit('set-fighters-data', room.fightersData)
       io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining - 1, timeOut: room.gameTimer.timeOut })

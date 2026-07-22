@@ -54,12 +54,13 @@ class SpriteAnimated extends SpriteStatic {
         this.currentFrame++
 
         if (this.currentFrame === this.imgFrames) {
-          this.currentFrame = 0
           this.animateIsComplete = true
 
           if (this.compliteAnimationAndStop) {
             this.stop = true
             this.currentFrame = this.imgFrames - 1
+          } else {
+            this.currentFrame = 0
           }
         }
       }
@@ -141,13 +142,6 @@ class Fighter extends SpriteAnimated {
       this.restartState = true
     }
 
-    if (this.textureMirroring < 0) {
-      this.img.src = this.sprites[this.state].leftScr
-    } else {
-      this.img.src = this.sprites[this.state].rightSrc
-    }
-    this.imgFrames = this.sprites[this.state].frames
-
     if ((this.state != this.newState && this.stateCanBeChanged) || this.restartState) {
       this.state = this.newState
 
@@ -171,6 +165,13 @@ class Fighter extends SpriteAnimated {
         this.compliteAnimationAndStop = true
       }
     }
+
+    if (this.textureMirroring < 0) {
+      this.img.src = this.sprites[this.state].leftScr
+    } else {
+      this.img.src = this.sprites[this.state].rightSrc
+    }
+    this.imgFrames = this.sprites[this.state].frames
   }
 
   freez () {

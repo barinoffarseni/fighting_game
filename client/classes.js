@@ -54,12 +54,13 @@ class SpriteAnimated extends SpriteStatic {
         this.currentFrame++
 
         if (this.currentFrame === this.imgFrames) {
-          this.currentFrame = 0
           this.animateIsComplete = true
 
           if (this.compliteAnimationAndStop) {
             this.stop = true
             this.currentFrame = this.imgFrames - 1
+          } else {
+            this.currentFrame = 0
           }
         }
       }
@@ -70,23 +71,22 @@ class SpriteAnimated extends SpriteStatic {
 }
 
 class Fighter extends SpriteAnimated {
-  constructor ({ velocity, sprites, offset, attackFrame, name, position }) {
+  constructor ({ velocity, sprites, offset, attackFrame, name, position, textureMirroring }) {
     super({
       position,
-      imgSrc: './img/samurai/Idle.png',
+      imgSrc: `./img/${name}/Idle.png`,
       scale: 2.5,
       framesHold: 10,
-      imgFrames: 8,
+      imgFrames: sprites.idle.frames,
       offset
     })
     this.position = position
     this.velocity = velocity
     this.width = 50
     this.height = 150
-    this.textureMirroring = 1
+    this.textureMirroring = textureMirroring
     this.isAttack = false
     this.attackFrame = attackFrame
-    this.previousHealth = 100
     this.sprites = sprites
     this.state = 'idle'
     this.newState = 'idle'
@@ -115,7 +115,7 @@ class Fighter extends SpriteAnimated {
         ctx.fillStyle = 'yellow'
       }
 
-      if (this.attackBox && this.attackBox) {
+      if (this.attackBox) {
         ctx.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width * this.textureMirroring, this.attackBox.height)
       }
     }
@@ -145,13 +145,6 @@ class Fighter extends SpriteAnimated {
     if ((this.state != this.newState && this.stateCanBeChanged) || this.restartState) {
       this.state = this.newState
 
-      if (this.textureMirroring < 0) {
-        this.img.src = this.sprites[this.state].leftScr
-        this.imgFrames = this.sprites[this.state].frames
-      } else {
-        this.img.src = this.sprites[this.state].rightSrc
-        this.imgFrames = this.sprites[this.state].frames
-      }
       this.currentFrame = 0
       this.framesElapsed = 0
 
@@ -172,6 +165,13 @@ class Fighter extends SpriteAnimated {
         this.compliteAnimationAndStop = true
       }
     }
+
+    if (this.textureMirroring < 0) {
+      this.img.src = this.sprites[this.state].leftScr
+    } else {
+      this.img.src = this.sprites[this.state].rightSrc
+    }
+    this.imgFrames = this.sprites[this.state].frames
   }
 
   freez () {
@@ -234,7 +234,6 @@ class Fighter extends SpriteAnimated {
       if (this.health <= 0) {
         this.newState = 'death'
       }
-
       this.setState()
     }
 
@@ -362,9 +361,11 @@ class Timer extends Indicator {
     ctx.fillStyle = this.color
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
-    ctx.font = this.text.style
-    ctx.textAlign = 'center'
-    ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+    if (this.timeRemaining || this.timeRemaining === 0) {
+      ctx.font = this.text.style
+      ctx.textAlign = 'center'
+      ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+    }
   }
 }
 

@@ -83,7 +83,8 @@ const samuraiData = {
     y: -155
   },
   attackFrame: 4,
-  name: 'samurai'
+  name: 'samurai',
+  textureMirroring: 1
 }
 
 const ninjaData = {
@@ -122,7 +123,8 @@ const ninjaData = {
     y: -170
   },
   attackFrame: 1,
-  name: 'ninja'
+  name: 'ninja',
+  textureMirroring: -1
 }
 
 const rightHealthBarData = {
@@ -211,12 +213,20 @@ socket.on('set-fighters-data', function (data) {
     player[player.type].health = data[player.type].health
     player[player.type].position = data[player.type].position
     player[player.type].command = data[player.type].command
+
+    if (!player[player.type].previousHealth) {
+      player[player.type].previousHealth = data[player.type].health
+    }
   }
 
   if (enemy[enemy.type]) {
     enemy[enemy.type].health = data[enemy.type].health
     enemy[enemy.type].position = data[enemy.type].position
     enemy[enemy.type].command = data[enemy.type].command
+
+    if (!enemy[enemy.type].previousHealth) {
+      enemy[enemy.type].previousHealth = data[enemy.type].health
+    }
   }
 
   if (debug && data[player.type].attackBox && data[enemy.type].attackBox) {

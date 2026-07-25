@@ -274,7 +274,7 @@ class WinIndicator extends Indicator {
 
     this.text = {
       position: this.position,
-      style: 'bold 35px Arial',
+      style: '32px "Silkscreen", monospace',
       color: 'yellow',
       offset: {
         x: 0,
@@ -310,7 +310,7 @@ class WaitTimer {
         x: 0,
         y: -30
       },
-      style: 'bold 128px'
+      style: '128px "Pixelify Sans", monospace'
     }
     this.aWaitTimerExists = false
   }
@@ -351,7 +351,7 @@ class Timer extends Indicator {
         x: 0,
         y: 0
       },
-      style: 'bold 48px serif'
+      style: '40px "Pixelify Sans", monospace'
     }
   }
 
@@ -363,8 +363,9 @@ class Timer extends Indicator {
 
     if (this.timeRemaining || this.timeRemaining === 0) {
       ctx.font = this.text.style
+      ctx.fillStyle = 'red'
       ctx.textAlign = 'center'
-      ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }
 }
@@ -415,7 +416,7 @@ class Button {
         x: 0,
         y: -10
       },
-      style: 'bold 35px Arial',
+      style: '35px "Silkscreen", monospace',
       color: 'black'
     }
     this.color = 'grey'

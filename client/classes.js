@@ -321,6 +321,8 @@ class WaitTimer {
     if (gameState === 'stop') {
       ctx.font = this.text.style
       ctx.textAlign = 'center'
+      ctx.fillStyle = 'red'
+      ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
       ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }
@@ -351,7 +353,7 @@ class Timer extends Indicator {
         x: 0,
         y: 0
       },
-      style: '40px "Pixelify Sans", monospace'
+      style: '47px "Pixelify Sans", monospace'
     }
   }
 

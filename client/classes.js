@@ -332,8 +332,8 @@ class Timer extends Indicator {
   constructor () {
     super({
       position: {
-        x: canvas.width / 2,
-        y: 10
+        x: canvas.width / 2 - 2,
+        y: 57
       },
       color: 'grey',
       width: 100,
@@ -343,6 +343,8 @@ class Timer extends Indicator {
         y: 0
       }
     })
+    this.radius = 12
+    this.pixelSize = 4
 
     this.text = {
       position: {
@@ -360,8 +362,20 @@ class Timer extends Indicator {
   update () { }
 
   render () {
-    ctx.fillStyle = this.color
-    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+    ctx.fillStyle = 'black'
+
+    for (let row = -this.radius; row <= this.radius; row++) {
+      for (let line = -this.radius; line <= this.radius; line++) {
+        if (line * line + row * row <= this.radius * this.radius) {
+          ctx.fillRect(
+            this.position.x + line * this.pixelSize,
+            this.position.y + row * this.pixelSize,
+            this.pixelSize,
+            this.pixelSize
+          )
+        }
+      }
+    }
 
     if (this.timeRemaining || this.timeRemaining === 0) {
       ctx.font = this.text.style
@@ -369,6 +383,10 @@ class Timer extends Indicator {
       ctx.textAlign = 'center'
       ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
     }
+  }
+
+  drawAFrame () {
+    drawPixelCircle(сtx, this.position.x, this.position.y, this.width/2, 5, 'black')
   }
 }
 
@@ -399,6 +417,14 @@ class HealthBar extends Indicator {
     if (this.entity.health >= 0) {
       this.healthValue = (this.entity.health * 100) / 10000
     }
+  }
+
+  drawAFrame () {
+    ctx.fillStyle = 'black'
+    ctx.fillRect(this.position.x + 52, this.position.y + 6, this.width + 10, this.height + 10)
+
+    ctx.fillStyle = '#d69b43'
+    ctx.fillRect(this.position.x + 56, this.position.y + 10, this.width + 2, this.height + 2)
   }
 }
 

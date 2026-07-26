@@ -1,6 +1,5 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
-ctx.imageSmoothingEnabled = false;
 
 canvas.width = 1024
 canvas.height = 576
@@ -147,11 +146,11 @@ const leftHealthBarData = {
 
 const timer = new Timer({
   position: {
-    x: canvas.width/2 - 85,
+    x: canvas.width/2 - 90,
     y: -3
   },
   imgSrc: './img/timerFrame.png',
-  width: 173,
+  width: 181,
   height: 130
 })
 gameObjects.push(timer)

@@ -276,7 +276,7 @@ class WinIndicator extends Indicator {
 
     this.text = {
       position: this.position,
-      style: '32px "Silkscreen", monospace',
+      style: 'bold 35px Arial',
       color: 'yellow',
       offset: {
         x: 0,
@@ -312,7 +312,7 @@ class WaitTimer {
         x: 0,
         y: -30
       },
-      style: '128px "Pixelify Sans", monospace'
+      style: 'bold 128px'
     }
     this.aWaitTimerExists = false
   }
@@ -421,7 +421,7 @@ class Button {
         x: 0,
         y: -10
       },
-      style: '35px "Silkscreen", monospace',
+      style: 'bold 35px Arial',
       color: 'black'
     }
     this.color = 'grey'

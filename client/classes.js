@@ -361,10 +361,6 @@ class Timer extends SpriteStatic {
       ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }
-
-  drawAFrame () {
-    drawPixelCircle(сtx, this.position.x, this.position.y, this.width / 2, 5, 'black')
-  }
 }
 
 class HealthBar extends Indicator {
@@ -394,14 +390,6 @@ class HealthBar extends Indicator {
     if (this.entity.health >= 0) {
       this.healthValue = (this.entity.health * 100) / 10000
     }
-  }
-
-  drawAFrame () {
-    ctx.fillStyle = 'black'
-    ctx.fillRect(this.position.x + 52, this.position.y + 6, this.width + 10, this.height + 10)
-
-    ctx.fillStyle = '#d69b43'
-    ctx.fillRect(this.position.x + 56, this.position.y + 10, this.width + 2, this.height + 2)
   }
 }
 

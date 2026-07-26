@@ -146,7 +146,7 @@ const leftHealthBarData = {
 
 const timer = new Timer({
   position: {
-    x: canvas.width/2 - 90,
+    x: canvas.width / 2 - 90,
     y: -3
   },
   imgSrc: './img/timerFrame.png',

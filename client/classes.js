@@ -1,12 +1,14 @@
 class SpriteStatic {
-  constructor ({ position, imgSrc }) {
+  constructor ({ position, imgSrc, width, height}) {
     this.position = position
     this.img = new Image()
     this.img.src = imgSrc
+    this.width = width
+    this.height = height
   }
 
   render () {
-    ctx.drawImage(this.img, this.position.x, this.position.y)
+    ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height)
   }
 
   update () { }
@@ -328,23 +330,9 @@ class WaitTimer {
   }
 }
 
-class Timer extends Indicator {
-  constructor () {
-    super({
-      position: {
-        x: canvas.width / 2 - 2,
-        y: 57
-      },
-      color: 'grey',
-      width: 100,
-      height: 100,
-      offset: {
-        x: -50,
-        y: 0
-      }
-    })
-    this.radius = 12
-    this.pixelSize = 4
+class Timer extends SpriteStatic {
+  constructor (position, imgSrc, width, height) {
+    super(position, imgSrc, width, height)
 
     this.text = {
       position: {
@@ -362,26 +350,14 @@ class Timer extends Indicator {
   update () { }
 
   render () {
-    ctx.fillStyle = 'black'
-
-    for (let row = -this.radius; row <= this.radius; row++) {
-      for (let line = -this.radius; line <= this.radius; line++) {
-        if (line * line + row * row <= this.radius * this.radius) {
-          ctx.fillRect(
-            this.position.x + line * this.pixelSize,
-            this.position.y + row * this.pixelSize,
-            this.pixelSize,
-            this.pixelSize
-          )
-        }
-      }
-    }
+    super.render()
 
     if (this.timeRemaining || this.timeRemaining === 0) {
       ctx.font = this.text.style
-      ctx.fillStyle = 'red'
+      ctx.fillStyle = 'rgba(248, 243,	186)'
       ctx.textAlign = 'center'
       ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }
 

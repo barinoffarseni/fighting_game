@@ -376,22 +376,22 @@ class HealthBar extends Indicator {
     super({
       position: {
         x: canvas.width / 2,
-        y: 10
+        y: 26
       },
       color: 'green',
-      width: 417,
-      height: 70,
+      width: 393,
+      height: 45,
       offset
     })
-    this.maxWidth = 417
+    this.maxWidth = 393
     this.textureMirroring = textureMirroring
     this.healthValue = 1
     this.entity = entity
   }
 
   render () {
-    ctx.fillStyle = this.color
-    ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.textureMirroring * this.healthValue, this.height)
+    ctx.fillStyle = 'rgba(159,63,79)'
+    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.textureMirroring * this.healthValue, this.height)
   }
 
   update () {

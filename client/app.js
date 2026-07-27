@@ -359,7 +359,7 @@ function setFighter (player, leftHealthBarData, rightHealthBarData) {
         gameObjects.push(new HealthBar(rightHealthBarData))
         gameObjects.push(new SpriteStatic({
           position: {
-            x: canvas.width/2 - 14,
+            x: canvas.width / 2 - 14,
             y: -90
           },
           imgSrc: './img/healthBarFrame.png',

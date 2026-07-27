@@ -417,7 +417,7 @@ class HealthBar extends Indicator {
         this.height
       )
       ctx.fillRect(
-        this.position.x + this.offset.x + this.maxWidth  * this.textureMirroring * this.healthValue - (9 * this.textureMirroring),
+        this.position.x + this.offset.x + this.maxWidth * this.textureMirroring * this.healthValue - (9 * this.textureMirroring),
         this.position.y + this.offset.y,
         9 * this.textureMirroring,
         this.height

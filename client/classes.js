@@ -390,8 +390,24 @@ class HealthBar extends Indicator {
   }
 
   render () {
-    ctx.fillStyle = 'rgba(159,63,79)'
+    ctx.fillStyle = '#463c5c'
+    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width * this.textureMirroring, this.height)
+    ctx.fillStyle = '#ad3e55'
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.textureMirroring * this.healthValue, this.height)
+    ctx.fillStyle = '#d95a70'
+    ctx.fillRect(
+      this.position.x + this.offset.x + (4 * this.textureMirroring),
+      this.position.y + this.offset.y + 4,
+      this.maxWidth * this.textureMirroring * this.healthValue - (8 * this.textureMirroring),
+      6
+    )
+    ctx.fillStyle = '#7f2b3e'
+    ctx.fillRect(
+      this.position.x + this.offset.x + (4 * this.textureMirroring),
+      this.position.y + this.offset.y + this.height - 7,
+      this.maxWidth * this.textureMirroring * this.healthValue - (8 * this.textureMirroring),
+      4
+    )
   }
 
   update () {

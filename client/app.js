@@ -29,7 +29,29 @@ gameObjects.push(new SpriteStatic({
     x: 0,
     y: 0
   },
-  imgSrc: './img/background.png'
+  imgSrc: './img/background.png',
+  width: canvas.width,
+  height: canvas.height
+}))
+
+gameObjects.push(new SpriteStatic({
+  position: {
+    x: -24,
+    y: -100
+  },
+  imgSrc: './img/healthBarFrame.png',
+  width: 550,
+  height: 300
+}))
+
+gameObjects.push(new SpriteStatic({
+  position: {
+    x: canvas.width/2 - 14,
+    y: -100
+  },
+  imgSrc: './img/healthBarFrame.png',
+  width: 550,
+  height: 300
 }))
 
 gameObjects.push(new SpriteAnimated({

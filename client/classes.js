@@ -1,12 +1,14 @@
 class SpriteStatic {
-  constructor ({ position, imgSrc }) {
+  constructor ({ position, imgSrc, width, height }) {
     this.position = position
     this.img = new Image()
     this.img.src = imgSrc
+    this.width = width
+    this.height = height
   }
 
   render () {
-    ctx.drawImage(this.img, this.position.x, this.position.y)
+    ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height)
   }
 
   update () { }
@@ -389,7 +391,7 @@ class HealthBar extends Indicator {
 
   render () {
     ctx.fillStyle = this.color
-    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.textureMirroring * this.healthValue, this.height)
+    ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.textureMirroring * this.healthValue, this.height)
   }
 
   update () {

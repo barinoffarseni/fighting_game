@@ -131,14 +131,14 @@ const ninjaData = {
 
 const rightHealthBarData = {
   offset: {
-    x: 50,
+    x: 64,
     y: 0
   },
   textureMirroring: 1
 }
 const leftHealthBarData = {
   offset: {
-    x: -50,
+    x: -64,
     y: 0
   },
   textureMirroring: -1
@@ -349,6 +349,15 @@ function setFighter (player, leftHealthBarData, rightHealthBarData) {
 
         leftHealthBarData.entity = player.samurai
         gameObjects.push(new HealthBar(leftHealthBarData))
+        gameObjects.push(new SpriteStatic({
+          position: {
+            x: -24,
+            y: -90
+          },
+          imgSrc: './img/healthBarFrame.png',
+          width: 550,
+          height: 300
+        }))
       }
       if (player.type == 'ninja' && ninjaData.position) {
         player.ninja = new Fighter(ninjaData)
@@ -356,6 +365,15 @@ function setFighter (player, leftHealthBarData, rightHealthBarData) {
 
         rightHealthBarData.entity = player.ninja
         gameObjects.push(new HealthBar(rightHealthBarData))
+        gameObjects.push(new SpriteStatic({
+          position: {
+            x: canvas.width / 2 - 14,
+            y: -90
+          },
+          imgSrc: './img/healthBarFrame.png',
+          width: 550,
+          height: 300
+        }))
       }
     } else {
       clearInterval(intervalId)

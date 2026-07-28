@@ -368,22 +368,53 @@ class HealthBar extends Indicator {
     super({
       position: {
         x: canvas.width / 2,
-        y: 10
+        y: 26
       },
       color: 'green',
-      width: 417,
-      height: 70,
+      width: 393,
+      height: 45,
       offset
     })
-    this.maxWidth = 417
+    this.maxWidth = 393
     this.textureMirroring = textureMirroring
     this.healthValue = 1
     this.entity = entity
   }
 
   render () {
-    ctx.fillStyle = this.color
+    ctx.fillStyle = '#3f3656'
+    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width * this.textureMirroring, this.height)
+    ctx.fillStyle = '#ad3e55'
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.textureMirroring * this.healthValue, this.height)
+
+    if (this.healthValue !== 0) {
+      ctx.fillStyle = '#d95a70'
+      ctx.fillRect(
+        this.position.x + this.offset.x + (4 * this.textureMirroring),
+        this.position.y + this.offset.y + 4,
+        this.maxWidth * this.textureMirroring * this.healthValue - (8 * this.textureMirroring),
+        6
+      )
+      ctx.fillStyle = '#7f2b3e'
+      ctx.fillRect(
+        this.position.x + this.offset.x + (4 * this.textureMirroring),
+        this.position.y + this.offset.y + this.height - 7,
+        this.maxWidth * this.textureMirroring * this.healthValue - (8 * this.textureMirroring),
+        4
+      )
+      ctx.fillRect(
+        this.position.x + this.offset.x,
+        this.position.y + this.offset.y,
+        9 * this.textureMirroring,
+        this.height
+      )
+      ctx.fillRect(
+        this.position.x + this.offset.x + this.maxWidth * this.textureMirroring * this.healthValue - (9 * this.textureMirroring),
+        this.position.y + this.offset.y,
+        9 * this.textureMirroring,
+        this.height
+      )
+    }
   }
 
   update () {

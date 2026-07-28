@@ -1,12 +1,14 @@
 class SpriteStatic {
-  constructor ({ position, imgSrc }) {
+  constructor ({ position, imgSrc, width, height }) {
     this.position = position
     this.img = new Image()
     this.img.src = imgSrc
+    this.width = width
+    this.height = height
   }
 
   render () {
-    ctx.drawImage(this.img, this.position.x, this.position.y)
+    ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height)
   }
 
   update () { }
@@ -321,26 +323,16 @@ class WaitTimer {
     if (gameState === 'stop') {
       ctx.font = this.text.style
       ctx.textAlign = 'center'
+      ctx.fillStyle = 'red'
+      ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
       ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }
 }
 
-class Timer extends Indicator {
-  constructor () {
-    super({
-      position: {
-        x: canvas.width / 2,
-        y: 10
-      },
-      color: 'grey',
-      width: 100,
-      height: 100,
-      offset: {
-        x: -50,
-        y: 0
-      }
-    })
+class Timer extends SpriteStatic {
+  constructor (position, imgSrc, width, height) {
+    super(position, imgSrc, width, height)
 
     this.text = {
       position: {
@@ -351,19 +343,21 @@ class Timer extends Indicator {
         x: 0,
         y: 0
       },
-      style: 'bold 48px serif'
+      style: '47px "Pixelify Sans", monospace'
     }
   }
 
   update () { }
 
   render () {
-    ctx.fillStyle = this.color
-    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+    super.render()
 
     if (this.timeRemaining || this.timeRemaining === 0) {
       ctx.font = this.text.style
+      ctx.fillStyle = 'rgba(248, 243,	186)'
+      ctx.lineWidth = 2
       ctx.textAlign = 'center'
+      ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
       ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }

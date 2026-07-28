@@ -29,7 +29,9 @@ gameObjects.push(new SpriteStatic({
     x: 0,
     y: 0
   },
-  imgSrc: './img/background.png'
+  imgSrc: './img/background.png',
+  width: canvas.width,
+  height: canvas.height
 }))
 
 gameObjects.push(new SpriteAnimated({
@@ -142,7 +144,15 @@ const leftHealthBarData = {
   textureMirroring: -1
 }
 
-const timer = new Timer()
+const timer = new Timer({
+  position: {
+    x: canvas.width / 2 - 90,
+    y: -3
+  },
+  imgSrc: './img/timerFrame.png',
+  width: 181,
+  height: 130
+})
 gameObjects.push(timer)
 
 const waitTimer = new WaitTimer()

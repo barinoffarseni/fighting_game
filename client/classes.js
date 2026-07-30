@@ -312,7 +312,7 @@ class WaitTimer {
         x: 0,
         y: -30
       },
-      style: 'bold 128px'
+      style: '47px "Pixelify Sans", monospace'
     }
     this.aWaitTimerExists = false
   }

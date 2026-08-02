@@ -162,6 +162,7 @@ gameObjects.push(waitTimer)
 
 const restartButton = new Button()
 gameObjects.push(restartButton)
+gameObjects.push(new RestartButtonFrame())
 
 const winIndicator = new WinIndicator()
 gameObjects.push(winIndicator)

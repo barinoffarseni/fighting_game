@@ -363,6 +363,30 @@ class Timer extends SpriteStatic {
   }
 }
 
+class RestartButtonFrame extends SpriteStatic {
+  constructor () {
+    super(
+      {
+        position: {
+          x: canvas.width / 2 - 545 / 2,
+          y: canvas.height / 2 - 92
+        },
+        imgSrc: './img/frame.png',
+        width: 545,
+        height: 300
+      }
+    )
+  }
+
+  update () { }
+
+  render () {
+    if (gameState === 'over' || gameState === 'stop') {
+      super.render()
+    }
+  }
+}
+
 class HealthBar extends Indicator {
   constructor ({ offset, textureMirroring, entity }) {
     super({
@@ -431,7 +455,7 @@ class Button {
       y: canvas.height / 1.6
     }
     this.offset = {
-      x: -65,
+      x: -120,
       y: -50
     }
     this.text = {
@@ -440,12 +464,12 @@ class Button {
         x: 0,
         y: -10
       },
-      style: 'bold 35px Arial',
-      color: 'black'
+      style: '40px "Silkscreen", monospace',
+      color: 'rgba(250	245	165)'
     }
-    this.color = 'grey'
-    this.width = 130
-    this.height = 60
+    this.color = 'rgba(248, 243,	186)'
+    this.width = 240
+    this.height = 55
     this.mouse = mouse
     this.minX = this.position.x + this.offset.x
     this.maxX = this.position.x + this.offset.x + this.width
@@ -469,15 +493,13 @@ class Button {
 
   render () {
     if (gameState === 'over' || gameState === 'stop') {
-      ctx.fillStyle = this.color
-      ctx.strokeStyle = 'black'
-      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
       ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
       ctx.font = this.text.style
       ctx.fillStyle = this.text.color
       ctx.textAlign = 'center'
       ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.strokeText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }
 }

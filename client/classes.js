@@ -475,21 +475,26 @@ class Button {
     this.minY = this.position.y + this.offset.y
     this.maxY = this.position.y + this.offset.y + this.height
     this.state = 'idle'
+    this.isActive()
   }
 
-  update () {
-    if (gameState === 'over' || gameState === 'stop') {
-      canvas.addEventListener('mousedown', function (event) {
+  isActive() {
+    canvas.addEventListener('mousedown', function (event) {
+      if (gameState === 'over' || gameState === 'stop') {
         const rect = canvas.getBoundingClientRect()
         const mouseX = event.clientX - rect.left
         const mouseY = event.clientY - rect.top
 
         if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           restartButton.state = 'pressed'
+        } else {
+          restartButton.state = 'idle'
         }
-      })
+      }
+    })
 
-      canvas.addEventListener('mouseup', function (event) {
+    canvas.addEventListener('mouseup', function (event) {
+      if (gameState === 'over' || gameState === 'stop') {
         const rect = canvas.getBoundingClientRect()
         const mouseX = event.clientX - rect.left
         const mouseY = event.clientY - rect.top
@@ -497,20 +502,28 @@ class Button {
         if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           location.reload()
         }
-      })
+      }
+    })
 
-      canvas.addEventListener('mousemove', function (event) {
+    canvas.addEventListener('mousemove', function (event) {
+      if (gameState === 'over' || gameState === 'stop') {
         const rect = canvas.getBoundingClientRect()
         const mouseX = event.clientX - rect.left
         const mouseY = event.clientY - rect.top
 
-        if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
-          restartButton.state = 'hover'
-        } else {
-          restartButton.state = 'idle'
+        if (restartButton.state !== 'pressed') {
+          if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+            restartButton.state = 'hover'
+          } else {
+            restartButton.state = 'idle'
+          }
         }
-      })
-    }
+      }
+    })
+  }
+
+  update () {
+
   }
 
   render () {
@@ -519,7 +532,7 @@ class Button {
       if (this.state === 'idle') {
         ctx.fillStyle = '#6F4E8E'
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
-        ctx.fillStyle = '#8E6AB2'
+        ctx.fillStyle = '#885fb1'
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 12)
         ctx.fillStyle = '#4D3566'
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 13, this.width, 13)
@@ -528,6 +541,18 @@ class Button {
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
         ctx.fillStyle = '#2D1F3C'
         ctx.fillRect(this.position.x + this.offset.x,  this.position.y + this.offset.y + this.height - 10.5, this.width, 10.5)
+      }
+
+      if (this.state === 'hover') {
+        ctx.fillStyle = '#A97DCC'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        ctx.fillStyle = '#c09ee2'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 12)
+        ctx.fillStyle = '#7b6397'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 13, this.width, 13)
+        ctx.fillRect(this.position.x + this.offset.x + this.width - 8, this.position.y + this.offset.y, 8, this.height)
+        ctx.fillStyle = '#7e6796'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
       }
 
       if (this.state === 'pressed') {

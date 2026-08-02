@@ -501,6 +501,8 @@ class Button {
 
         if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           location.reload()
+        } else {
+          restartButton.state = 'idle'
         }
       }
     })

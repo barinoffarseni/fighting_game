@@ -473,12 +473,23 @@ class Button {
     this.minX = this.position.x + this.offset.x
     this.maxX = this.position.x + this.offset.x + this.width
     this.minY = this.position.y + this.offset.y
-    this.maxY = this.position.y + this.offset.y + this.width
+    this.maxY = this.position.y + this.offset.y + this.height
+    this.state = 'idle'
   }
 
   update () {
     if (gameState === 'over' || gameState === 'stop') {
-      canvas.addEventListener('click', function (event) {
+      canvas.addEventListener('mousedown', function (event) {
+        const rect = canvas.getBoundingClientRect()
+        const mouseX = event.clientX - rect.left
+        const mouseY = event.clientY - rect.top
+
+        if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+          restartButton.state = 'pressed'
+        }
+      })
+
+      canvas.addEventListener('mouseup', function (event) {
         const rect = canvas.getBoundingClientRect()
         const mouseX = event.clientX - rect.left
         const mouseY = event.clientY - rect.top
@@ -487,26 +498,48 @@ class Button {
           location.reload()
         }
       })
+
+      canvas.addEventListener('mousemove', function (event) {
+        const rect = canvas.getBoundingClientRect()
+        const mouseX = event.clientX - rect.left
+        const mouseY = event.clientY - rect.top
+
+        if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+          restartButton.state = 'hover'
+        } else {
+          restartButton.state = 'idle'
+        }
+      })
     }
   }
 
   render () {
+    ctx.strokeRect(restartButton.minX, restartButton.minY , this.width, this.height)
     if (gameState === 'over' || gameState === 'stop') {
-      ctx.fillStyle = '#6F4E8E'
-      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
-      ctx.fillStyle = '#8E6AB2'
-      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 12)
-      ctx.fillStyle = '#4D3566'
-      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 13, this.width, 13)
-      ctx.fillRect(this.position.x + this.offset.x + this.width - 8, this.position.y + this.offset.y, 8, this.height)
-      ctx.fillStyle = '#61467e'
-      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
-      ctx.fillStyle = '#2D1F3C'
-      ctx.fillRect(this.position.x + this.offset.x,  this.position.y + this.offset.y + this.height - 10.5, this.width, 10.5)
-      ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+      if (this.state === 'idle') {
+        ctx.fillStyle = '#6F4E8E'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        ctx.fillStyle = '#8E6AB2'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 12)
+        ctx.fillStyle = '#4D3566'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 13, this.width, 13)
+        ctx.fillRect(this.position.x + this.offset.x + this.width - 8, this.position.y + this.offset.y, 8, this.height)
+        ctx.fillStyle = '#705a88'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
+        ctx.fillStyle = '#2D1F3C'
+        ctx.fillRect(this.position.x + this.offset.x,  this.position.y + this.offset.y + this.height - 10.5, this.width, 10.5)
+      }
 
-      ctx.font = this.text.style
+      if (this.state === 'pressed') {
+        ctx.fillStyle = '#4D3566'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+      }
+
       ctx.fillStyle = '#F3E7A1'
+      if (this.state === 'pressed') {
+          ctx.fillStyle = '#3A2A18'
+      }
+      ctx.font = this.text.style
       ctx.textAlign = 'center'
       ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)
       ctx.strokeText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)

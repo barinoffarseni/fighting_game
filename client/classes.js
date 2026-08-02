@@ -465,9 +465,8 @@ class Button {
         y: -10
       },
       style: '40px "Silkscreen", monospace',
-      color: 'rgba(250	245	165)'
     }
-    this.color = 'rgba(248, 243,	186)'
+    this.color = 'rgba(83, 64, 99)'
     this.width = 240
     this.height = 55
     this.mouse = mouse
@@ -493,10 +492,21 @@ class Button {
 
   render () {
     if (gameState === 'over' || gameState === 'stop') {
+      ctx.fillStyle = '#6F4E8E'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+      ctx.fillStyle = '#8E6AB2'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 12)
+      ctx.fillStyle = '#4D3566'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 13, this.width, 13)
+      ctx.fillRect(this.position.x + this.offset.x + this.width - 8, this.position.y + this.offset.y, 8, this.height)
+      ctx.fillStyle = '#61467e'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
+      ctx.fillStyle = '#2D1F3C'
+      ctx.fillRect(this.position.x + this.offset.x,  this.position.y + this.offset.y + this.height - 10.5, this.width, 10.5)
       ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
 
       ctx.font = this.text.style
-      ctx.fillStyle = this.text.color
+      ctx.fillStyle = '#F3E7A1'
       ctx.textAlign = 'center'
       ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)
       ctx.strokeText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)

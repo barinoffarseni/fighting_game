@@ -533,7 +533,6 @@ class Button {
   }
 
   render () {
-    ctx.strokeRect(restartButton.minX, restartButton.minY, this.width, this.height)
     if (gameState === 'over' || gameState === 'stop') {
       if (this.state === 'idle') {
         ctx.fillStyle = '#6F4E8E'

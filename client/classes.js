@@ -464,7 +464,11 @@ class Button {
         x: 0,
         y: -10
       },
-      style: '40px "Silkscreen", monospace',
+      offsetUponPressing: {
+        x: 0,
+        y: 0
+      },
+      style: '40px "Silkscreen", monospace'
     }
     this.color = 'rgba(83, 64, 99)'
     this.width = 240
@@ -478,7 +482,7 @@ class Button {
     this.isActive()
   }
 
-  isActive() {
+  isActive () {
     canvas.addEventListener('mousedown', function (event) {
       if (gameState === 'over' || gameState === 'stop') {
         const rect = canvas.getBoundingClientRect()
@@ -529,7 +533,7 @@ class Button {
   }
 
   render () {
-    ctx.strokeRect(restartButton.minX, restartButton.minY , this.width, this.height)
+    ctx.strokeRect(restartButton.minX, restartButton.minY, this.width, this.height)
     if (gameState === 'over' || gameState === 'stop') {
       if (this.state === 'idle') {
         ctx.fillStyle = '#6F4E8E'
@@ -542,7 +546,7 @@ class Button {
         ctx.fillStyle = '#705a88'
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
         ctx.fillStyle = '#2D1F3C'
-        ctx.fillRect(this.position.x + this.offset.x,  this.position.y + this.offset.y + this.height - 10.5, this.width, 10.5)
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 10.5, this.width, 10.5)
       }
 
       if (this.state === 'hover') {
@@ -563,13 +567,15 @@ class Button {
       }
 
       ctx.fillStyle = '#F3E7A1'
+      this.text.offsetUponPressing.y = 0
       if (this.state === 'pressed') {
-          ctx.fillStyle = '#3A2A18'
+        ctx.fillStyle = '#3A2A18'
+        this.text.offsetUponPressing.y = 3
       }
       ctx.font = this.text.style
       ctx.textAlign = 'center'
-      ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)
-      ctx.strokeText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
+      ctx.strokeText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
     }
   }
 }

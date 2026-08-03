@@ -294,7 +294,7 @@ class WinIndicator extends Indicator {
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
       ctx.fillStyle = '#8265a0'
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 14)
-      ctx.fillStyle = '#8f7da3'
+      ctx.fillStyle = '#5f4778'
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 5, this.height)
       ctx.fillStyle = '#4D3566'
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 18, this.width, 18)

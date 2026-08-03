@@ -165,11 +165,12 @@ const winIndicator = new WinIndicator()
 gameObjects.push(winIndicator)
 const winIndicatorFrame = new Frame({
   position: {
-    x: canvas.width / 2 - 545 / 2,
-    y: canvas.height / 2
+    x: canvas.width / 2 - 593 / 2,
+    y: canvas.height / 2 - 367 / 2 - 50
   },
-  width: 545,
-  height: 300
+  imgSrc: './img/winIndicatorFrame.png',
+  width: 593,
+  height: 367
 })
 gameObjects.push(winIndicatorFrame)
 

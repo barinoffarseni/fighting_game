@@ -167,6 +167,7 @@ const RestartButtonFrame = new Frame({
     x: canvas.width / 2 - 545 / 2,
     y: canvas.height / 2 - 92
   },
+  imgSrc: './img/restartButtonFrame.png',
   width: 545,
   height: 300
 })

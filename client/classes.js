@@ -364,11 +364,11 @@ class Timer extends SpriteStatic {
 }
 
 class Frame extends SpriteStatic {
-  constructor ({ position, width, height }) {
+  constructor ({ position, imgSrc, width, height }) {
     super(
       {
         position,
-        imgSrc: './img/frame.png',
+        imgSrc,
         width,
         height
       }

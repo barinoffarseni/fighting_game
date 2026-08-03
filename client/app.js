@@ -274,7 +274,6 @@ socket.on('wait-timer', function (data) {
 socket.on('set-game-state', function (data) {
   gameState = data.state
   if (gameState === 'over') {
-    console.log(data.winner)
     winIndicator.winner = data.winner
     winIndicatorFrame.isVisible = true
   }

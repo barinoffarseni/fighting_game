@@ -266,7 +266,7 @@ class WinIndicator extends Indicator {
         y: canvas.height / 2
       },
       offset: {
-        x: -179,
+        x: -180,
         y: -90
       },
       color: 'grey',
@@ -277,7 +277,7 @@ class WinIndicator extends Indicator {
     this.text = {
       position: this.position,
       style: '40px "Silkscreen", monospace',
-      color: 'yellow',
+      color: '#F3E7A1',
       offset: {
         x: 0,
         y: -50
@@ -290,8 +290,17 @@ class WinIndicator extends Indicator {
 
   render () {
     if (gameState === 'over') {
-      ctx.fillStyle = this.color
+      ctx.fillStyle = '#6F4E8E'
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+      ctx.fillStyle = '#8265a0'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 14)
+      ctx.fillStyle = '#8f7da3'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 5, this.height)
+      ctx.fillStyle = '#4D3566'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 18, this.width, 18)
+      ctx.fillRect(this.position.x + this.offset.x + this.width - 5, this.position.y + this.offset.y, 5, this.height)
+      ctx.fillStyle = '#2D1F3C'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 15, this.width, 15)
 
       ctx.font = this.text.style
       ctx.fillStyle = this.text.color
@@ -375,7 +384,7 @@ class Frame extends SpriteStatic {
         height
       }
     )
-    this.isVisible = true
+    this.isVisible = false
   }
 
   update () { }

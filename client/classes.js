@@ -363,7 +363,7 @@ class Timer extends SpriteStatic {
   }
 }
 
-class RestartButtonFrame extends SpriteStatic {
+class Frame extends SpriteStatic {
   constructor () {
     super(
       {
@@ -376,12 +376,13 @@ class RestartButtonFrame extends SpriteStatic {
         height: 300
       }
     )
+    this.isVisible = false
   }
 
   update () { }
 
   render () {
-    if (gameState === 'over' || gameState === 'stop') {
+    if (this.isVisible) {
       super.render()
     }
   }

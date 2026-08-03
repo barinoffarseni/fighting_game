@@ -160,6 +160,16 @@ gameObjects.push(waitTimer)
 
 const restartButton = new Button()
 gameObjects.push(restartButton)
+const RestartButtonFrame = new Frame({
+  position: {
+    x: canvas.width / 2 - 545 / 2,
+    y: canvas.height / 2 - 92
+  },
+  imgSrc: './img/restartButtonFrame.png',
+  width: 545,
+  height: 300
+})
+gameObjects.push(RestartButtonFrame)
 
 const winIndicator = new WinIndicator()
 gameObjects.push(winIndicator)
@@ -273,9 +283,14 @@ socket.on('wait-timer', function (data) {
 
 socket.on('set-game-state', function (data) {
   gameState = data.state
+  RestartButtonFrame.isVisible = false
+  if (gameState === 'stop') {
+    RestartButtonFrame.isVisible = true
+  }
   if (gameState === 'over') {
     winIndicator.winner = data.winner
     winIndicatorFrame.isVisible = true
+    RestartButtonFrame.isVisible = true
   }
 })
 

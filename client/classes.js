@@ -375,7 +375,7 @@ class Timer extends SpriteStatic {
 }
 
 class Frame extends SpriteStatic {
-  constructor ({ position, width, imgSrc, height }) {
+  constructor ({ position, imgSrc, width, height }) {
     super(
       {
         position,
@@ -464,7 +464,7 @@ class Button {
       y: canvas.height / 1.6
     }
     this.offset = {
-      x: -65,
+      x: -120,
       y: -50
     }
     this.text = {
@@ -473,44 +473,117 @@ class Button {
         x: 0,
         y: -10
       },
-      style: 'bold 35px Arial',
-      color: 'black'
+      offsetUponPressing: {
+        x: 0,
+        y: 0
+      },
+      style: '40px "Silkscreen", monospace'
     }
-    this.color = 'grey'
-    this.width = 130
-    this.height = 60
+    this.color = 'rgba(83, 64, 99)'
+    this.width = 240
+    this.height = 55
     this.mouse = mouse
     this.minX = this.position.x + this.offset.x
     this.maxX = this.position.x + this.offset.x + this.width
     this.minY = this.position.y + this.offset.y
-    this.maxY = this.position.y + this.offset.y + this.width
+    this.maxY = this.position.y + this.offset.y + this.height
+    this.state = 'idle'
+    this.isActive()
   }
 
-  update () {
-    if (gameState === 'over' || gameState === 'stop') {
-      canvas.addEventListener('click', function (event) {
+  isActive () {
+    canvas.addEventListener('mousedown', function (event) {
+      if (gameState === 'over' || gameState === 'stop') {
+        const rect = canvas.getBoundingClientRect()
+        const mouseX = event.clientX - rect.left
+        const mouseY = event.clientY - rect.top
+
+        if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+          restartButton.state = 'pressed'
+        } else {
+          restartButton.state = 'idle'
+        }
+      }
+    })
+
+    canvas.addEventListener('mouseup', function (event) {
+      if (gameState === 'over' || gameState === 'stop') {
         const rect = canvas.getBoundingClientRect()
         const mouseX = event.clientX - rect.left
         const mouseY = event.clientY - rect.top
 
         if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           location.reload()
+        } else {
+          restartButton.state = 'idle'
         }
-      })
-    }
+      }
+    })
+
+    canvas.addEventListener('mousemove', function (event) {
+      if (gameState === 'over' || gameState === 'stop') {
+        const rect = canvas.getBoundingClientRect()
+        const mouseX = event.clientX - rect.left
+        const mouseY = event.clientY - rect.top
+
+        if (restartButton.state !== 'pressed') {
+          if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+            restartButton.state = 'hover'
+          } else {
+            restartButton.state = 'idle'
+          }
+        }
+      }
+    })
+  }
+
+  update () {
+
   }
 
   render () {
     if (gameState === 'over' || gameState === 'stop') {
-      ctx.fillStyle = this.color
-      ctx.strokeStyle = 'black'
-      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
-      ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+      if (this.state === 'idle') {
+        ctx.fillStyle = '#6F4E8E'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        ctx.fillStyle = '#885fb1'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 12)
+        ctx.fillStyle = '#4D3566'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 13, this.width, 13)
+        ctx.fillRect(this.position.x + this.offset.x + this.width - 8, this.position.y + this.offset.y, 8, this.height)
+        ctx.fillStyle = '#705a88'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
+        ctx.fillStyle = '#2D1F3C'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 10.5, this.width, 10.5)
+      }
 
+      if (this.state === 'hover') {
+        ctx.fillStyle = '#A97DCC'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        ctx.fillStyle = '#c09ee2'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 12)
+        ctx.fillStyle = '#7b6397'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 13, this.width, 13)
+        ctx.fillRect(this.position.x + this.offset.x + this.width - 8, this.position.y + this.offset.y, 8, this.height)
+        ctx.fillStyle = '#7e6796'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
+      }
+
+      if (this.state === 'pressed') {
+        ctx.fillStyle = '#4D3566'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+      }
+
+      ctx.fillStyle = '#F3E7A1'
+      this.text.offsetUponPressing.y = 0
+      if (this.state === 'pressed') {
+        ctx.fillStyle = '#3A2A18'
+        this.text.offsetUponPressing.y = 3
+      }
       ctx.font = this.text.style
-      ctx.fillStyle = this.text.color
       ctx.textAlign = 'center'
-      ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
+      ctx.strokeText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
     }
   }
 }

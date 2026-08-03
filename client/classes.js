@@ -289,11 +289,6 @@ class WinIndicator extends Indicator {
   update () { }
 
   render () {
-    ctx.font = this.text.style
-    ctx.fillStyle = this.text.color
-    ctx.textAlign = 'center'
-    ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
-    ctx.strokeText('Player II'+ ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
     if (gameState === 'over') {
       ctx.fillStyle = this.color
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
@@ -387,7 +382,6 @@ class Frame extends SpriteStatic {
 
   render () {
     if (this.isVisible) {
-      console.log(this.imgSrc)
       super.render()
     }
   }

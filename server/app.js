@@ -47,12 +47,12 @@ setInterval(() => {
 
       if (room.gameTimer.timeRemaining === 0) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
-          room.winner = 'Player 2'
+          room.winner = 'Player II'
           room.gameState = 'over'
           io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
         }
         if (room.fighters.samurai.health > room.fighters.ninja.health) {
-          room.winner = 'Player 1'
+          room.winner = 'Player I'
           room.gameState = 'over'
           io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
         }
@@ -172,13 +172,13 @@ io.on('connection', (socket) => {
     }
 
     if (room.fighters.samurai.health === 0) {
-      room.winner = 'Player 2'
+      room.winner = 'Player II'
       room.gameState = 'over'
       room.gameTimer.timeStop = true
       io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
     }
     if (room.fighters.ninja.health === 0) {
-      room.winner = 'Player 1'
+      room.winner = 'Player I'
       room.gameState = 'over'
       room.gameTimer.timeStop = true
       io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })

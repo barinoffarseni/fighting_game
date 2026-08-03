@@ -163,6 +163,15 @@ gameObjects.push(restartButton)
 
 const winIndicator = new WinIndicator()
 gameObjects.push(winIndicator)
+const winIndicatorFrame = new Frame({
+  position: {
+    x: canvas.width / 2 - 545 / 2,
+    y: canvas.height / 2
+  },
+  width: 545,
+  height: 300
+})
+gameObjects.push(winIndicatorFrame)
 
 function gameLoop () {
   control()
@@ -264,7 +273,9 @@ socket.on('wait-timer', function (data) {
 socket.on('set-game-state', function (data) {
   gameState = data.state
   if (gameState === 'over') {
+    console.log(data.winner)
     winIndicator.winner = data.winner
+    winIndicatorFrame.isVisible = true
   }
 })
 

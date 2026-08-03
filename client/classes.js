@@ -266,17 +266,17 @@ class WinIndicator extends Indicator {
         y: canvas.height / 2
       },
       offset: {
-        x: -110,
+        x: -179,
         y: -90
       },
       color: 'grey',
-      width: 220,
+      width: 360,
       height: 60
     })
 
     this.text = {
       position: this.position,
-      style: 'bold 35px Arial',
+      style: '40px "Silkscreen", monospace',
       color: 'yellow',
       offset: {
         x: 0,
@@ -289,6 +289,7 @@ class WinIndicator extends Indicator {
   update () { }
 
   render () {
+    ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
     if (gameState === 'over') {
       ctx.fillStyle = this.color
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
@@ -297,6 +298,7 @@ class WinIndicator extends Indicator {
       ctx.fillStyle = this.text.color
       ctx.textAlign = 'center'
       ctx.fillText(this.winner + ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.strokeText(this.winner + ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }
 }
@@ -360,6 +362,29 @@ class Timer extends SpriteStatic {
       ctx.textAlign = 'center'
       ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
       ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+    }
+  }
+}
+
+class Frame extends SpriteStatic {
+  constructor ({ position, width, height }) {
+    super(
+      {
+        position,
+        imgSrc: './img/frame.png',
+        width,
+        height
+      }
+    )
+    this.isVisible = false
+  }
+
+  update () { }
+
+  render () {
+    if (this.isVisible) {
+      console.log('log')
+      super.render()
     }
   }
 }

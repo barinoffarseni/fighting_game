@@ -364,16 +364,13 @@ class Timer extends SpriteStatic {
 }
 
 class Frame extends SpriteStatic {
-  constructor () {
+  constructor ({ position, width, height }) {
     super(
       {
-        position: {
-          x: canvas.width / 2 - 545 / 2,
-          y: canvas.height / 2 - 92
-        },
+        position,
         imgSrc: './img/frame.png',
-        width: 545,
-        height: 300
+        width,
+        height
       }
     )
     this.isVisible = false

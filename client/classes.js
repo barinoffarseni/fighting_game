@@ -492,11 +492,18 @@ class Button {
   }
 
   isActive () {
+    function getCanvasMousePosition (event) {
+      const rect = canvas.getBoundingClientRect()
+
+      return {
+        x: (event.clientX - rect.left) * canvas.width / rect.width,
+        y: (event.clientY - rect.top) * canvas.height / rect.height
+      }
+    }
+
     canvas.addEventListener('mousedown', function (event) {
       if (gameState === 'over' || gameState === 'stop') {
-        const rect = canvas.getBoundingClientRect()
-        const mouseX = event.clientX - rect.left
-        const mouseY = event.clientY - rect.top
+        const { x: mouseX, y: mouseY } = getCanvasMousePosition(event)
 
         if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           restartButton.state = 'pressed'
@@ -508,9 +515,7 @@ class Button {
 
     canvas.addEventListener('mouseup', function (event) {
       if (gameState === 'over' || gameState === 'stop') {
-        const rect = canvas.getBoundingClientRect()
-        const mouseX = event.clientX - rect.left
-        const mouseY = event.clientY - rect.top
+        const { x: mouseX, y: mouseY } = getCanvasMousePosition(event)
 
         if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           location.reload()
@@ -522,9 +527,7 @@ class Button {
 
     canvas.addEventListener('mousemove', function (event) {
       if (gameState === 'over' || gameState === 'stop') {
-        const rect = canvas.getBoundingClientRect()
-        const mouseX = event.clientX - rect.left
-        const mouseY = event.clientY - rect.top
+        const { x: mouseX, y: mouseY } = getCanvasMousePosition(event)
 
         if (restartButton.state !== 'pressed') {
           if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {

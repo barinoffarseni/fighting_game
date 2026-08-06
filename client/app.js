@@ -371,7 +371,7 @@ function setFighter (player, leftHealthBarData, rightHealthBarData) {
     if (!player[player.type]) {
       if (player.type == 'samurai' && samuraiData.position) {
         player.samurai = new Fighter(samuraiData)
-        gameObjects.push(player.samurai)
+        gameObjects.splice(1, 0, player.samurai)
 
         leftHealthBarData.entity = player.samurai
         gameObjects.push(new HealthBar(leftHealthBarData))
@@ -387,7 +387,7 @@ function setFighter (player, leftHealthBarData, rightHealthBarData) {
       }
       if (player.type == 'ninja' && ninjaData.position) {
         player.ninja = new Fighter(ninjaData)
-        gameObjects.push(player.ninja)
+        gameObjects.splice(1, 0, player.ninja)
 
         rightHealthBarData.entity = player.ninja
         gameObjects.push(new HealthBar(rightHealthBarData))

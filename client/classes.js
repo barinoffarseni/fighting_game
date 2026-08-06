@@ -335,8 +335,10 @@ class WaitTimer {
       ctx.textAlign = 'center'
       ctx.lineWidth = 2
       ctx.fillStyle = 'red'
-      ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
-      ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+      if (this.timeRemaining) {
+        ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+        ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+      }
     }
   }
 }

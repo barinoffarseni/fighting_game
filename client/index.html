@@ -16,11 +16,23 @@
       margin: 0;
       overflow: hidden;
       background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     canvas {
-      width: 100vw;
-      height: 100vh;
+      width: min(100vw, calc(100vh * 16 / 9));
+      height: min(100vh, calc(100vw * 9 / 16));
+      display: block;
+    }
+
+    @media (orientation: portrait) and (pointer: coarse) {
+      canvas {
+        width: min(100vh, calc(100vw * 16 / 9));
+        height: min(100vw, calc(100vh * 9 / 16));
+        transform: rotate(90deg);
+      }
     }
   </style>
 </head>

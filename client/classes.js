@@ -276,7 +276,7 @@ class WinIndicator extends Indicator {
 
     this.text = {
       position: this.position,
-      style: '40px "Silkscreen", monospace',
+      style: 'bold 40px Menlo, Monaco, Consolas, "Courier New", monospace',
       color: '#F3E7A1',
       offset: {
         x: 0,
@@ -322,7 +322,7 @@ class WaitTimer {
         x: 0,
         y: -30
       },
-      style: '47px "Pixelify Sans", monospace'
+      style: 'bold 47px Menlo, Monaco, Consolas, "Courier New", monospace'
     }
     this.aWaitTimerExists = false
   }
@@ -356,7 +356,7 @@ class Timer extends SpriteStatic {
         x: 0,
         y: 0
       },
-      style: '47px "Pixelify Sans", monospace'
+      style: 'bold 47px Menlo, Monaco, Consolas, "Courier New", monospace'
     }
   }
 
@@ -479,7 +479,7 @@ class Button {
         x: 0,
         y: 0
       },
-      style: '40px "Silkscreen", monospace'
+      style: 'bold 40px Menlo, Monaco, Consolas, "Courier New", monospace'
     }
     this.color = 'rgba(83, 64, 99)'
     this.width = 240

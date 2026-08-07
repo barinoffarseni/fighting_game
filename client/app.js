@@ -1,6 +1,11 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
+const loadedFonts = new Set()
+
+loadFont('Pixelify Sans')
+loadFont('Silkscreen')
+
 canvas.width = 1024
 canvas.height = 576
 
@@ -405,4 +410,18 @@ function setFighter (player, leftHealthBarData, rightHealthBarData) {
       clearInterval(intervalId)
     }
   }, 100)
+}
+
+function loadFont (font) {
+  document.fonts.load(`400 16px "${font}"`)
+    .then(fontFaces => {
+      if (fontFaces.length > 0) {
+        loadedFonts.add(font)
+      }
+    })
+    .catch(() => {})
+}
+
+function isFontLoaded (font) {
+  return loadedFonts.has(font)
 }

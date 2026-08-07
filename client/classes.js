@@ -302,13 +302,11 @@ class WinIndicator extends Indicator {
       ctx.fillStyle = '#2D1F3C'
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 15, this.width, 15)
 
-      if (isFontLoaded('Silkscreen')) {
-        ctx.font = this.text.style
-        ctx.fillStyle = this.text.color
-        ctx.textAlign = 'center'
-        ctx.fillText(this.winner + ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
-        ctx.strokeText(this.winner + ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
-      }
+      ctx.font = this.text.style
+      ctx.fillStyle = this.text.color
+      ctx.textAlign = 'center'
+      ctx.fillText(this.winner + ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.strokeText(this.winner + ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }
 }
@@ -332,7 +330,7 @@ class WaitTimer {
   update () { }
 
   render () {
-    if (gameState === 'stop' && isFontLoaded('Pixelify Sans')) {
+    if (gameState === 'stop') {
       ctx.font = this.text.style
       ctx.textAlign = 'center'
       ctx.lineWidth = 2
@@ -367,7 +365,7 @@ class Timer extends SpriteStatic {
   render () {
     super.render()
 
-    if ((this.timeRemaining || this.timeRemaining === 0) && isFontLoaded('Pixelify Sans')) {
+    if (this.timeRemaining || this.timeRemaining === 0) {
       ctx.font = this.text.style
       ctx.fillStyle = 'rgba(248, 243,	186)'
       ctx.lineWidth = 2
@@ -581,18 +579,16 @@ class Button {
         ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
       }
 
-      if (isFontLoaded('Silkscreen')) {
-        ctx.fillStyle = '#F3E7A1'
-        this.text.offsetUponPressing.y = 0
-        if (this.state === 'pressed') {
-          ctx.fillStyle = '#3A2A18'
-          this.text.offsetUponPressing.y = 3
-        }
-        ctx.font = this.text.style
-        ctx.textAlign = 'center'
-        ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
-        ctx.strokeText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
+      ctx.fillStyle = '#F3E7A1'
+      this.text.offsetUponPressing.y = 0
+      if (this.state === 'pressed') {
+        ctx.fillStyle = '#3A2A18'
+        this.text.offsetUponPressing.y = 3
       }
+      ctx.font = this.text.style
+      ctx.textAlign = 'center'
+      ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
+      ctx.strokeText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
     }
   }
 }

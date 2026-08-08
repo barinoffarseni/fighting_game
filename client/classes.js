@@ -1,12 +1,14 @@
 class SpriteStatic {
-  constructor ({ position, imgSrc }) {
+  constructor ({ position, imgSrc, width, height }) {
     this.position = position
     this.img = new Image()
     this.img.src = imgSrc
+    this.width = width
+    this.height = height
   }
 
   render () {
-    ctx.drawImage(this.img, this.position.x, this.position.y)
+    ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height)
   }
 
   update () { }
@@ -264,18 +266,18 @@ class WinIndicator extends Indicator {
         y: canvas.height / 2
       },
       offset: {
-        x: -110,
+        x: -180,
         y: -90
       },
       color: 'grey',
-      width: 220,
+      width: 360,
       height: 60
     })
 
     this.text = {
       position: this.position,
-      style: 'bold 35px Arial',
-      color: 'yellow',
+      style: 'bold 40px Menlo, Monaco, Consolas, "Courier New", monospace',
+      color: '#F3E7A1',
       offset: {
         x: 0,
         y: -50
@@ -288,13 +290,23 @@ class WinIndicator extends Indicator {
 
   render () {
     if (gameState === 'over') {
-      ctx.fillStyle = this.color
+      ctx.fillStyle = '#6F4E8E'
       ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+      ctx.fillStyle = '#8265a0'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 14)
+      ctx.fillStyle = '#5f4778'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 5, this.height)
+      ctx.fillStyle = '#4D3566'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 18, this.width, 18)
+      ctx.fillRect(this.position.x + this.offset.x + this.width - 5, this.position.y + this.offset.y, 5, this.height)
+      ctx.fillStyle = '#2D1F3C'
+      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 15, this.width, 15)
 
       ctx.font = this.text.style
       ctx.fillStyle = this.text.color
       ctx.textAlign = 'center'
       ctx.fillText(this.winner + ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.strokeText(this.winner + ' WIN', this.text.position.x, this.text.position.y + this.text.offset.y)
     }
   }
 }
@@ -310,7 +322,7 @@ class WaitTimer {
         x: 0,
         y: -30
       },
-      style: 'bold 128px'
+      style: 'bold 47px Menlo, Monaco, Consolas, "Courier New", monospace'
     }
     this.aWaitTimerExists = false
   }
@@ -321,26 +333,19 @@ class WaitTimer {
     if (gameState === 'stop') {
       ctx.font = this.text.style
       ctx.textAlign = 'center'
-      ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.lineWidth = 2
+      ctx.fillStyle = 'red'
+      if (this.timeRemaining) {
+        ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+        ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+      }
     }
   }
 }
 
-class Timer extends Indicator {
-  constructor () {
-    super({
-      position: {
-        x: canvas.width / 2,
-        y: 10
-      },
-      color: 'grey',
-      width: 100,
-      height: 100,
-      offset: {
-        x: -50,
-        y: 0
-      }
-    })
+class Timer extends SpriteStatic {
+  constructor (position, imgSrc, width, height) {
+    super(position, imgSrc, width, height)
 
     this.text = {
       position: {
@@ -351,20 +356,44 @@ class Timer extends Indicator {
         x: 0,
         y: 0
       },
-      style: 'bold 48px serif'
+      style: 'bold 47px Menlo, Monaco, Consolas, "Courier New", monospace'
     }
   }
 
   update () { }
 
   render () {
-    ctx.fillStyle = this.color
-    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+    super.render()
 
     if (this.timeRemaining || this.timeRemaining === 0) {
       ctx.font = this.text.style
+      ctx.fillStyle = 'rgba(248, 243,	186)'
+      ctx.lineWidth = 2
       ctx.textAlign = 'center'
+      ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
       ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+    }
+  }
+}
+
+class Frame extends SpriteStatic {
+  constructor ({ position, imgSrc, width, height }) {
+    super(
+      {
+        position,
+        imgSrc,
+        width,
+        height
+      }
+    )
+    this.isVisible = false
+  }
+
+  update () { }
+
+  render () {
+    if (this.isVisible) {
+      super.render()
     }
   }
 }
@@ -374,22 +403,53 @@ class HealthBar extends Indicator {
     super({
       position: {
         x: canvas.width / 2,
-        y: 10
+        y: 26
       },
       color: 'green',
-      width: 417,
-      height: 70,
+      width: 393,
+      height: 45,
       offset
     })
-    this.maxWidth = 417
+    this.maxWidth = 393
     this.textureMirroring = textureMirroring
     this.healthValue = 1
     this.entity = entity
   }
 
   render () {
-    ctx.fillStyle = this.color
+    ctx.fillStyle = '#3f3656'
+    ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width * this.textureMirroring, this.height)
+    ctx.fillStyle = '#ad3e55'
     ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.maxWidth * this.textureMirroring * this.healthValue, this.height)
+
+    if (this.healthValue !== 0) {
+      ctx.fillStyle = '#d95a70'
+      ctx.fillRect(
+        this.position.x + this.offset.x + (4 * this.textureMirroring),
+        this.position.y + this.offset.y + 4,
+        this.maxWidth * this.textureMirroring * this.healthValue - (8 * this.textureMirroring),
+        6
+      )
+      ctx.fillStyle = '#7f2b3e'
+      ctx.fillRect(
+        this.position.x + this.offset.x + (4 * this.textureMirroring),
+        this.position.y + this.offset.y + this.height - 7,
+        this.maxWidth * this.textureMirroring * this.healthValue - (8 * this.textureMirroring),
+        4
+      )
+      ctx.fillRect(
+        this.position.x + this.offset.x,
+        this.position.y + this.offset.y,
+        9 * this.textureMirroring,
+        this.height
+      )
+      ctx.fillRect(
+        this.position.x + this.offset.x + this.maxWidth * this.textureMirroring * this.healthValue - (9 * this.textureMirroring),
+        this.position.y + this.offset.y,
+        9 * this.textureMirroring,
+        this.height
+      )
+    }
   }
 
   update () {
@@ -406,7 +466,7 @@ class Button {
       y: canvas.height / 1.6
     }
     this.offset = {
-      x: -65,
+      x: -120,
       y: -50
     }
     this.text = {
@@ -415,44 +475,120 @@ class Button {
         x: 0,
         y: -10
       },
-      style: 'bold 35px Arial',
-      color: 'black'
+      offsetUponPressing: {
+        x: 0,
+        y: 0
+      },
+      style: 'bold 40px Menlo, Monaco, Consolas, "Courier New", monospace'
     }
-    this.color = 'grey'
-    this.width = 130
-    this.height = 60
+    this.color = 'rgba(83, 64, 99)'
+    this.width = 240
+    this.height = 55
     this.mouse = mouse
     this.minX = this.position.x + this.offset.x
     this.maxX = this.position.x + this.offset.x + this.width
     this.minY = this.position.y + this.offset.y
-    this.maxY = this.position.y + this.offset.y + this.width
+    this.maxY = this.position.y + this.offset.y + this.height
+    this.state = 'idle'
+    this.isActive()
   }
 
-  update () {
-    if (gameState === 'over' || gameState === 'stop') {
-      canvas.addEventListener('click', function (event) {
-        const rect = canvas.getBoundingClientRect()
-        const mouseX = event.clientX - rect.left
-        const mouseY = event.clientY - rect.top
+  isActive () {
+    function getCanvasMousePosition (event) {
+      const rect = canvas.getBoundingClientRect()
+
+      return {
+        x: (event.clientX - rect.left) * canvas.width / rect.width,
+        y: (event.clientY - rect.top) * canvas.height / rect.height
+      }
+    }
+
+    canvas.addEventListener('mousedown', function (event) {
+      if (gameState === 'over' || gameState === 'stop') {
+        const { x: mouseX, y: mouseY } = getCanvasMousePosition(event)
+
+        if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+          restartButton.state = 'pressed'
+        } else {
+          restartButton.state = 'idle'
+        }
+      }
+    })
+
+    canvas.addEventListener('mouseup', function (event) {
+      if (gameState === 'over' || gameState === 'stop') {
+        const { x: mouseX, y: mouseY } = getCanvasMousePosition(event)
 
         if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           location.reload()
+        } else {
+          restartButton.state = 'idle'
         }
-      })
-    }
+      }
+    })
+
+    canvas.addEventListener('mousemove', function (event) {
+      if (gameState === 'over' || gameState === 'stop') {
+        const { x: mouseX, y: mouseY } = getCanvasMousePosition(event)
+
+        if (restartButton.state !== 'pressed') {
+          if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
+            restartButton.state = 'hover'
+          } else {
+            restartButton.state = 'idle'
+          }
+        }
+      }
+    })
+  }
+
+  update () {
+
   }
 
   render () {
     if (gameState === 'over' || gameState === 'stop') {
-      ctx.fillStyle = this.color
-      ctx.strokeStyle = 'black'
-      ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
-      ctx.strokeRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+      if (this.state === 'idle') {
+        ctx.fillStyle = '#6F4E8E'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        ctx.fillStyle = '#885fb1'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 12)
+        ctx.fillStyle = '#4D3566'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 13, this.width, 13)
+        ctx.fillRect(this.position.x + this.offset.x + this.width - 8, this.position.y + this.offset.y, 8, this.height)
+        ctx.fillStyle = '#705a88'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
+        ctx.fillStyle = '#2D1F3C'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 10.5, this.width, 10.5)
+      }
 
+      if (this.state === 'hover') {
+        ctx.fillStyle = '#A97DCC'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+        ctx.fillStyle = '#c09ee2'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, 12)
+        ctx.fillStyle = '#7b6397'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y + this.height - 13, this.width, 13)
+        ctx.fillRect(this.position.x + this.offset.x + this.width - 8, this.position.y + this.offset.y, 8, this.height)
+        ctx.fillStyle = '#7e6796'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, 8, this.height)
+      }
+
+      if (this.state === 'pressed') {
+        ctx.fillStyle = '#4D3566'
+        ctx.fillRect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height)
+      }
+
+      ctx.fillStyle = '#F3E7A1'
+      this.text.offsetUponPressing.y = 0
+      if (this.state === 'pressed') {
+        ctx.fillStyle = '#3A2A18'
+        this.text.offsetUponPressing.y = 3
+      }
       ctx.font = this.text.style
-      ctx.fillStyle = this.text.color
       ctx.textAlign = 'center'
-      ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y)
+      ctx.fillText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
+      ctx.strokeText('Restart', this.text.position.x, this.text.position.y + this.text.offset.y + this.text.offsetUponPressing.y)
     }
   }
 }

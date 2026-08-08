@@ -29,7 +29,9 @@ gameObjects.push(new SpriteStatic({
     x: 0,
     y: 0
   },
-  imgSrc: './img/background.png'
+  imgSrc: './img/background.png',
+  width: canvas.width,
+  height: canvas.height
 }))
 
 gameObjects.push(new SpriteAnimated({
@@ -129,20 +131,28 @@ const ninjaData = {
 
 const rightHealthBarData = {
   offset: {
-    x: 50,
+    x: 64,
     y: 0
   },
   textureMirroring: 1
 }
 const leftHealthBarData = {
   offset: {
-    x: -50,
+    x: -64,
     y: 0
   },
   textureMirroring: -1
 }
 
-const timer = new Timer()
+const timer = new Timer({
+  position: {
+    x: canvas.width / 2 - 90,
+    y: -3
+  },
+  imgSrc: './img/timerFrame.png',
+  width: 181,
+  height: 130
+})
 gameObjects.push(timer)
 
 const waitTimer = new WaitTimer()
@@ -150,9 +160,29 @@ gameObjects.push(waitTimer)
 
 const restartButton = new Button()
 gameObjects.push(restartButton)
+const RestartButtonFrame = new Frame({
+  position: {
+    x: canvas.width / 2 - 545 / 2,
+    y: canvas.height / 2 - 92
+  },
+  imgSrc: './img/restartButtonFrame.png',
+  width: 545,
+  height: 300
+})
+gameObjects.push(RestartButtonFrame)
 
 const winIndicator = new WinIndicator()
 gameObjects.push(winIndicator)
+const winIndicatorFrame = new Frame({
+  position: {
+    x: canvas.width / 2 - 593 / 2,
+    y: canvas.height / 2 - 367 / 2 - 50
+  },
+  imgSrc: './img/winIndicatorFrame.png',
+  width: 593,
+  height: 367
+})
+gameObjects.push(winIndicatorFrame)
 
 function gameLoop () {
   control()
@@ -253,8 +283,14 @@ socket.on('wait-timer', function (data) {
 
 socket.on('set-game-state', function (data) {
   gameState = data.state
+  RestartButtonFrame.isVisible = false
+  if (gameState === 'stop') {
+    RestartButtonFrame.isVisible = true
+  }
   if (gameState === 'over') {
     winIndicator.winner = data.winner
+    winIndicatorFrame.isVisible = true
+    RestartButtonFrame.isVisible = true
   }
 })
 
@@ -335,17 +371,35 @@ function setFighter (player, leftHealthBarData, rightHealthBarData) {
     if (!player[player.type]) {
       if (player.type == 'samurai' && samuraiData.position) {
         player.samurai = new Fighter(samuraiData)
-        gameObjects.push(player.samurai)
+        gameObjects.splice(1, 0, player.samurai)
 
         leftHealthBarData.entity = player.samurai
         gameObjects.push(new HealthBar(leftHealthBarData))
+        gameObjects.push(new SpriteStatic({
+          position: {
+            x: -24,
+            y: -90
+          },
+          imgSrc: './img/healthBarFrame.png',
+          width: 550,
+          height: 300
+        }))
       }
       if (player.type == 'ninja' && ninjaData.position) {
         player.ninja = new Fighter(ninjaData)
-        gameObjects.push(player.ninja)
+        gameObjects.splice(1, 0, player.ninja)
 
         rightHealthBarData.entity = player.ninja
         gameObjects.push(new HealthBar(rightHealthBarData))
+        gameObjects.push(new SpriteStatic({
+          position: {
+            x: canvas.width / 2 - 14,
+            y: -90
+          },
+          imgSrc: './img/healthBarFrame.png',
+          width: 550,
+          height: 300
+        }))
       }
     } else {
       clearInterval(intervalId)

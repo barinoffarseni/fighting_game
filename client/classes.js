@@ -276,7 +276,7 @@ class WinIndicator extends Indicator {
 
     this.text = {
       position: this.position,
-      style: '40px "Silkscreen", monospace',
+      style: 'bold 40px Menlo, Monaco, Consolas, "Courier New", monospace',
       color: '#F3E7A1',
       offset: {
         x: 0,
@@ -322,7 +322,7 @@ class WaitTimer {
         x: 0,
         y: -30
       },
-      style: '47px "Pixelify Sans", monospace'
+      style: 'bold 47px Menlo, Monaco, Consolas, "Courier New", monospace'
     }
     this.aWaitTimerExists = false
   }
@@ -335,8 +335,10 @@ class WaitTimer {
       ctx.textAlign = 'center'
       ctx.lineWidth = 2
       ctx.fillStyle = 'red'
-      ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
-      ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+      if (this.timeRemaining) {
+        ctx.fillText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+        ctx.strokeText(this.timeRemaining, this.text.position.x, this.text.position.y + this.text.offset.y)
+      }
     }
   }
 }
@@ -354,7 +356,7 @@ class Timer extends SpriteStatic {
         x: 0,
         y: 0
       },
-      style: '47px "Pixelify Sans", monospace'
+      style: 'bold 47px Menlo, Monaco, Consolas, "Courier New", monospace'
     }
   }
 
@@ -477,7 +479,7 @@ class Button {
         x: 0,
         y: 0
       },
-      style: '40px "Silkscreen", monospace'
+      style: 'bold 40px Menlo, Monaco, Consolas, "Courier New", monospace'
     }
     this.color = 'rgba(83, 64, 99)'
     this.width = 240
@@ -492,11 +494,18 @@ class Button {
   }
 
   isActive () {
+    function getCanvasMousePosition (event) {
+      const rect = canvas.getBoundingClientRect()
+
+      return {
+        x: (event.clientX - rect.left) * canvas.width / rect.width,
+        y: (event.clientY - rect.top) * canvas.height / rect.height
+      }
+    }
+
     canvas.addEventListener('mousedown', function (event) {
       if (gameState === 'over' || gameState === 'stop') {
-        const rect = canvas.getBoundingClientRect()
-        const mouseX = event.clientX - rect.left
-        const mouseY = event.clientY - rect.top
+        const { x: mouseX, y: mouseY } = getCanvasMousePosition(event)
 
         if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           restartButton.state = 'pressed'
@@ -508,9 +517,7 @@ class Button {
 
     canvas.addEventListener('mouseup', function (event) {
       if (gameState === 'over' || gameState === 'stop') {
-        const rect = canvas.getBoundingClientRect()
-        const mouseX = event.clientX - rect.left
-        const mouseY = event.clientY - rect.top
+        const { x: mouseX, y: mouseY } = getCanvasMousePosition(event)
 
         if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {
           location.reload()
@@ -522,9 +529,7 @@ class Button {
 
     canvas.addEventListener('mousemove', function (event) {
       if (gameState === 'over' || gameState === 'stop') {
-        const rect = canvas.getBoundingClientRect()
-        const mouseX = event.clientX - rect.left
-        const mouseY = event.clientY - rect.top
+        const { x: mouseX, y: mouseY } = getCanvasMousePosition(event)
 
         if (restartButton.state !== 'pressed') {
           if (mouseX > restartButton.minX && mouseX < restartButton.maxX && mouseY > restartButton.minY && mouseY < restartButton.maxY) {

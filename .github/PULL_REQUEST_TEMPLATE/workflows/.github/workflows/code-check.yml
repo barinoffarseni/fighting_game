@@ -1,0 +1,26 @@
+name: Code check
+
+on:
+  workflow_dispatch:
+  pull_request:
+  # Trigger the workflow on push or pull request
+  push:
+    branches:
+      - v2
+
+jobs:
+  build-and-push:
+    runs-on: node:23-alpine3.20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install packages
+        run: npm install
+
+      - name: Standart Check
+        run: npx standard
+
+      # - name: Eslint Check
+      #   run: npx eslint

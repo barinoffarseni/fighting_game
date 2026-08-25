@@ -2,12 +2,7 @@ const express = require('express')
 const app = express()
 const http = require('http')
 const httpServer = http.createServer(app)
-const io = require('socket.io')(httpServer, {
-  cors: {
-    origin: 'http://localhost',
-    methods: ['GET', 'POST']
-  }
-})
+const io = require('socket.io')(httpServer)
 const Room = require('./room.js').Room
 const Timer = require('./timer.js').Timer
 const Fighter = require('./fighter.js').Fighter

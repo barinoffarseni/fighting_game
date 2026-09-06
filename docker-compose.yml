@@ -1,6 +1,6 @@
 services:
   node:
-    image: node:26-alpine3.20
+    image: node:26-alpine3.23
     container_name: fighting-game-node
     ports:
       - '3000:3000'

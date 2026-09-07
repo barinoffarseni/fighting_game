@@ -10,7 +10,7 @@ services:
     command: ash -c "npm install && node --inspect=0.0.0.0 server/app.js"
 
   nginx:
-    image: nginx:1.31.5-alpine
+    image: nginx:1.31.5-alpine3.24
     container_name: fighting-game-nginx
     ports:
       - '80:80'

@@ -1,0 +1,17 @@
+zebey.live {
+    root * /var/www/html
+    encode gzip zstd
+
+    handle /socket.io/* {
+        reverse_proxy node:3000
+    }
+
+    handle /health {
+        respond 200
+    }
+
+    handle {
+        try_files {path} {path}/ /index.html?{query}
+        file_server
+    }
+}

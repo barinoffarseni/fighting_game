@@ -1,4 +1,4 @@
-zebey.live {
+zabey.life {
     root * /var/www/html
     encode gzip zstd
 

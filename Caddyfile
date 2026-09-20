@@ -1,4 +1,4 @@
-zabey.life {
+localhost {
     root * /var/www/html
     encode gzip zstd
 

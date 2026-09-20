@@ -4,7 +4,6 @@ services:
     container_name: fighting-game-node
     ports:
       - '3000:3000'
-      - '9229:9229'
     volumes:
       - .:/app
     working_dir: /app

@@ -1,4 +1,4 @@
-localhost {
+{$SITE_ADDRESS:localhost} {
     root * /var/www/html
     encode gzip zstd
 

@@ -16,6 +16,8 @@ services:
       - "80:80"
       - "443:443"
       - "443:443/udp"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./client:/var/www/html

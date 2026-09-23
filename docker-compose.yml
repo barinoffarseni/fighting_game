@@ -1,21 +1,28 @@
 services:
   node:
-    image: node:26-alpine3.23
+    build: .
     container_name: fighting-game-node
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: ash -c "npm install && node --inspect=0.0.0.0 server/app.js"
+    expose:
+      - '3000'
+    command: ["node", "server/app.js"]
 
-  nginx:
-    image: nginx:1.31.5-alpine3.24
-    container_name: fighting-game-nginx
+  caddy:
+    image: caddy:2.11.4-alpine
+    container_name: fighting-game-caddy
     ports:
-      - '80:80'
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - ./client:/var/www/html
+      - caddy_data:/data
+      - caddy_config:/config
     depends_on:
       - node
+
+volumes:
+  caddy_data:
+  caddy_config:

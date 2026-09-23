@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/app
     working_dir: /app
-    command: ash -c "npm install && node --inspect=0.0.0.0 server/app.js"
+    command: ["node", "server/app.js"]
 
   caddy:
     image: caddy:2.11.4-alpine
@@ -17,7 +17,7 @@ services:
       - "443:443"
       - "443:443/udp"
     environment:
-      SITE_ADDRESS: ${SITE_ADDRESS}
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./client:/var/www/html
@@ -29,4 +29,3 @@ services:
 volumes:
   caddy_data:
   caddy_config:
-

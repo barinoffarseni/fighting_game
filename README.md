@@ -16,7 +16,7 @@
 
 ## Команды
 
-* `docker compose -f docker-compose.yml -f docker-compose.local.yml up -d` - запустить проект локально (запускается откладку)
+* `docker compose -f docker-compose.yml -f docker-compose.local.yml up -d` - запустить проект локально в режиме отладки
 * `docker-compose up -d` - запустить проект в продакшене
 * `docker-compose restart` - перезапустить проект
 * `docker-compose exec node npx eslint` - проверить код на ошибки

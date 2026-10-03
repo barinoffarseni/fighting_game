@@ -2,6 +2,8 @@ services:
   node:
     build: .
     container_name: fighting-game-node
+    volumes:
+      - .:/app
     expose:
       - '3000'
     command: ["node", "server/app.js"]

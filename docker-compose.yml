@@ -1,12 +1,13 @@
 services:
   node:
-    build: .
+    image: node:26-alpine3.23
     container_name: fighting-game-node
     volumes:
       - .:/app
+    working_dir: /app
     expose:
       - '3000'
-    command: ["node", "server/app.js"]
+    command: ash -c "npm ci && exec node server/app.js"
 
   caddy:
     image: caddy:2.11.4-alpine

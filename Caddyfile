@@ -1,5 +1,6 @@
 {$SITE_ADDRESS:localhost} {
     root * /var/www/html
+    header Cache-Control "no-store"
     encode gzip zstd
 
     handle /socket.io/* {

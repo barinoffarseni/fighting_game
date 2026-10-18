@@ -41,7 +41,7 @@ gameObjects.push(new SpriteAnimated({
   },
   imgSrc: './img/shop.png',
   scale: 2.4,
-  framesHold: 10,
+  framesHold: 8,
   imgFrames: 6,
   offset: {
     x: 0,

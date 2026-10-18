@@ -23,6 +23,7 @@ class SpriteAnimated extends SpriteStatic {
     this.framesElapsed = 0
 
     this.framesHold = framesHold
+    this.defaultFramesHold = framesHold
     this.scale = scale
     this.imgFrames = imgFrames
     this.offset = offset
@@ -52,7 +53,8 @@ class SpriteAnimated extends SpriteStatic {
       this.framesElapsed++
       this.animateIsComplete = false
 
-      if (this.framesElapsed % this.framesHold === 0) {
+      if (this.framesElapsed >= this.framesHold) {
+        this.framesElapsed -= this.framesHold
         this.currentFrame++
 
         if (this.currentFrame === this.imgFrames) {
@@ -89,6 +91,10 @@ class Fighter extends SpriteAnimated {
     this.textureMirroring = textureMirroring
     this.isAttack = false
     this.attackFrame = attackFrame
+    this.attackFramesHold = {
+      beforeHit: 2.5,
+      afterHit: 15
+    },
     this.sprites = sprites
     this.state = 'idle'
     this.newState = 'idle'
@@ -237,6 +243,16 @@ class Fighter extends SpriteAnimated {
         this.newState = 'death'
       }
       this.setState()
+    }
+
+    if ((this.state === 'attack1' || this.state === 'attack2') && this.name === 'samurai') {
+      if (this.currentFrame < this.attackFrame) {
+        this.framesHold = this.attackFramesHold.beforeHit
+      } else {
+        this.framesHold = this.attackFramesHold.afterHit
+      }
+    } else {
+      this.framesHold = this.defaultFramesHold
     }
 
     super.update()

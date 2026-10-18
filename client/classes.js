@@ -78,7 +78,7 @@ class Fighter extends SpriteAnimated {
       position,
       imgSrc: `./img/${name}/Idle.png`,
       scale: 2.5,
-      framesHold: 10,
+      framesHold: 8,
       imgFrames: sprites.idle.frames,
       offset
     })

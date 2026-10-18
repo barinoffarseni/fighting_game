@@ -65,7 +65,7 @@ setInterval(() => {
       room.waitTimer.update()
     }
   }
-}, 50)
+}, 40)
 
 io.on('connection', (socket) => {
   const player = { id: crypto.randomUUID() }
@@ -113,19 +113,19 @@ io.on('connection', (socket) => {
 
     if (data.player.type === 'samurai') {
       if (data.player.command === 'right') {
-        room.fighters.samurai.velocity.x = 4
+        room.fighters.samurai.velocity.x = 14
         if (room.fighters.samurai.canJump) {
           room.fighters.samurai.command = data.player.command
         }
       }
       if (data.player.command === 'left') {
-        room.fighters.samurai.velocity.x = -4
+        room.fighters.samurai.velocity.x = -14
         if (room.fighters.samurai.canJump) {
           room.fighters.samurai.command = data.player.command
         }
       }
       if (data.player.command === 'up' && room.fighters.samurai.canJump) {
-        room.fighters.samurai.velocity.y = -10
+        room.fighters.samurai.velocity.y = -35
       }
       if (data.player.command === 'attack') {
         room.fighters.samurai.command = data.player.command
@@ -133,19 +133,19 @@ io.on('connection', (socket) => {
     }
     if (data.player.type === 'ninja') {
       if (data.player.command === 'right') {
-        room.fighters.ninja.velocity.x = 4
+        room.fighters.ninja.velocity.x = 14
         if (room.fighters.ninja.canJump) {
           room.fighters.ninja.command = data.player.command
         }
       }
       if (data.player.command === 'left') {
-        room.fighters.ninja.velocity.x = -4
+        room.fighters.ninja.velocity.x = -14
         if (room.fighters.ninja.canJump) {
           room.fighters.ninja.command = data.player.command
         }
       }
       if (data.player.command === 'up' && room.fighters.ninja.canJump) {
-        room.fighters.ninja.velocity.y = -10
+        room.fighters.ninja.velocity.y = -35
       }
       if (data.player.command === 'attack') {
         room.fighters.ninja.command = data.player.command

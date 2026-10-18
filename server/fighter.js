@@ -1,4 +1,4 @@
-const gravity = 0.2
+const gravity = 2.45
 
 export class Fighter {
   constructor ({ position, velocity, attackFrame }) {

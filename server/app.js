@@ -65,7 +65,7 @@ setInterval(() => {
       room.waitTimer.update()
     }
   }
-}, 40)
+}, 50)
 
 io.on('connection', (socket) => {
   const player = { id: crypto.randomUUID() }

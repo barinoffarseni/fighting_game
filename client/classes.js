@@ -175,9 +175,9 @@ class Fighter extends SpriteAnimated {
     }
 
     if (this.textureMirroring < 0) {
-      this.img = this.sprites[this.state].leftImg
+      this.img.src = this.sprites[this.state].leftScr
     } else {
-      this.img = this.sprites[this.state].rightImg
+      this.img.src = this.sprites[this.state].rightSrc
     }
     this.imgFrames = this.sprites[this.state].frames
   }
@@ -193,10 +193,6 @@ class Fighter extends SpriteAnimated {
     for (const key of Object.keys(this.sprites)) {
       this.sprites[key].leftScr = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + 'Inverted.png'
       this.sprites[key].rightSrc = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
-      this.sprites[key].leftImg = new Image()
-      this.sprites[key].leftImg.src = this.sprites[key].leftScr
-      this.sprites[key].rightImg = new Image()
-      this.sprites[key].rightImg.src = this.sprites[key].rightSrc
     }
   }
 

@@ -86,6 +86,9 @@ io.on('connection', (socket) => {
 
       for (const fighter of Object.values(rooms[roomId].fighters)) {
         fighter.command = 'idle'
+        fighter.moveLeft = false
+        fighter.moveRight = false
+        fighter.attackPressed = false
       }
 
       for (const fighter of Object.values(rooms[roomId].fightersData)) {
@@ -113,42 +116,30 @@ io.on('connection', (socket) => {
 
     if (data.player.type === 'samurai') {
       if (data.player.command === 'right') {
-        room.fighters.samurai.velocity.x = 14
-        if (room.fighters.samurai.canJump) {
-          room.fighters.samurai.command = data.player.command
-        }
+        room.fighters.samurai.moveRight = data.pressed
       }
       if (data.player.command === 'left') {
-        room.fighters.samurai.velocity.x = -14
-        if (room.fighters.samurai.canJump) {
-          room.fighters.samurai.command = data.player.command
-        }
+        room.fighters.samurai.moveLeft = data.pressed
       }
-      if (data.player.command === 'up' && room.fighters.samurai.canJump) {
+      if (data.player.command === 'up' && data.pressed && room.fighters.samurai.canJump) {
         room.fighters.samurai.velocity.y = -35
       }
       if (data.player.command === 'attack') {
-        room.fighters.samurai.command = data.player.command
+        room.fighters.samurai.attackPressed = data.pressed
       }
     }
     if (data.player.type === 'ninja') {
       if (data.player.command === 'right') {
-        room.fighters.ninja.velocity.x = 14
-        if (room.fighters.ninja.canJump) {
-          room.fighters.ninja.command = data.player.command
-        }
+        room.fighters.ninja.moveRight = data.pressed
       }
       if (data.player.command === 'left') {
-        room.fighters.ninja.velocity.x = -14
-        if (room.fighters.ninja.canJump) {
-          room.fighters.ninja.command = data.player.command
-        }
+        room.fighters.ninja.moveLeft = data.pressed
       }
-      if (data.player.command === 'up' && room.fighters.ninja.canJump) {
+      if (data.player.command === 'up' && data.pressed && room.fighters.ninja.canJump) {
         room.fighters.ninja.velocity.y = -35
       }
       if (data.player.command === 'attack') {
-        room.fighters.ninja.command = data.player.command
+        room.fighters.ninja.attackPressed = data.pressed
       }
     }
   })

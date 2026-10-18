@@ -322,17 +322,17 @@ function render () {
 
 window.addEventListener('keyup', keyup)
 function keyup (event) {
-  switch (event.key) {
-    case 'd':
+  switch (event.code) {
+    case 'KeyD':
       player.keys.d = false
       break
-    case 'a':
+    case 'KeyA':
       player.keys.a = false
       break
-    case 'w':
+    case 'KeyW':
       player.keys.w = false
       break
-    case 's':
+    case 'KeyS':
       player.keys.s = false
       break
   }
@@ -341,17 +341,17 @@ function keyup (event) {
 window.addEventListener('keydown', keydown)
 function keydown (event) {
   if (gameState !== 'over') {
-    switch (event.key) {
-      case 'd':
+    switch (event.code) {
+      case 'KeyD':
         player.keys.d = true
         break
-      case 'a':
+      case 'KeyA':
         player.keys.a = true
         break
-      case 'w':
+      case 'KeyW':
         player.keys.w = true
         break
-      case 's':
+      case 'KeyS':
         player.keys.s = true
         break
     }

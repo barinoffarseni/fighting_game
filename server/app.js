@@ -86,6 +86,7 @@ io.on('connection', (socket) => {
 
       for (const fighter of Object.values(rooms[roomId].fighters)) {
         fighter.command = 'idle'
+        fighter.velocity.x = 0
       }
 
       for (const fighter of Object.values(rooms[roomId].fightersData)) {
@@ -130,6 +131,10 @@ io.on('connection', (socket) => {
       if (data.player.command === 'attack') {
         room.fighters.samurai.command = data.player.command
       }
+      if (data.player.command === 'idle') {
+        room.fighters.samurai.velocity.x = 0
+        room.fighters.samurai.command = data.player.command
+      }
     }
     if (data.player.type === 'ninja') {
       if (data.player.command === 'right') {
@@ -148,6 +153,10 @@ io.on('connection', (socket) => {
         room.fighters.ninja.velocity.y = -35
       }
       if (data.player.command === 'attack') {
+        room.fighters.ninja.command = data.player.command
+      }
+      if (data.player.command === 'idle') {
+        room.fighters.ninja.velocity.x = 0
         room.fighters.ninja.command = data.player.command
       }
     }

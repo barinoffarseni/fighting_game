@@ -40,7 +40,13 @@ export class Fighter {
       this.position.y = 576 - 96 - this.height
       this.canJump = true
 
-      this.command = 'idle'
+      if (this.velocity.x < 0) {
+        this.command = 'left'
+      } else if (this.velocity.x > 0) {
+        this.command = 'right'
+      } else {
+        this.command = 'idle'
+      }
     } else {
       this.velocity.y += gravity
       this.canJump = false
@@ -52,8 +58,6 @@ export class Fighter {
         this.command = 'up'
       }
     }
-
-    this.velocity.x = 0
 
     this.attackBox.position = this.getAttackBoxPosition()
   }

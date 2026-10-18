@@ -322,12 +322,16 @@ function render () {
 
 window.addEventListener('keyup', keyup)
 function keyup (event) {
+  let movementKeyReleased = false
+
   switch (event.code) {
     case 'KeyD':
       player.keys.d = false
+      movementKeyReleased = true
       break
     case 'KeyA':
       player.keys.a = false
+      movementKeyReleased = true
       break
     case 'KeyW':
       player.keys.w = false
@@ -335,6 +339,10 @@ function keyup (event) {
     case 'KeyS':
       player.keys.s = false
       break
+  }
+
+  if (player.type && movementKeyReleased && !player.keys.a && !player.keys.d) {
+    socket.emit('set-move-command', { player: { type: player.type, command: 'idle' } })
   }
 }
 

@@ -18,7 +18,7 @@ setInterval(() => {
   for (const room of Object.values(rooms)) {
     if (Object.keys(room.players).length === 2 && room.gameState === 'start') {
       room.gameState = 'continue'
-      room.gameTimer = new Timer(30)
+      room.gameTimer = new Timer(45)
       room.gameObjects.push(room.gameTimer)
     }
 

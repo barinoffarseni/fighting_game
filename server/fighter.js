@@ -26,6 +26,15 @@ export class Fighter {
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
 
+    if (this.position.x + this.width >= 1024) {
+      this.velocity.x = 0
+      this.position.x = 1024 - this.width
+    }
+    if (this.position.x <= 0) {
+      this.velocity.x = 0
+      this.position.x = 0
+    }
+
     if (this.position.y + this.height >= 576 - 96) {
       this.velocity.y = 0
       this.position.y = 576 - 96 - this.height

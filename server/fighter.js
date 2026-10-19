@@ -1,4 +1,5 @@
 const gravity = 2.45
+const moveSpeed = 14
 
 export class Fighter {
   constructor ({ position, velocity, attackFrame }) {
@@ -10,6 +11,9 @@ export class Fighter {
     this.velocity = velocity
     this.canJump = false
     this.command = 'idle'
+    this.moveLeft = false
+    this.moveRight = false
+    this.attackPressed = false
     this.attackFrame = attackFrame
     this.attackBox = {
       position: this.position,
@@ -23,6 +27,14 @@ export class Fighter {
   }
 
   update () {
+    if (this.moveLeft === this.moveRight) {
+      this.velocity.x = 0
+    } else if (this.moveLeft) {
+      this.velocity.x = -moveSpeed
+    } else {
+      this.velocity.x = moveSpeed
+    }
+
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
 
@@ -57,6 +69,10 @@ export class Fighter {
       if (this.velocity.y < 0) {
         this.command = 'up'
       }
+    }
+
+    if (this.attackPressed) {
+      this.command = 'attack'
     }
 
     this.attackBox.position = this.getAttackBoxPosition()

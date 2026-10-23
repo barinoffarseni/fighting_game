@@ -13,6 +13,7 @@ const rooms = {}
 const playerRooms = new Map()
 const socketRooms = new Map()
 let waitingRoomId = null
+let tick = 0
 
 setInterval(() => {
   for (const room of Object.values(rooms)) {
@@ -37,8 +38,11 @@ setInterval(() => {
     }
 
     if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
+      io.to(room.id).emit('set-tick', tick)
       io.to(room.id).emit('set-fighters-data', room.fightersData)
       io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining, timeOut: room.gameTimer.timeOut })
+
+      tick++
 
       if (room.gameTimer.timeRemaining === 0) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {

@@ -15,13 +15,13 @@ class SpriteStatic {
 }
 
 class SpriteAnimated extends SpriteStatic {
-  constructor ({ position, imgSrc, scale, framesHold, imgFrames, offset }) {
+  constructor ({ position, imgSrc, scale, framesElapsed, framesHold, imgFrames, offset }) {
     super({ position, imgSrc })
 
     this.dx = 0
     this.dy = 0
-    this.framesElapsed = 0
 
+    this.framesElapsed = framesElapsed
     this.framesHold = framesHold
     this.defaultFramesHold = framesHold
     this.scale = scale
@@ -50,10 +50,9 @@ class SpriteAnimated extends SpriteStatic {
 
   update () {
     if (!this.stop) {
-      this.framesElapsed++
       this.animateIsComplete = false
 
-      if (this.framesElapsed >= this.framesHold) {
+      if (this.framesElapsed % this.framesHold === 0) {
         this.framesElapsed -= this.framesHold
         this.currentFrame++
 

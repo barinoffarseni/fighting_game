@@ -9,14 +9,23 @@ const Fighter = require('./fighter.js').Fighter
 
 const debug = false
 
+// tick rate is a physics constant: moveSpeed/gravity are per tick
+const TICK_MS = 50
+const MAX_CATCH_UP = 4
+
 const rooms = {}
 const playerRooms = new Map()
 const socketRooms = new Map()
 let waitingRoomId = null
 let tick = 0
+let accumulator = 0
+let lastTickTime = 0
 
-setInterval(() => {
+function stepRooms (tickNumber) {
   for (const room of Object.values(rooms)) {
+    // single source of game time: both players of a room get the same number
+    io.to(room.id).emit('set-tick', tickNumber)
+
     if (Object.keys(room.players).length === 2 && room.gameState === 'start') {
       room.gameState = 'continue'
       room.gameTimer = new Timer(45)
@@ -38,11 +47,8 @@ setInterval(() => {
     }
 
     if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
-      io.to(room.id).emit('set-tick', tick)
       io.to(room.id).emit('set-fighters-data', room.fightersData)
       io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining, timeOut: room.gameTimer.timeOut })
-
-      tick++
 
       if (room.gameTimer.timeRemaining === 0) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
@@ -69,7 +75,30 @@ setInterval(() => {
       room.waitTimer.update()
     }
   }
-}, 50)
+}
+
+function tickFrame () {
+  const now = performance.now()
+  accumulator += Math.min(now - lastTickTime, TICK_MS * MAX_CATCH_UP * 2)
+  lastTickTime = now
+
+  let steps = 0
+  while (accumulator >= TICK_MS && steps < MAX_CATCH_UP) {
+    tick++
+    stepRooms(tick)
+    accumulator -= TICK_MS
+    steps++
+  }
+
+  if (steps === MAX_CATCH_UP) {
+    accumulator = 0
+  }
+
+  setTimeout(tickFrame, Math.max(1, TICK_MS - accumulator))
+}
+
+lastTickTime = performance.now()
+setTimeout(tickFrame, TICK_MS)
 
 io.on('connection', (socket) => {
   const player = { id: crypto.randomUUID() }

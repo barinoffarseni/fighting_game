@@ -15,23 +15,22 @@ class SpriteStatic {
 }
 
 class SpriteAnimated extends SpriteStatic {
-  constructor ({ position, imgSrc, scale, framesElapsed, framesHold, imgFrames, offset }) {
+  constructor ({ position, imgSrc, scale, ticksPerFrame, imgFrames, offset }) {
     super({ position, imgSrc })
 
     this.dx = 0
     this.dy = 0
 
-    this.framesElapsed = framesElapsed
-    this.framesHold = framesHold
-    this.defaultFramesHold = framesHold
-    this.scale = scale
+    this.ticksPerFrame = ticksPerFrame
     this.imgFrames = imgFrames
+    this.scale = scale
     this.offset = offset
 
+    this.stateStartTick = null
+    this.elapsedFrames = 0
     this.currentFrame = 0
     this.animateIsComplete = false
     this.compliteAnimationAndStop = false
-    this.stop = false
   }
 
   render () {
@@ -48,28 +47,49 @@ class SpriteAnimated extends SpriteStatic {
     )
   }
 
-  update () {
-    if (!this.stop) {
-      this.animateIsComplete = false
+  frameHolds () {
+    return new Array(this.imgFrames).fill(this.ticksPerFrame)
+  }
 
-      if (this.framesElapsed % this.framesHold === 0) {
-        this.framesElapsed -= this.framesHold
-        this.currentFrame++
+  applyFrame () {
+    const holds = this.frameHolds()
+    const total = holds.reduce((sum, hold) => sum + hold, 0)
 
-        if (this.currentFrame === this.imgFrames) {
-          this.animateIsComplete = true
+    if (this.stateStartTick === null) {
+      this.stateStartTick = tick
+    }
 
-          if (this.compliteAnimationAndStop) {
-            this.stop = true
-            this.currentFrame = this.imgFrames - 1
-          } else {
-            this.currentFrame = 0
-          }
-        }
+    const rawElapsed = Math.max(0, tick - this.stateStartTick)
+    const looping = !this.compliteAnimationAndStop
+
+    let elapsed = rawElapsed
+
+    if (looping && total > 0) {
+      elapsed = rawElapsed % total
+    }
+
+    let frame = holds.length
+    let boundary = 0
+    for (let i = 0; i < holds.length; i++) {
+      boundary += holds[i]
+      if (elapsed < boundary) {
+        frame = i
+        break
       }
     }
 
+    this.elapsedFrames = elapsed
+    this.animateIsComplete = total > 0 && rawElapsed >= total && (!looping || rawElapsed % total === 0)
+    this.currentFrame = frame
+
+    if (frame >= holds.length) {
+      this.currentFrame = holds.length - 1
+    }
     this.dx = (this.currentFrame * this.img.width) / this.imgFrames
+  }
+
+  update () {
+    this.applyFrame()
   }
 }
 
@@ -79,7 +99,7 @@ class Fighter extends SpriteAnimated {
       position,
       imgSrc: `./img/${name}/Idle.png`,
       scale: 2.5,
-      framesHold: 8,
+      ticksPerFrame: 3,
       imgFrames: sprites.idle.frames,
       offset
     })
@@ -90,9 +110,9 @@ class Fighter extends SpriteAnimated {
     this.textureMirroring = textureMirroring
     this.isAttack = false
     this.attackFrame = attackFrame
-    this.attackFramesHold = {
-      beforeHit: 2.5,
-      afterHit: 15
+    this.attackTicksPerFrame = {
+      beforeHit: 1,
+      afterHit: 5
     },
     this.sprites = sprites
     this.state = 'idle'
@@ -102,8 +122,23 @@ class Fighter extends SpriteAnimated {
     this.restartState = false
     this.command = 'idle'
     this.attackFrame = attackFrame
+    this.didHit = false
     this.name = name
     this.getScr()
+  }
+
+  frameHolds () {
+    if (this.name === 'samurai' && (this.state === 'attack1' || this.state === 'attack2')) {
+      const holds = new Array(this.imgFrames).fill(this.attackTicksPerFrame.beforeHit)
+
+      for (let i = this.attackFrame; i < holds.length; i++) {
+        holds[i] = this.attackTicksPerFrame.afterHit
+      }
+
+      return holds
+    }
+
+    return super.frameHolds()
   }
 
   getPosition () {
@@ -153,7 +188,8 @@ class Fighter extends SpriteAnimated {
       this.state = this.newState
 
       this.currentFrame = 0
-      this.framesElapsed = 0
+      this.stateStartTick = tick
+      this.didHit = false
 
       if (this.state === 'attack1') {
         this.stateCanBeChanged = false
@@ -208,9 +244,13 @@ class Fighter extends SpriteAnimated {
       return false
     }
 
-    if (this.framesElapsed % this.framesHold === 0) {
-      socket.emit('check-attack-is-success', { attacker: this.name })
+    if (this.didHit) {
+      return false
     }
+
+    this.didHit = true
+
+    socket.emit('check-attack-is-success', { attacker: this.name })
   }
 
   update () {
@@ -246,16 +286,6 @@ class Fighter extends SpriteAnimated {
         this.newState = 'death'
       }
       this.setState()
-    }
-
-    if ((this.state === 'attack1' || this.state === 'attack2') && this.name === 'samurai') {
-      if (this.currentFrame < this.attackFrame) {
-        this.framesHold = this.attackFramesHold.beforeHit
-      } else {
-        this.framesHold = this.attackFramesHold.afterHit
-      }
-    } else {
-      this.framesHold = this.defaultFramesHold
     }
 
     super.update()

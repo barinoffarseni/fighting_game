@@ -6,6 +6,8 @@ canvas.height = 576
 
 let gameState = 'continue'
 
+let tick = 0
+
 const debug = false
 
 let id = localStorage.getItem('id')
@@ -41,7 +43,7 @@ gameObjects.push(new SpriteAnimated({
   },
   imgSrc: './img/shop.png',
   scale: 2.4,
-  framesHold: 8,
+  ticksPerFrame: 3,
   imgFrames: 6,
   offset: {
     x: 0,
@@ -217,6 +219,10 @@ function waitingForPlayers () {
 }
 
 waitingForPlayers()
+
+socket.on('set-tick', function (data) {
+  tick = data
+})
 
 socket.on('set-fighters-data', function (data) {
   if (player[player.type]) {

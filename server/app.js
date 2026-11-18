@@ -9,7 +9,6 @@ const Fighter = require('./fighter.js').Fighter
 
 const debug = false
 
-// tick rate is a physics constant: moveSpeed/gravity are per tick
 const TICK_MS = 50
 const MAX_CATCH_UP = 4
 
@@ -23,9 +22,6 @@ let lastTickTime = 0
 
 function stepRooms (tickNumber) {
   for (const room of Object.values(rooms)) {
-    // single source of game time: both players of a room get the same number
-    io.to(room.id).emit('set-tick', tickNumber)
-
     if (Object.keys(room.players).length === 2 && room.gameState === 'start') {
       room.gameState = 'continue'
       room.gameTimer = new Timer(45)
@@ -47,6 +43,7 @@ function stepRooms (tickNumber) {
     }
 
     if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
+      io.to(room.id).emit('set-tick', tickNumber)
       io.to(room.id).emit('set-fighters-data', room.fightersData)
       io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining, timeOut: room.gameTimer.timeOut })
 

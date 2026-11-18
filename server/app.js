@@ -20,80 +20,6 @@ let tick = 0
 let accumulator = 0
 let lastTickTime = 0
 
-function stepRooms (tickNumber) {
-  for (const room of Object.values(rooms)) {
-    if (Object.keys(room.players).length === 2 && room.gameState === 'start') {
-      room.gameState = 'continue'
-      room.gameTimer = new Timer(45)
-      room.gameObjects.push(room.gameTimer)
-    }
-
-    if (room.gameState === 'stop' && room.waitTimer === null) {
-      room.waitTimer = new Timer(60)
-    }
-    room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
-    room.fighters.ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.ninja.position.x, room.fighters.samurai.position.x)
-
-    room.fightersData.ninja = { position: room.fighters.ninja.position, command: room.fighters.ninja.command, health: room.fighters.ninja.health }
-    room.fightersData.samurai = { position: room.fighters.samurai.position, command: room.fighters.samurai.command, health: room.fighters.samurai.health }
-
-    if (debug) {
-      room.fightersData.ninja.attackBox = room.fighters.ninja.attackBox
-      room.fightersData.samurai.attackBox = room.fighters.samurai.attackBox
-    }
-
-    if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
-      io.to(room.id).emit('set-tick', tickNumber)
-      io.to(room.id).emit('set-fighters-data', room.fightersData)
-      io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining, timeOut: room.gameTimer.timeOut })
-
-      if (room.gameTimer.timeRemaining === 0) {
-        if (room.fighters.ninja.health > room.fighters.samurai.health) {
-          room.winner = 'Player II'
-          room.gameState = 'over'
-          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
-        }
-        if (room.fighters.samurai.health > room.fighters.ninja.health) {
-          room.winner = 'Player I'
-          room.gameState = 'over'
-          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
-        }
-        if (room.fighters.ninja.health === room.fighters.samurai.health) {
-          room.gameTimer.timeRemaining += 10
-          room.gameTimer.timeOut = false
-        }
-      }
-
-      room.update()
-    }
-
-    if (room.waitTimer !== null && room.gameState === 'stop') {
-      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut })
-      room.waitTimer.update()
-    }
-  }
-}
-
-function tickFrame () {
-  const now = performance.now()
-  accumulator += Math.min(now - lastTickTime, TICK_MS * MAX_CATCH_UP * 2)
-  lastTickTime = now
-
-  let steps = 0
-  while (accumulator >= TICK_MS && steps < MAX_CATCH_UP) {
-    tick++
-    stepRooms(tick)
-    accumulator -= TICK_MS
-    steps++
-  }
-
-  if (steps === MAX_CATCH_UP) {
-    accumulator = 0
-  }
-
-  setTimeout(tickFrame, Math.max(1, TICK_MS - accumulator))
-}
-
 lastTickTime = performance.now()
 setTimeout(tickFrame, TICK_MS)
 
@@ -299,4 +225,78 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   } else {
     return 1
   }
+}
+
+function stepRooms (tickNumber) {
+  for (const room of Object.values(rooms)) {
+    if (Object.keys(room.players).length === 2 && room.gameState === 'start') {
+      room.gameState = 'continue'
+      room.gameTimer = new Timer(45)
+      room.gameObjects.push(room.gameTimer)
+    }
+
+    if (room.gameState === 'stop' && room.waitTimer === null) {
+      room.waitTimer = new Timer(60)
+    }
+    room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
+    room.fighters.ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.ninja.position.x, room.fighters.samurai.position.x)
+
+    room.fightersData.ninja = { position: room.fighters.ninja.position, command: room.fighters.ninja.command, health: room.fighters.ninja.health }
+    room.fightersData.samurai = { position: room.fighters.samurai.position, command: room.fighters.samurai.command, health: room.fighters.samurai.health }
+
+    if (debug) {
+      room.fightersData.ninja.attackBox = room.fighters.ninja.attackBox
+      room.fightersData.samurai.attackBox = room.fighters.samurai.attackBox
+    }
+
+    if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
+      io.to(room.id).emit('set-tick', tickNumber)
+      io.to(room.id).emit('set-fighters-data', room.fightersData)
+      io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining, timeOut: room.gameTimer.timeOut })
+
+      if (room.gameTimer.timeRemaining === 0) {
+        if (room.fighters.ninja.health > room.fighters.samurai.health) {
+          room.winner = 'Player II'
+          room.gameState = 'over'
+          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+        }
+        if (room.fighters.samurai.health > room.fighters.ninja.health) {
+          room.winner = 'Player I'
+          room.gameState = 'over'
+          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+        }
+        if (room.fighters.ninja.health === room.fighters.samurai.health) {
+          room.gameTimer.timeRemaining += 10
+          room.gameTimer.timeOut = false
+        }
+      }
+
+      room.update()
+    }
+
+    if (room.waitTimer !== null && room.gameState === 'stop') {
+      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut })
+      room.waitTimer.update()
+    }
+  }
+}
+
+function tickFrame () {
+  const now = performance.now()
+  accumulator += Math.min(now - lastTickTime, TICK_MS * MAX_CATCH_UP * 2)
+  lastTickTime = now
+
+  let steps = 0
+  while (accumulator >= TICK_MS && steps < MAX_CATCH_UP) {
+    tick++
+    stepRooms(tick)
+    accumulator -= TICK_MS
+    steps++
+  }
+
+  if (steps === MAX_CATCH_UP) {
+    accumulator = 0
+  }
+
+  setTimeout(tickFrame, Math.max(1, TICK_MS - accumulator))
 }

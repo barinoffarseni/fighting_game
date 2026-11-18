@@ -20,14 +20,14 @@ class SpriteAnimated extends SpriteStatic {
 
     this.dx = 0
     this.dy = 0
+    this.framesElapsed = 0
 
     this.ticksPerFrame = ticksPerFrame
-    this.imgFrames = imgFrames
     this.scale = scale
+    this.imgFrames = imgFrames
     this.offset = offset
 
     this.stateStartTick = null
-    this.elapsedFrames = 0
     this.currentFrame = 0
     this.animateIsComplete = false
     this.compliteAnimationAndStop = false
@@ -45,6 +45,10 @@ class SpriteAnimated extends SpriteStatic {
       (this.img.width / this.imgFrames) * this.scale,
       this.img.height * this.scale
     )
+  }
+
+  update () {
+    this.applyFrame()
   }
 
   frameHolds () {
@@ -78,7 +82,7 @@ class SpriteAnimated extends SpriteStatic {
       }
     }
 
-    this.elapsedFrames = elapsed
+    this.framesElapsed = elapsed
     this.animateIsComplete = total > 0 && rawElapsed >= total && (!looping || rawElapsed % total === 0)
     this.currentFrame = frame
 
@@ -86,10 +90,6 @@ class SpriteAnimated extends SpriteStatic {
       this.currentFrame = holds.length - 1
     }
     this.dx = (this.currentFrame * this.img.width) / this.imgFrames
-  }
-
-  update () {
-    this.applyFrame()
   }
 }
 

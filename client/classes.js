@@ -1,5 +1,3 @@
-/* global gameState */
-
 class SpriteStatic {
   constructor ({ position, imgSrc, width, height }) {
     this.position = position

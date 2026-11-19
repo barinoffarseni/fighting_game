@@ -9,63 +9,19 @@ const Fighter = require('./fighter.js').Fighter
 
 const debug = false
 
+const TICK_MS = 50
+const MAX_CATCH_UP = 4
+
 const rooms = {}
 const playerRooms = new Map()
 const socketRooms = new Map()
 let waitingRoomId = null
+let tick = 0
+let accumulator = 0
+let lastTickTime = 0
 
-setInterval(() => {
-  for (const room of Object.values(rooms)) {
-    if (Object.keys(room.players).length === 2 && room.gameState === 'start') {
-      room.gameState = 'continue'
-      room.gameTimer = new Timer(30)
-      room.gameObjects.push(room.gameTimer)
-    }
-
-    if (room.gameState === 'stop' && room.waitTimer === null) {
-      room.waitTimer = new Timer(60)
-    }
-    room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
-    room.fighters.ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.ninja.position.x, room.fighters.samurai.position.x)
-
-    room.fightersData.ninja = { position: room.fighters.ninja.position, command: room.fighters.ninja.command, health: room.fighters.ninja.health }
-    room.fightersData.samurai = { position: room.fighters.samurai.position, command: room.fighters.samurai.command, health: room.fighters.samurai.health }
-
-    if (debug) {
-      room.fightersData.ninja.attackBox = room.fighters.ninja.attackBox
-      room.fightersData.samurai.attackBox = room.fighters.samurai.attackBox
-    }
-
-    if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
-      io.to(room.id).emit('set-fighters-data', room.fightersData)
-      io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining, timeOut: room.gameTimer.timeOut })
-
-      if (room.gameTimer.timeRemaining === 0) {
-        if (room.fighters.ninja.health > room.fighters.samurai.health) {
-          room.winner = 'Player II'
-          room.gameState = 'over'
-          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
-        }
-        if (room.fighters.samurai.health > room.fighters.ninja.health) {
-          room.winner = 'Player I'
-          room.gameState = 'over'
-          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
-        }
-        if (room.fighters.ninja.health === room.fighters.samurai.health) {
-          room.gameTimer.timeRemaining += 10
-          room.gameTimer.timeOut = false
-        }
-      }
-
-      room.update()
-    }
-
-    if (room.waitTimer !== null && room.gameState === 'stop') {
-      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut })
-      room.waitTimer.update()
-    }
-  }
-}, 50)
+lastTickTime = performance.now()
+setTimeout(tickFrame, TICK_MS)
 
 io.on('connection', (socket) => {
   const player = { id: crypto.randomUUID() }
@@ -86,6 +42,10 @@ io.on('connection', (socket) => {
 
       for (const fighter of Object.values(rooms[roomId].fighters)) {
         fighter.command = 'idle'
+        fighter.velocity.x = 0
+        fighter.moveLeft = false
+        fighter.moveRight = false
+        fighter.attackPressed = false
       }
 
       for (const fighter of Object.values(rooms[roomId].fightersData)) {
@@ -113,49 +73,37 @@ io.on('connection', (socket) => {
 
     if (data.player.type === 'samurai') {
       if (data.player.command === 'right') {
-        room.fighters.samurai.velocity.x = 4
-        if (room.fighters.samurai.canJump) {
-          room.fighters.samurai.command = data.player.command
-        }
+        room.fighters.samurai.moveRight = data.pressed
       }
       if (data.player.command === 'left') {
-        room.fighters.samurai.velocity.x = -4
-        if (room.fighters.samurai.canJump) {
-          room.fighters.samurai.command = data.player.command
-        }
+        room.fighters.samurai.moveLeft = data.pressed
       }
-      if (data.player.command === 'up' && room.fighters.samurai.canJump) {
-        room.fighters.samurai.velocity.y = -10
+      if (data.player.command === 'up' && data.pressed && room.fighters.samurai.canJump) {
+        room.fighters.samurai.velocity.y = -35
       }
       if (data.player.command === 'attack') {
-        room.fighters.samurai.command = data.player.command
+        room.fighters.samurai.attackPressed = data.pressed
       }
     }
     if (data.player.type === 'ninja') {
       if (data.player.command === 'right') {
-        room.fighters.ninja.velocity.x = 4
-        if (room.fighters.ninja.canJump) {
-          room.fighters.ninja.command = data.player.command
-        }
+        room.fighters.ninja.moveRight = data.pressed
       }
       if (data.player.command === 'left') {
-        room.fighters.ninja.velocity.x = -4
-        if (room.fighters.ninja.canJump) {
-          room.fighters.ninja.command = data.player.command
-        }
+        room.fighters.ninja.moveLeft = data.pressed
       }
-      if (data.player.command === 'up' && room.fighters.ninja.canJump) {
-        room.fighters.ninja.velocity.y = -10
+      if (data.player.command === 'up' && data.pressed && room.fighters.ninja.canJump) {
+        room.fighters.ninja.velocity.y = -35
       }
       if (data.player.command === 'attack') {
-        room.fighters.ninja.command = data.player.command
+        room.fighters.ninja.attackPressed = data.pressed
       }
     }
   })
 
   socket.on('check-attack-is-success', (data) => {
     const room = rooms[socketRooms.get(socket.id)]
-    if (!room) {
+    if (!room || room.gameState !== 'continue') {
       return
     }
 
@@ -167,16 +115,10 @@ io.on('connection', (socket) => {
     }
 
     if (room.fighters.samurai.health === 0) {
-      room.winner = 'Player II'
-      room.gameState = 'over'
-      room.gameTimer.timeStop = true
-      io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+      finishGame(room, 'Player II')
     }
     if (room.fighters.ninja.health === 0) {
-      room.winner = 'Player I'
-      room.gameState = 'over'
-      room.gameTimer.timeStop = true
-      io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+      finishGame(room, 'Player I')
     }
   })
   socket.on('get-player-id', (id) => {
@@ -251,6 +193,19 @@ httpServer.listen(3000, () => {
   console.log('listening on *:3000')
 })
 
+function finishGame (room, winner) {
+  room.winner = winner
+  room.gameState = 'over'
+  room.gameTimer.timeStop = true
+
+  for (const fighter of Object.values(room.fighters)) {
+    fighter.attackPressed = false
+    fighter.command = 'idle'
+  }
+
+  io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+}
+
 function checkAttackIsSuccess (attacker, victim) {
   attacker.setAttackBoxMinMaxPosition()
 
@@ -277,4 +232,73 @@ function getFighterAttackBoxPositionMirroring (x1, x2) {
   } else {
     return 1
   }
+}
+
+function stepRooms (tickNumber) {
+  for (const room of Object.values(rooms)) {
+    if (Object.keys(room.players).length === 2 && room.gameState === 'start') {
+      room.gameState = 'continue'
+      room.gameTimer = new Timer(45)
+      room.gameObjects.push(room.gameTimer)
+    }
+
+    if (room.gameState === 'stop' && room.waitTimer === null) {
+      room.waitTimer = new Timer(60)
+    }
+    room.fighters.samurai.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.samurai.position.x, room.fighters.ninja.position.x)
+    room.fighters.ninja.attackBoxPositionMirroring = getFighterAttackBoxPositionMirroring(room.fighters.ninja.position.x, room.fighters.samurai.position.x)
+
+    room.fightersData.ninja = { position: room.fighters.ninja.position, command: room.fighters.ninja.command, health: room.fighters.ninja.health }
+    room.fightersData.samurai = { position: room.fighters.samurai.position, command: room.fighters.samurai.command, health: room.fighters.samurai.health }
+
+    if (debug) {
+      room.fightersData.ninja.attackBox = room.fighters.ninja.attackBox
+      room.fightersData.samurai.attackBox = room.fighters.samurai.attackBox
+    }
+
+    if ((room.gameState === 'continue' || room.gameState === 'over') && room.gameTimer !== null) {
+      io.to(room.id).emit('set-tick', tickNumber)
+      io.to(room.id).emit('set-fighters-data', room.fightersData)
+      io.to(room.id).emit('timer', { timeRemaining: room.gameTimer.timeRemaining, timeOut: room.gameTimer.timeOut })
+
+      if (room.gameTimer.timeRemaining === 0) {
+        if (room.fighters.ninja.health > room.fighters.samurai.health) {
+          finishGame(room, 'Player II')
+        }
+        if (room.fighters.samurai.health > room.fighters.ninja.health) {
+          finishGame(room, 'Player I')
+        }
+        if (room.fighters.ninja.health === room.fighters.samurai.health) {
+          room.gameTimer.timeRemaining += 10
+          room.gameTimer.timeOut = false
+        }
+      }
+
+      room.update()
+    }
+
+    if (room.waitTimer !== null && room.gameState === 'stop') {
+      io.to(room.id).emit('wait-timer', { timeRemaining: room.waitTimer.timeRemaining, timeOut: room.waitTimer.timeOut })
+      room.waitTimer.update()
+    }
+  }
+}
+
+function tickFrame () {
+  const now = performance.now()
+  accumulator += Math.min(now - lastTickTime, TICK_MS * MAX_CATCH_UP * 2)
+  lastTickTime = now
+
+  let steps = 0
+  for (steps; accumulator >= TICK_MS && steps < MAX_CATCH_UP; steps++) {
+    tick++
+    stepRooms(tick)
+    accumulator -= TICK_MS
+  }
+
+  if (steps === MAX_CATCH_UP) {
+    accumulator = 0
+  }
+
+  setTimeout(tickFrame, Math.max(1, TICK_MS - accumulator))
 }

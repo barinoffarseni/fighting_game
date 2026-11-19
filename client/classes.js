@@ -15,22 +15,22 @@ class SpriteStatic {
 }
 
 class SpriteAnimated extends SpriteStatic {
-  constructor ({ position, imgSrc, scale, framesHold, imgFrames, offset }) {
+  constructor ({ position, imgSrc, scale, ticksPerFrame, imgFrames, offset }) {
     super({ position, imgSrc })
 
     this.dx = 0
     this.dy = 0
     this.framesElapsed = 0
 
-    this.framesHold = framesHold
+    this.ticksPerFrame = ticksPerFrame
     this.scale = scale
     this.imgFrames = imgFrames
     this.offset = offset
 
+    this.stateStartTick = null
     this.currentFrame = 0
     this.animateIsComplete = false
     this.compliteAnimationAndStop = false
-    this.stop = false
   }
 
   render () {
@@ -48,26 +48,51 @@ class SpriteAnimated extends SpriteStatic {
   }
 
   update () {
-    if (!this.stop) {
-      this.framesElapsed++
-      this.animateIsComplete = false
+    this.applyFrame()
+  }
 
-      if (this.framesElapsed % this.framesHold === 0) {
-        this.currentFrame++
+  getFrameHolds () {
+    return new Array(this.imgFrames).fill(this.ticksPerFrame)
+  }
 
-        if (this.currentFrame === this.imgFrames) {
-          this.animateIsComplete = true
+  applyFrame () {
+    const holds = this.getFrameHolds()
+    const total = holds.reduce((sum, hold) => sum + hold, 0)
 
-          if (this.compliteAnimationAndStop) {
-            this.stop = true
-            this.currentFrame = this.imgFrames - 1
-          } else {
-            this.currentFrame = 0
-          }
-        }
+    if (this.stateStartTick === null) {
+      this.stateStartTick = tick
+    }
+
+    const rawElapsed = Math.max(0, tick - this.stateStartTick)
+    const looping = !this.compliteAnimationAndStop
+
+    let elapsed = rawElapsed
+
+    if (looping) {
+      elapsed = rawElapsed % total
+    }
+
+    let frame = this.imgFrames
+    let boundary = 0
+    for (let i = 0; i < holds.length; i++) {
+      boundary += holds[i]
+      if (elapsed < boundary) {
+        frame = i
+        break
       }
     }
 
+    this.framesElapsed = elapsed
+    if (looping) {
+      this.animateIsComplete = rawElapsed >= total && rawElapsed % total === 0
+    } else {
+      this.animateIsComplete = rawElapsed >= total
+    }
+    this.currentFrame = frame
+
+    if (frame >= holds.length) {
+      this.currentFrame = holds.length - 1
+    }
     this.dx = (this.currentFrame * this.img.width) / this.imgFrames
   }
 }
@@ -78,7 +103,7 @@ class Fighter extends SpriteAnimated {
       position,
       imgSrc: `./img/${name}/Idle.png`,
       scale: 2.5,
-      framesHold: 10,
+      ticksPerFrame: 3,
       imgFrames: sprites.idle.frames,
       offset
     })
@@ -89,6 +114,10 @@ class Fighter extends SpriteAnimated {
     this.textureMirroring = textureMirroring
     this.isAttack = false
     this.attackFrame = attackFrame
+    this.attackTicksPerFrame = {
+      beforeHit: 1,
+      afterHit: 5
+    },
     this.sprites = sprites
     this.state = 'idle'
     this.newState = 'idle'
@@ -97,8 +126,23 @@ class Fighter extends SpriteAnimated {
     this.restartState = false
     this.command = 'idle'
     this.attackFrame = attackFrame
+    this.didHit = false
     this.name = name
     this.getScr()
+  }
+
+  getFrameHolds () {
+    if (this.name === 'samurai' && (this.state === 'attack1' || this.state === 'attack2')) {
+      const holds = new Array(this.imgFrames).fill(this.attackTicksPerFrame.beforeHit)
+
+      for (let i = this.attackFrame; i < holds.length; i++) {
+        holds[i] = this.attackTicksPerFrame.afterHit
+      }
+
+      return holds
+    }
+
+    return super.getFrameHolds()
   }
 
   getPosition () {
@@ -148,7 +192,8 @@ class Fighter extends SpriteAnimated {
       this.state = this.newState
 
       this.currentFrame = 0
-      this.framesElapsed = 0
+      this.stateStartTick = tick
+      this.didHit = false
 
       if (this.state === 'attack1') {
         this.stateCanBeChanged = false
@@ -169,9 +214,9 @@ class Fighter extends SpriteAnimated {
     }
 
     if (this.textureMirroring < 0) {
-      this.img.src = this.sprites[this.state].leftScr
+      this.img = this.sprites[this.state].leftImg
     } else {
-      this.img.src = this.sprites[this.state].rightSrc
+      this.img = this.sprites[this.state].rightImg
     }
     this.imgFrames = this.sprites[this.state].frames
   }
@@ -187,6 +232,10 @@ class Fighter extends SpriteAnimated {
     for (const key of Object.keys(this.sprites)) {
       this.sprites[key].leftScr = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + 'Inverted.png'
       this.sprites[key].rightSrc = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
+      this.sprites[key].leftImg = new Image()
+      this.sprites[key].leftImg.src = this.sprites[key].leftScr
+      this.sprites[key].rightImg = new Image()
+      this.sprites[key].rightImg.src = this.sprites[key].rightSrc
     }
   }
 
@@ -199,9 +248,13 @@ class Fighter extends SpriteAnimated {
       return false
     }
 
-    if (this.framesElapsed % this.framesHold === 0) {
-      socket.emit('check-attack-is-success', { attacker: this.name })
+    if (this.didHit) {
+      return false
     }
+
+    this.didHit = true
+
+    socket.emit('check-attack-is-success', { attacker: this.name })
   }
 
   update () {
@@ -225,12 +278,12 @@ class Fighter extends SpriteAnimated {
         this.previousHealth = this.health
       }
 
-      if (this.command === 'attack') {
+      if (this.command === 'attack' && gameState !== 'over') {
         this.newState = 'attack1'
-      }
 
-      if (this.state === 'attack1' && this.command === 'attack') {
-        this.newState = 'attack2'
+        if (this.state === 'attack1') {
+          this.newState = 'attack2'
+        }
       }
 
       if (this.health <= 0) {

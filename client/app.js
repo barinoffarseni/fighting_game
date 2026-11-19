@@ -6,6 +6,8 @@ canvas.height = 576
 
 let gameState = 'continue'
 
+let tick = 0
+
 const debug = false
 
 let id = localStorage.getItem('id')
@@ -41,7 +43,7 @@ gameObjects.push(new SpriteAnimated({
   },
   imgSrc: './img/shop.png',
   scale: 2.4,
-  framesHold: 10,
+  ticksPerFrame: 3,
   imgFrames: 6,
   offset: {
     x: 0,
@@ -185,7 +187,6 @@ const winIndicatorFrame = new Frame({
 gameObjects.push(winIndicatorFrame)
 
 function gameLoop () {
-  control()
   update()
   render()
 
@@ -219,24 +220,9 @@ function waitingForPlayers () {
 
 waitingForPlayers()
 
-function control () {
-  if (player.keys.w) {
-    socket.emit('set-move-command', { player: { type: player.type, command: 'up' } })
-    // Ваня разобраться что тут set-move-command отправляется 60 раз в секунду
-  }
-
-  if (player.keys.d) {
-    socket.emit('set-move-command', { player: { type: player.type, command: 'right' } })
-  }
-
-  if (player.keys.a) {
-    socket.emit('set-move-command', { player: { type: player.type, command: 'left' } })
-  }
-
-  if (player.keys.s) {
-    socket.emit('set-move-command', { player: { type: player.type, command: 'attack' } })
-  }
-}
+socket.on('set-tick', function (data) {
+  tick = data
+})
 
 socket.on('set-fighters-data', function (data) {
   if (player[player.type]) {
@@ -322,39 +308,61 @@ function render () {
 
 window.addEventListener('keyup', keyup)
 function keyup (event) {
-  switch (event.key) {
-    case 'd':
+  let command = null
+
+  switch (event.code) {
+    case 'KeyD':
       player.keys.d = false
+      command = 'right'
       break
-    case 'a':
+    case 'KeyA':
       player.keys.a = false
+      command = 'left'
       break
-    case 'w':
+    case 'KeyW':
       player.keys.w = false
+      command = 'up'
       break
-    case 's':
+    case 'KeyS':
       player.keys.s = false
+      command = 'attack'
       break
   }
+
+  sendMoveCommand(command, false)
 }
 
 window.addEventListener('keydown', keydown)
 function keydown (event) {
-  if (gameState !== 'over') {
-    switch (event.key) {
-      case 'd':
+  if (gameState !== 'over' && !event.repeat) {
+    let command = null
+
+    switch (event.code) {
+      case 'KeyD':
         player.keys.d = true
+        command = 'right'
         break
-      case 'a':
+      case 'KeyA':
         player.keys.a = true
+        command = 'left'
         break
-      case 'w':
+      case 'KeyW':
         player.keys.w = true
+        command = 'up'
         break
-      case 's':
+      case 'KeyS':
         player.keys.s = true
+        command = 'attack'
         break
     }
+
+    sendMoveCommand(command, true)
+  }
+}
+
+function sendMoveCommand (command, pressed) {
+  if (command) {
+    socket.emit('set-move-command', { player: { type: player.type, command }, pressed })
   }
 }
 

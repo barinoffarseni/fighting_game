@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
 
   socket.on('check-attack-is-success', (data) => {
     const room = rooms[socketRooms.get(socket.id)]
-    if (!room) {
+    if (!room || room.gameState !== 'continue') {
       return
     }
 
@@ -115,16 +115,10 @@ io.on('connection', (socket) => {
     }
 
     if (room.fighters.samurai.health === 0) {
-      room.winner = 'Player II'
-      room.gameState = 'over'
-      room.gameTimer.timeStop = true
-      io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+      finishGame(room, 'Player II')
     }
     if (room.fighters.ninja.health === 0) {
-      room.winner = 'Player I'
-      room.gameState = 'over'
-      room.gameTimer.timeStop = true
-      io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+      finishGame(room, 'Player I')
     }
   })
   socket.on('get-player-id', (id) => {
@@ -199,6 +193,21 @@ httpServer.listen(3000, () => {
   console.log('listening on *:3000')
 })
 
+function finishGame (room, winner) {
+  room.winner = winner
+  room.gameState = 'over'
+  room.gameTimer.timeStop = true
+
+  for (const fighter of Object.values(room.fighters)) {
+    fighter.attackPressed = false
+    if (fighter.command === 'attack') {
+      fighter.command = 'idle'
+    }
+  }
+
+  io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+}
+
 function checkAttackIsSuccess (attacker, victim) {
   attacker.setAttackBoxMinMaxPosition()
 
@@ -256,14 +265,10 @@ function stepRooms (tickNumber) {
 
       if (room.gameTimer.timeRemaining === 0) {
         if (room.fighters.ninja.health > room.fighters.samurai.health) {
-          room.winner = 'Player II'
-          room.gameState = 'over'
-          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+          finishGame(room, 'Player II')
         }
         if (room.fighters.samurai.health > room.fighters.ninja.health) {
-          room.winner = 'Player I'
-          room.gameState = 'over'
-          io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })
+          finishGame(room, 'Player I')
         }
         if (room.fighters.ninja.health === room.fighters.samurai.health) {
           room.gameTimer.timeRemaining += 10

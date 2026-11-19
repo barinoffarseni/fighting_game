@@ -51,12 +51,12 @@ class SpriteAnimated extends SpriteStatic {
     this.applyFrame()
   }
 
-  frameHolds () {
+  getFrameHolds () {
     return new Array(this.imgFrames).fill(this.ticksPerFrame)
   }
 
   applyFrame () {
-    const holds = this.frameHolds()
+    const holds = this.getFrameHolds()
     const total = holds.reduce((sum, hold) => sum + hold, 0)
 
     if (this.stateStartTick === null) {
@@ -72,7 +72,7 @@ class SpriteAnimated extends SpriteStatic {
       elapsed = rawElapsed % total
     }
 
-    let frame = holds.length
+    let frame = this.imgFrames
     let boundary = 0
     for (let i = 0; i < holds.length; i++) {
       boundary += holds[i]
@@ -131,7 +131,7 @@ class Fighter extends SpriteAnimated {
     this.getScr()
   }
 
-  frameHolds () {
+  getFrameHolds () {
     if (this.name === 'samurai' && (this.state === 'attack1' || this.state === 'attack2')) {
       const holds = new Array(this.imgFrames).fill(this.attackTicksPerFrame.beforeHit)
 
@@ -142,7 +142,7 @@ class Fighter extends SpriteAnimated {
       return holds
     }
 
-    return super.frameHolds()
+    return super.getFrameHolds()
   }
 
   getPosition () {

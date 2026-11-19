@@ -200,9 +200,7 @@ function finishGame (room, winner) {
 
   for (const fighter of Object.values(room.fighters)) {
     fighter.attackPressed = false
-    if (fighter.command === 'attack') {
-      fighter.command = 'idle'
-    }
+    fighter.command = 'idle'
   }
 
   io.to(room.id).emit('set-game-state', { state: room.gameState, winner: room.winner })

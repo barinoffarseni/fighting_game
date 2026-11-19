@@ -287,11 +287,10 @@ function tickFrame () {
   lastTickTime = now
 
   let steps = 0
-  while (accumulator >= TICK_MS && steps < MAX_CATCH_UP) {
+  for (steps; accumulator >= TICK_MS && steps < MAX_CATCH_UP; steps++) {
     tick++
     stepRooms(tick)
     accumulator -= TICK_MS
-    steps++
   }
 
   if (steps === MAX_CATCH_UP) {

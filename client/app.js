@@ -361,7 +361,7 @@ function keydown (event) {
 }
 
 function sendMoveCommand (command, pressed) {
-  if (player.type && command) {
+  if (command) {
     socket.emit('set-move-command', { player: { type: player.type, command }, pressed })
   }
 }

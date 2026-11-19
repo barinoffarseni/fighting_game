@@ -278,12 +278,12 @@ class Fighter extends SpriteAnimated {
         this.previousHealth = this.health
       }
 
-      if (this.command === 'attack') {
+      if (this.command === 'attack' && gameState !== 'over') {
         this.newState = 'attack1'
-      }
 
-      if (this.state === 'attack1' && this.command === 'attack') {
-        this.newState = 'attack2'
+        if (this.state === 'attack1') {
+          this.newState = 'attack2'
+        }
       }
 
       if (this.health <= 0) {

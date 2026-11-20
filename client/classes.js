@@ -230,10 +230,10 @@ class Fighter extends SpriteAnimated {
 
   getScr () {
     for (const key of Object.keys(this.sprites)) {
-      this.sprites[key].leftScr = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + 'Inverted.png'
+      this.sprites[key].leftSrс = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + 'Inverted.png'
       this.sprites[key].rightSrc = './img/' + this.name + '/' + key.replace(key[0], key[0].toUpperCase()) + '.png'
       this.sprites[key].leftImg = new Image()
-      this.sprites[key].leftImg.src = this.sprites[key].leftScr
+      this.sprites[key].leftImg.src = this.sprites[key].leftSrс
       this.sprites[key].rightImg = new Image()
       this.sprites[key].rightImg.src = this.sprites[key].rightSrc
     }

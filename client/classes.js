@@ -72,12 +72,12 @@ class SpriteAnimated extends SpriteStatic {
       elapsed = rawElapsed % total
     }
 
-    let frame = this.imgFrames
+    let frameNumber = this.imgFrames
     let boundary = 0
     for (let i = 0; i < holds.length; i++) {
       boundary += holds[i]
       if (elapsed < boundary) {
-        frame = i
+        frameNumber = i
         break
       }
     }
@@ -88,9 +88,9 @@ class SpriteAnimated extends SpriteStatic {
     } else {
       this.animateIsComplete = rawElapsed >= total
     }
-    this.currentFrame = frame
+    this.currentFrame = frameNumber
 
-    if (frame >= holds.length) {
+    if (frameNumber >= holds.length) {
       this.currentFrame = holds.length - 1
     }
     this.dx = (this.currentFrame * this.img.width) / this.imgFrames

@@ -70,6 +70,9 @@ class SpriteAnimated extends SpriteStatic {
 
     if (looping) {
       elapsed = rawElapsed % total
+      this.animateIsComplete = rawElapsed >= total && rawElapsed % total === 0
+    } else {
+      this.animateIsComplete = rawElapsed >= total
     }
 
     let frameNumber = this.imgFrames
@@ -83,11 +86,6 @@ class SpriteAnimated extends SpriteStatic {
     }
 
     this.framesElapsed = elapsed
-    if (looping) {
-      this.animateIsComplete = rawElapsed >= total && rawElapsed % total === 0
-    } else {
-      this.animateIsComplete = rawElapsed >= total
-    }
     this.currentFrame = frameNumber
 
     if (frameNumber >= holds.length) {
